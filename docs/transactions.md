@@ -10,12 +10,12 @@ from this [Payments][] could be generated and Users can be updated.
 Fields
 ------
 
-bankId: string (sort code)
-accountId: string (account number)
-transactionType: string (OTHER, DIRECTDEP)
-when: date
-amount: integer (pence)
-description: string
-type: string (BGC, BBP, STO, ...; if it can be extracted from the description)
+ - bankId: string (sort code)
+ - accountId: string (account number)
+ - transactionType: string (OTHER, DIRECTDEP)
+ - when: date
+ - amount: integer (pence)
+ - description: string
+ - type: string (BGC, BBP, STO, ...; if it can be extracted from the description)
 
 [Payments]: payments.md

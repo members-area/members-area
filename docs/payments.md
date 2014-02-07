@@ -11,13 +11,13 @@ to that transaction.
 Fields
 ------
 
-userId: foreign, required
-transactionId: foreign, optional
-type: string (CASH, GC, STO, BGC, PAYPAL, OTHER)
-amount: integer (pence)
-when: date
-periodFrom: date (the start of the period this payment covers)
-periodCount: integer (number of {months} from periodFrom this covers)
-meta: JSON
+ - userId: foreign, required
+ - transactionId: foreign, optional
+ - type: string (CASH, GC, STO, BGC, PAYPAL, OTHER)
+ - amount: integer (pence)
+ - when: date
+ - periodFrom: date (the start of the period this payment covers)
+ - periodCount: integer (number of {months} from periodFrom this covers)
+ - meta: JSON
 
 [Transaction]: transactions.md

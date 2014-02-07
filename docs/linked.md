@@ -7,6 +7,6 @@ against.
 Fields
 ------
 
-userId: foreign, required
-identifier: string, required
-meta: JSON
+ - userId: foreign, required
+ - identifier: string, required
+ - meta: JSON
