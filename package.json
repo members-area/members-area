@@ -1,0 +1,29 @@
+{
+  "name": "members-area",
+  "version": "0.0.0",
+  "description": "An area for members of a group to manage their subscription, permissions and resources.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/benjie/members-area.git"
+  },
+  "keywords": [
+    "makerspace",
+    "hackerspace",
+    "members",
+    "area",
+    "hackspace"
+  ],
+  "author": "Benjie Gillam <benjie@jemjie.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benjie/members-area/issues"
+  },
+  "homepage": "https://github.com/benjie/members-area"
+}
