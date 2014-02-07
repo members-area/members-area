@@ -1,6 +1,7 @@
 fs = require 'fs'
 Sequelize = require 'sequelize'
 _ = require 'underscore'
+require '../env'
 config = require '../config/config.json'
 
 sequelize = new Sequelize config.database, config.username, config.password, _.defaults config,
