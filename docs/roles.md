@@ -102,3 +102,8 @@ requirements of the role have been met.
 Approvals are public.
 
 Once all requirements have been met, you are granted the role.
+
+Fields
+------
+
+ - name: string
