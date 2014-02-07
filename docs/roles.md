@@ -17,6 +17,10 @@ Requirements:
 
  - 1 **Trustee**'s approval
 
+Grants:
+
+ - Login
+
 ### Supporter
 
 Someone who has had a payment registered via the members area (either
