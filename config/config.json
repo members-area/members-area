@@ -1,5 +1,6 @@
 {
   "development": {
+    "coffee": true,
     "dialect": "sqlite",
     "storage": "./members.sqlite",
     "username": null,
@@ -8,6 +9,7 @@
     "host": null
   },
   "test": {
+    "coffee": true,
     "dialect": "sqlite",
     "storage": "./members-test.sqlite",
     "username": null,
