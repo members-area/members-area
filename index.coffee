@@ -24,6 +24,7 @@ app.use express.favicon(path.join(__dirname, 'public', 'img', 'favicon.png'))
 
 app.use require('./logging')(app)
 app.use require('./stylus')()
+app.use require('./http-error')()
 app.use express.bodyParser()
 app.use express.methodOverride()
 app.use express.cookieParser(process.env.SECRET ? String(Math.random()))

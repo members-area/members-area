@@ -27,8 +27,11 @@ class Router
 
   handler: (params) ->
     return (req, res, next) ->
-      err = new Error("Unimplemented")
-      err.status = 501
-      next err
+      try
+        throw new req.HTTPError(404) unless params.controller? and params.action?
+        Controller = require("./controllers/#{params.controller}")
+        Controller.handle params, req, res, next
+      catch e
+        next e
 
 module.exports = (app) -> new Router app
