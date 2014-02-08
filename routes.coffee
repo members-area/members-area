@@ -1,1 +1,1 @@
-module.exports = ({get, post, any}) ->
+module.exports = ({get, post, all}) ->
