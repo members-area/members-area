@@ -16,3 +16,6 @@ fs.readdirSync(__dirname).forEach (filename) ->
   return if name is 'index' or name.substr(0,1) is '.'
   model = sequelize.import "#{__dirname}/#{name}"
   exports[model.name] = model
+
+exports.User.hasMany exports.RoleUser
+exports.Role.hasMany exports.RoleUser
