@@ -8,5 +8,6 @@ Fields
 ------
 
  - userId: foreign, required
+ - type: string ('twitter', 'facebook', 'github', ...)
  - identifier: string, required
  - meta: JSON
