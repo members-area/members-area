@@ -38,15 +38,15 @@ describe User.name, ->
 
       it 'too short', (done) ->
         @data.username = "a"
-        @expectErrors 'username', /must be between/, done
+        @expectErrors 'username', /must be between/i, done
 
       it 'start with letter', (done) ->
         @data.username = "$$$$$"
-        @expectErrors 'username', /start with/, done
+        @expectErrors 'username', /start with/i, done
 
       it 'dodgy characters', (done) ->
         @data.username = "A$$$$"
-        @expectErrors 'username', /alphanumeric/, done
+        @expectErrors 'username', /alphanumeric/i, done
 
     describe 'address', ->
       it 'accepts valid', (done) ->
@@ -55,4 +55,4 @@ describe User.name, ->
 
       it 'requires postcode', (done) ->
         @data.address = "1 Street Road, Townington, Shireshire"
-        @expectErrors 'address', /postcode/, done
+        @expectErrors 'address', /postcode/i, done
