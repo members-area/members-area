@@ -35,6 +35,7 @@ module.exports = class RegistrationController extends Controller
       user.save().done (err) =>
         addError 'base', 'Could not create user' if err
         return done() if @errors
+        @template = "success"
         return done()
 
   # ---------------
