@@ -17,5 +17,9 @@ fs.readdirSync(__dirname).forEach (filename) ->
   model = sequelize.import "#{__dirname}/#{name}"
   exports[model.name] = model
 
+exports.middleware = -> (req, res, next) ->
+  req[k] = v for own k, v of exports
+  next()
+
 exports.User.hasMany exports.RoleUser
 exports.Role.hasMany exports.RoleUser

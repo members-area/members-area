@@ -31,6 +31,7 @@ app.use express.cookieParser(process.env.SECRET ? String(Math.random()))
 app.use express.session()
 app.configure 'development', ->
   app.use express.errorHandler()
+app.use require('./models').middleware()
 app.use require('./passport').initialize()
 
 require('./router')(app)
