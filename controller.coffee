@@ -20,6 +20,7 @@ class Controller
     return
 
   @callbacks: (event) ->
+    @makeCallbacksLocal()
     (@_callbacks[event] ? []).slice()
 
   @before: -> @callback 'before', arguments...
