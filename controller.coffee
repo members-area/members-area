@@ -54,7 +54,9 @@ class Controller
     @view = "#{@params.controller}/#{@params.action}"
 
   render: (done) ->
-    @res.render "#{@view}", (err, html) =>
+    vars = {}
+    vars[k] = v for own k, v of @ when typeof k isnt 'function'
+    @res.render "#{@view}", vars, (err, html) =>
       return done err if err
       @rendered = true
       @res.send html
