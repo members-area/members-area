@@ -1,0 +1,124 @@
+extends ../layout
+
+block title
+  | Register
+
+block body
+  - var controlGroupClass, value, item, field
+  - var tabIndex = 1
+  .row
+    .span4.offset1.gumph
+      h2 Membership
+      p So Make It Ltd. is a members-ran non-profit company. Membership is paid
+        | monthly by standing order. 
+        strong The minimum subscription is £5/month, and is due as soon as you're approved. 
+        | We ask that you pay what you think the space is worth to you, but
+        | running an organisation like this isn't cheap, so please be as
+        | generous as you can.  The space requires our members to contribute an
+        | average subscription of at least £20/month to survive.
+
+      p By joining you're becoming a member of So Make It Ltd. (as goverened by 
+        a(href="http://www.legislation.gov.uk/ukpga/2006/46/part/8/chapter/2/crossheading/general") UK law
+        | ) and you agree to be bound by our 
+        a(href="http://so-make-it.github.com/constitution/constitution.pdf") constitution
+        |  and to follow the 
+        a(href="http://wiki.somakeit.org.uk/wiki/Rules") rules of the space
+        | .
+
+      p
+        strong
+          a(href="http://www.legislation.gov.uk/ukpga/2006/46/part/8/chapter/2/crossheading/general") UK law
+          |  requires that you provide your real name and address in order to join.
+        |  Your name will be visible to all members.
+
+      p Many of the services provided by So Make It require a username and
+        | password, so you will need to choose a unique username.
+
+      p If you do not wish to give your address, please 
+        a(href="mailto:join@somakeit.org.uk?subject=Associate%20Membership") email us
+        |  and we'll let you know when we add 
+        a(href="https://wiki.somakeit.org.uk/wiki/Associate_Membership") Associate Membership
+        | .
+
+    .span4.offset1.register-form
+      h2 Registration form
+      form(action='', method='POST')
+        fieldset
+          input(type='hidden', name='form', value='register')
+
+          p
+            strong
+              a(href="http://www.legislation.gov.uk/ukpga/2006/46/part/8/chapter/2/crossheading/general") UK law
+              |  requires you to provide your real name and address to become a member of So Make It Ltd.
+
+          //- Antispam
+          .control-group.sdfsdfsdf
+            label Fill this field in if you're not a human:
+            input.text(type='text', name='url', placeholder='Required')
+
+          - each field in ['Full Name', 'Email', 'Username']
+            - item = field.replace(/ /,"").toLowerCase()
+            - controlGroupClass = (err && err[item] ? "error" : "")
+            .control-group(class=controlGroupClass)
+              label(class="text-"+controlGroupClass)= field
+              input.text(type='text', name=item, placeholder='Required', value=data[item], tabindex=tabIndex++)
+
+              if item == 'email' && err && err.email409
+                p.text-error This email address is already registered.
+              if item == 'username' && err && err.username409
+                p.text-error This username has been taken by another user.
+              if item == 'username' && err && err.username403
+                p.text-error This username is disallowed.
+
+          - controlGroupClass = (err && err.address ? "error" : "")
+          .control-group(class=controlGroupClass)
+            label(class="text-"+controlGroupClass) Postal Address
+            textarea.text(name='address', placeholder='Required', rows=4, tabindex=tabIndex++)= data.address
+
+          - controlGroupClass = (err && err.password ? "error" : "")
+          .control-group(class=controlGroupClass)
+            label(class="text-"+controlGroupClass) Password
+            input.text(type='password', name='password', placeholder='Password', tabindex=tabIndex++)
+            input.text(type='password', name='password2', placeholder='Again', tabindex=tabIndex++)
+
+            if err && err.passwordsdontmatch
+              p.text-error Passwords don't match.
+
+          //-- controlGroupClass = (err && err.wikiname ? "error" : "")
+          //-.control-group(class=controlGroupClass)
+            //-label(class="text-"+controlGroupClass) Wiki Username (if you have one)
+            //-input.text(type='text', name='wikiname', placeholder='Optional', value=data.wikiname, tabindex=tabIndex++)
+
+          - controlGroupClass = (err && err.terms ? "error" : "")
+          .control-group(class=controlGroupClass)
+            label(class="text-"+controlGroupClass)
+              input(type="checkbox", name="terms", tabindex=tabIndex++)
+              |  I confirm that the information I have entered above is not
+              |  fraudulent, that I wish to become a member of So Make It Ltd.,
+              |  and that I agree to be bound by the 
+              a(href="http://so-make-it.github.com/constitution/constitution.pdf") constitution
+              |  and 
+              a(href="http://wiki.somakeit.org.uk/wiki/Rules") rules
+              | . 
+
+          - controlGroupClass = (err && err.subs ? "error" : "")
+          .control-group(class=controlGroupClass)
+            label(class="text-"+controlGroupClass)
+              input(type="checkbox", name="subs", tabindex=tabIndex++)
+              |  Further I 
+              strong agree to pay a monthly subscription 
+              | to So Make It by standing order, bank transfer, cash, or any
+              | other method that the Trustees approve from time to time.
+
+          if err && err.antispam
+            p.text-error You tripped our robot alarm (we're not convinced you're human). Please contact 
+              a(href="mailto:benjie@somakeit.org.uk?subject=Robot%20Alarm") Benjie
+              | .
+
+          if err && err.unknown
+            p.text-error An unknown error occurred. Please contact 
+              a(href="mailto:benjie@somakeit.org.uk?subject=Signup%20Issue") Benjie
+              | .
+
+          button.btn.btn-primary.btn-large(type='submit', tabindex=tabIndex++) Sign up
+

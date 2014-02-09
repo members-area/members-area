@@ -52,6 +52,7 @@ class Controller
 
   constructor: (@params, @req, @res) ->
     @view = "#{@params.controller}/#{@params.action}"
+    @data = @req.body ? {}
 
   render: (done) ->
     vars = {}
@@ -61,5 +62,12 @@ class Controller
       @rendered = true
       @res.send html
       done()
+
+  redirectTo: (url, {status}) ->
+    if status?
+      @res.redirect status, url
+    else
+      @res.redirect url
+    @rendered = true
 
 module.exports = Controller
