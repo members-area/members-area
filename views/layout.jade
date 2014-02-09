@@ -1,0 +1,51 @@
+doctype html
+html
+  head
+    title= title
+      |  | So Make It Members
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/bootstrap-responsive.min.css')
+    link(rel='stylesheet', href='/css/style.css')
+    link(href="/img/favicon.png", rel="shortcut icon")
+    script(src='/js/jquery.min.js')
+    script(src='/js/jquery-migrate.min.js')
+    script(src='/js/bootstrap.min.js')
+  body
+    block everything
+      .navbar.navbar-inverse.navbar-static-top
+        .navbar-inner
+          .container
+            //- Responsive Navbar Part 1: Button for triggering responsive navbar (not covered in tutorial). Include responsive CSS to utilize.
+            a.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+            a.brand(href='/') So Make It
+            //- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse.
+            .nav-collapse.collapse
+              - var active
+              ul(class="nav members")
+                li
+                  a(href='http://www.somakeit.org.uk/') Website
+                li
+                  a(href='http://wiki.somakeit.org.uk/') Wiki
+              ul.nav.pull-right
+                li.active
+                  a(href='/') Members area
+
+      #main.container
+        block body
+          .row
+            .span12
+              block content
+
+      .container
+        footer
+          block footer
+            p.backtotop
+              a(href='#') Back to top
+            p
+              | &copy; #{ new Date().getFullYear() } So Make It Ltd.
+            p.legal
+              | A not-for-profit company limited by guarantee, registered in England and Wales with company number: 08442741. Registered address: 6 Irving Road, SO16 4DZ.
