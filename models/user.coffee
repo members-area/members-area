@@ -61,6 +61,7 @@ module.exports = (sequelize, DataTypes) ->
     meta:
       type: DataTypes.TEXT
       allowNull: false
+      defaultValue: JSON.stringify {}
   ,
     validate:
       addressRequired: -> # XXX: if they've a role that requires address, don't allow address to be null, etc.

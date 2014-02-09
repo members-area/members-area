@@ -9,3 +9,4 @@ module.exports = (sequelize, DataTypes) ->
     meta:
       type: DataTypes.TEXT
       allowNull: false
+      defaultValue: JSON.stringify {}
