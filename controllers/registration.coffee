@@ -17,11 +17,11 @@ module.exports = class RegistrationController extends Controller
       @errors[field].push message
 
     if @data.url?.length
-      addError 'base', 'you appear to be a spammer'
+      addError 'base', 'You appear to be a spammer'
     unless @data.terms is 'on'
-      addError 'terms', 'you must accept the terms'
+      addError 'terms', 'You must accept the terms'
     unless @data.password is @data.password2
-      addError 'password', 'passwords do not match'
+      addError 'password', 'Passwords do not match'
 
     return done() if @errors
 
@@ -30,10 +30,10 @@ module.exports = class RegistrationController extends Controller
     delete @data.password2
     user = @req.User.build @data
     user.validate().done (err, @errors) =>
-      addError 'base', 'errors occurred during validation' if err
+      addError 'base', 'Errors occurred during validation' if err
       return done() if @errors
       user.save().done (err) =>
-        addError 'base', 'could not create user' if err
+        addError 'base', 'Could not create user' if err
         return done() if @errors
         return done()
 
