@@ -51,13 +51,14 @@ class Controller
       next err unless instance.rendered
 
   constructor: (@params, @req, @res) ->
-    @view = "#{@params.controller}/#{@params.action}"
+    @templateParent ?= @params.controller
+    @template ?= @params.action
     @data = @req.body ? {}
 
   render: (done) ->
     vars = {}
     vars[k] = v for own k, v of @ when typeof k isnt 'function'
-    @res.render "#{@view}", vars, (err, html) =>
+    @res.render "#{@templateParent}/#{@template}", vars, (err, html) =>
       return done err if err
       @rendered = true
       @res.send html
