@@ -1,3 +1,4 @@
+process.env.NODE_ENV ?= "test"
 chai = require 'chai'
 expect = chai.expect
 models = require('../models')
