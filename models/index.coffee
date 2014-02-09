@@ -2,7 +2,7 @@ fs = require 'fs'
 Sequelize = require 'sequelize'
 _ = require 'underscore'
 require '../env'
-config = require '../config/config.json'
+config = require('../config/config.json')[process.env.NODE_ENV]
 
 sequelize = new Sequelize config.database, config.username, config.password, _.defaults config,
   define:
