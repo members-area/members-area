@@ -24,13 +24,14 @@ sequelize = new Sequelize config.database, config.username, config.password, _.d
 sequelize.membersMeta =
   type: Sequelize.TEXT
   allowNull: false
-  defaultValue: {}
+  defaultValue: "{}"
   get: ->
     try
       return JSON.parse @getDataValue('meta')
     catch
       return {}
   set: (v) ->
+    v = {} if v is "{}"
     throw new Error("Can only set meta to object.") unless typeof v is 'object'
     @setDataValue('meta', JSON.stringify(v))
     return
