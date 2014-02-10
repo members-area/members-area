@@ -24,7 +24,7 @@ sequelize = new Sequelize config.database, config.username, config.password, _.d
 sequelize.membersMeta =
   type: Sequelize.TEXT
   allowNull: false
-  defaultValue: JSON.stringify {}
+  defaultValue: {}
   get: ->
     try
       return JSON.parse @getDataValue('meta')
