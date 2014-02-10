@@ -15,7 +15,27 @@ module.exports = (sequelize, DataTypes) ->
     meta: sequelize.membersMeta
   ,
     tableName: 'RolesUsers'
+
+    hooks:
+      beforeCreate: (roleUser, next) ->
+        return next() if roleUser.approved?
+        role = Role.getById(roleUser.id)
+        userId = roleUser.id
+        if userId is 1 and role in [role.base, role.owner]
+          roleUser.approved = new Date()
+          return next()
+        # Should we auto-grant this role?
+        @shouldAutoApprove (autoApprove) =>
+          if autoApprove
+            roleUser.approved = new Date()
+          next()
+
     instanceMethods:
+      shouldAutoApprove: (callback) ->
+        requirements = @role.meta.requirements ? []
+        async.map requirements, @checkRequirement.bind(this), (err) ->
+          callback !err
+
       checkRequirement: (requirement, callback) ->
         models = require('./')
         switch requirement.type
