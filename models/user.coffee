@@ -62,3 +62,8 @@ module.exports = (sequelize, DataTypes) ->
   ,
     validate:
       addressRequired: -> # XXX: if they've a role that requires address, don't allow address to be null, etc.
+    instanceMethods:
+      hasActiveRole: (roleId, callback) ->
+        roleId = roleId.id if typeof roleId is 'object'
+        @getRoles(where: ["id = ? AND rejected IS NULL AND accepted IS NOT NULL", roleId]).done (err, roles) ->
+          callback (err || roles?.length < 1)
