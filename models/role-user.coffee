@@ -12,9 +12,6 @@ module.exports = (sequelize, DataTypes) ->
       type: DataTypes.TEXT
       allowNull: true
 
-    meta:
-      type: DataTypes.TEXT
-      allowNull: false
-      defaultValue: JSON.stringify {}
+    meta: sequelize.membersMeta
   ,
     tableName: 'RolesUsers'

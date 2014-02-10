@@ -9,6 +9,20 @@ sequelize = new Sequelize config.database, config.username, config.password, _.d
     charset: 'utf8'
     collate: 'utf8_general_ci'
 
+sequelize.membersMeta =
+  type: Sequelize.TEXT
+  allowNull: false
+  defaultValue: JSON.stringify {}
+  get: ->
+    try
+      return JSON.parse @getDataValue('meta')
+    catch
+      return {}
+  set: (v) ->
+    throw new Error("Can only set meta to object.") unless typeof v is 'object'
+    @setDataValue('meta', JSON.stringify(v))
+    return
+
 exports.sequelize = sequelize
 
 fs.readdirSync(__dirname).forEach (filename) ->

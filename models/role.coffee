@@ -6,7 +6,4 @@ module.exports = (sequelize, DataTypes) ->
       unique: true
       validate: {isEmail:true}
 
-    meta:
-      type: DataTypes.TEXT
-      allowNull: false
-      defaultValue: JSON.stringify {}
+    meta: sequelize.membersMeta
