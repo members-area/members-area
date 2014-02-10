@@ -7,3 +7,4 @@ models = require('../models')
 chai.Assertion.includeStack = true
 
 module.exports = {chai, expect, models}
+module.exports[k] ?= v for k, v of models

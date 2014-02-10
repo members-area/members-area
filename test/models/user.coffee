@@ -1,6 +1,4 @@
-{expect, models} = require '../test_helper'
-
-{User} = models
+{User, expect, models} = require '../test_helper'
 
 describe User.name, ->
   describe 'validations', ->
