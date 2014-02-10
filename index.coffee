@@ -76,4 +76,9 @@ start = ->
     # TCP socket
     listen port
 
-start()
+require('./models').Role.loadAll (err, roles) ->
+  if err
+    console.error "Error loading roles:", err
+    process.exit 1
+  app.roles = roles
+  start()
