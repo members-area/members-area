@@ -3,11 +3,23 @@ Sequelize = require 'sequelize'
 _ = require 'underscore'
 require '../env'
 config = require('../config/config.json')[process.env.NODE_ENV]
+async = require('async')
 
 sequelize = new Sequelize config.database, config.username, config.password, _.defaults config,
   define:
     charset: 'utf8'
     collate: 'utf8_general_ci'
+    classMethods:
+      seed: (callback) ->
+        @count().done (err, count) =>
+          return callback err if err
+          return callback() if count > 0
+          # No data, so seed away.
+          return callback() unless @seedData
+          console.log "Seeding #{model.name}"
+          create = (entry, done) =>
+            @create(entry).done done
+          async.mapSeries @seedData, create, callback
 
 sequelize.membersMeta =
   type: Sequelize.TEXT

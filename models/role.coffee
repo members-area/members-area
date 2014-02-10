@@ -8,3 +8,18 @@ module.exports = (sequelize, DataTypes) ->
         isAlphanumeric: true
 
     meta: sequelize.membersMeta
+  ,
+    classMethods:
+      seedData: [
+        {
+          name: "Registered"
+          meta:
+            base: true
+            grants: ['usage']
+        }
+        {
+          name: "Owner"
+          meta:
+            owner: true
+        }
+      ]

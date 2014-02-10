@@ -9,6 +9,7 @@
   "scripts": {
     "rollback": "./node_modules/.bin/sequelize -u",
     "migrate": "./node_modules/.bin/sequelize -m",
+    "seed": "./node_modules/.bin/coffee seed.coffee",
     "test": "mocha test"
   },
   "repository": {

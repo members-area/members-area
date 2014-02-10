@@ -111,3 +111,9 @@ Fields
 ------
 
  - name: string
+
+Meta
+----
+
+ - base: true if this is the basic role
+ - owner: true if this is the owner role
