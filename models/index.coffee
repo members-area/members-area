@@ -50,4 +50,7 @@ exports.middleware = -> (req, res, next) ->
   next()
 
 exports.User.hasMany exports.RoleUser
+exports.RoleUser.belongsTo exports.User
+
 exports.Role.hasMany exports.RoleUser
+exports.RoleUser.belongsTo exports.Role
