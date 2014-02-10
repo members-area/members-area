@@ -36,4 +36,9 @@ module.exports = (sequelize, DataTypes) ->
               roles.owner ?= role
           return callback new Error("No base role") unless roles.base
           return callback new Error("No owner role") unless roles.owner
-          return callback null, roles
+          @roles = roles
+          return callback null, @roles
+      getById: (id) ->
+        @roles ?= []
+        return role for role in @roles when role.id is id
+        return null
