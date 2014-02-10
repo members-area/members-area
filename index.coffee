@@ -49,28 +49,31 @@ listen = (port) ->
       fs.chmod port, '0666'
     app.logger.info "Express server listening on port " + port
 
-port = app.get('port')
-if typeof port is 'string'
-  # Unix socket - see if it's in use
-  socket = new net.Socket
-  socket.on 'connect', ->
-    app.logger.error "Socket in use"
-    process.exit 1
-  socket.on 'error', (err) ->
-    if err?.code is 'ECONNREFUSED'
-      # No-one's listening
-      fs.unlink port, (err) ->
-        if err
-          app.logger.error "Couldn't delete old socket."
-          process.exit 1
-        app.logger.info "Liberated unused socket."
-        listen port
-    else if err?.code is 'ENOENT'
-      listen port
-    else
-      app.logger.error "Could not listen on socket '#{port}': #{err}"
+start = ->
+  port = app.get('port')
+  if typeof port is 'string'
+    # Unix socket - see if it's in use
+    socket = new net.Socket
+    socket.on 'connect', ->
+      app.logger.error "Socket in use"
       process.exit 1
-  socket.connect port
-else
-  # TCP socket
-  listen port
+    socket.on 'error', (err) ->
+      if err?.code is 'ECONNREFUSED'
+        # No-one's listening
+        fs.unlink port, (err) ->
+          if err
+            app.logger.error "Couldn't delete old socket."
+            process.exit 1
+          app.logger.info "Liberated unused socket."
+          listen port
+      else if err?.code is 'ENOENT'
+        listen port
+      else
+        app.logger.error "Could not listen on socket '#{port}': #{err}"
+        process.exit 1
+    socket.connect port
+  else
+    # TCP socket
+    listen port
+
+start()
