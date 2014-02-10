@@ -117,3 +117,30 @@ Meta
 
  - base: true if this is the basic role
  - owner: true if this is the owner role
+ - requirements: array of requirements
+ - grants: array of permissions (strings)
+
+### Requirements
+
+#### type: text
+
+These are just listed, they're ignored by the system.
+
+ - text: string
+
+#### type: role
+
+The user must already have this role.
+
+ - roleId: integer
+
+#### type: approval
+
+The user must be approved by [count] members who have role [roleId].
+
+ - roleId: integer
+ - count: integer
+
+### Permissions
+
+ - 'usage': able to log in, etc.

@@ -19,7 +19,7 @@ Fields
 Meta fields
 -----------
 
- - approvals, array of `{userId, role}` of people who approved this
+ - approvals, array of `{userId, roleId}` of people who approved this
 
 [Users]: users.md
 [Roles]: roles.md
