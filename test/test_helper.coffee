@@ -109,5 +109,12 @@ app.__defineGetter__ 'roles', ->
   app._roles = roles
   return roles
 
-module.exports = {app, chai, expect, models, sinon, Sequelize}
+catchErrors = (done, fn) ->
+  return ->
+    try
+      fn.call @, arguments
+    catch e
+      done(e)
+
+module.exports = {app, catchErrors, chai, expect, models, sinon, Sequelize}
 module.exports[k] ?= v for k, v of models
