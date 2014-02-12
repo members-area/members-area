@@ -111,6 +111,22 @@ app.__defineGetter__ 'roles', ->
   app._roles = roles
   return roles
 
+reqres = (callback) ->
+  req = new http.IncomingMessage
+  res = new http.ServerResponse req
+  # Apply middleware
+  req.app = app
+  middlewares = [
+    require('../logging')(req.app)
+    require('../http-error')()
+    require('../models').middleware()
+  ]
+  iterator = (middleware, done) ->
+    middleware(req, res, done)
+  async.mapSeries middlewares, iterator, ->
+    callback req, res
+  return
+
 catchErrors = (done, fn) ->
   return ->
     try
@@ -118,5 +134,5 @@ catchErrors = (done, fn) ->
     catch e
       done(e)
 
-module.exports = {app, catchErrors, chai, expect, models, sinon, Sequelize}
+module.exports = {app, catchErrors, chai, expect, models, reqres, sinon, Sequelize}
 module.exports[k] ?= v for k, v of models
