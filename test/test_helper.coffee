@@ -7,6 +7,8 @@ chai = require 'chai'
 expect = chai.expect
 sinon = require 'sinon'
 
+process.chdir "#{__dirname}/.."
+
 config = require('../config/config.json')[process.env.NODE_ENV]
 try
   fs.unlinkSync config.storage
