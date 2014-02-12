@@ -22,6 +22,9 @@ app.set 'view engine', 'jade'
 app.use express.static(path.join(__dirname, 'public'))
 app.use express.favicon(path.join(__dirname, 'public', 'img', 'favicon.png'))
 
+app.use (req, res, next) ->
+  req.app = app
+  next()
 app.use require('./logging')(app)
 app.use require('./stylus')()
 app.use require('./http-error')()
