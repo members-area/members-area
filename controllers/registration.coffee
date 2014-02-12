@@ -32,11 +32,24 @@ module.exports = class RegistrationController extends Controller
     user.validate().done (err, @errors) =>
       addError 'base', 'Errors occurred during validation' if err
       return done() if @errors
-      user.save().done (err) =>
-        addError 'base', 'Could not create user' if err
-        return done() if @errors
-        @template = "success"
-        return done()
+      @req.sequelize.transaction (t) =>
+        user.save(transaction: t).done (err) =>
+          if err
+            console.dir err
+            addError 'base', 'Could not create user'
+            return t.rollback()
+          # Request base role.
+          roles = [@req.app.roles.base]
+          if user.id is 1
+            roles.push [@req.app.roles.owner]
+          user.requestRoles roles, {transaction: t}, (err) =>
+            if err
+              console.error err
+              addError 'base', 'Could not apply for registration'
+              return t.rollback()
+            @template = "success"
+            return t.commit()
+        t.done done
 
   # ---------------
 
