@@ -10,6 +10,7 @@
   },
   "test": {
     "coffee": true,
+    "logging": false,
     "dialect": "sqlite",
     "storage": "./members-test.sqlite",
     "username": null,
