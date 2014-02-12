@@ -1,3 +1,4 @@
+require('source-map-support').install()
 process.env.NODE_ENV ?= "test"
 fs = require 'fs'
 http = require 'http'
