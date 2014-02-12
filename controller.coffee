@@ -45,7 +45,7 @@ class Controller
         fn.call instance, done
       else
         fn.call instance
-        done()
+        process.nextTick done
 
     async.eachSeries array, run, (err) =>
       next err unless instance.rendered
