@@ -79,9 +79,12 @@ start = ->
     # TCP socket
     listen port
 
-require('./models').Role.loadAll (err, roles) ->
-  if err
-    console.error "Error loading roles:", err
-    process.exit 1
-  app.roles = roles
-  start()
+if require.main is module
+  require('./models').Role.loadAll (err, roles) ->
+    if err
+      console.error "Error loading roles:", err
+      process.exit 1
+    app.roles = roles
+    start()
+
+module.exports = app
