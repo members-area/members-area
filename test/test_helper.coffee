@@ -1,5 +1,9 @@
 require('source-map-support').install()
-process.env.NODE_ENV ?= "test"
+process.env.NODE_ENV ?= 'test'
+if process.env.NODE_ENV isnt 'test'
+  console.error "Aborting test because environment is wrong: #{process.env.NODE_ENV}"
+  process.exit 1
+process.env.NODE_ENV = "test"
 fs = require 'fs'
 http = require 'http'
 async = require 'async'
