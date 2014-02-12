@@ -6,17 +6,13 @@ async = require 'async'
 chai = require 'chai'
 expect = chai.expect
 sinon = require 'sinon'
-
-process.chdir "#{__dirname}/.."
-
-config = require('../config/config.json')[process.env.NODE_ENV]
-try
-  fs.unlinkSync config.storage
-
 models = require('../models')
 Sequelize = require 'sequelize'
 
-models.sequelize.sync()
+before (done) ->
+  models.sequelize.sync(force:true).done done
+
+process.chdir "#{__dirname}/.."
 
 # Why would you not want this?!
 chai.Assertion.includeStack = true
