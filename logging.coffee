@@ -5,9 +5,10 @@ express = require 'express'
 try
   fs.mkdirSync 'log'
 
-winston.remove winston.transports.Console
+try winston.remove winston.transports.Console
+try winston.remove winston.transports.File
 winston.add winston.transports.Console, timestamp: true, colorize: true if process.env.NODE_ENV is 'development'
-winston.add winston.transports.File, {filename: "log/winston-#{process.env.NODE_ENV}.log", maxsize: 50000000, maxFiles: 8, level: 'warn'}
+winston.add winston.transports.File, {filename: "log/winston-#{process.env.NODE_ENV}.log", maxsize: 50000000, maxFiles: 8, level: 'warn'} unless process.env.NODE_ENV is 'test'
 winston.handleExceptions new winston.transports.File {filename: "log/crash-#{process.env.NODE_ENV}.log"}
 
 module.exports = (app) ->
@@ -44,4 +45,5 @@ module.exports = (app) ->
   return (req, res, next) ->
     winstonMiddleware req, res, (err) ->
       return next.apply null, arguments if err
+      return next() if process.env.NODE_ENV is 'test'
       loggerMiddleware req, res, next
