@@ -1,4 +1,6 @@
+async = require 'async'
 bcrypt = require 'bcrypt'
+models = require './'
 
 disallowedUsernameRegexps = [
   /master$/i
@@ -67,3 +69,18 @@ module.exports = (sequelize, DataTypes) ->
         roleId = roleId.id if typeof roleId is 'object'
         @getRoles(where: ["id = ? AND rejected IS NULL AND accepted IS NOT NULL", roleId]).done (err, roles) ->
           callback (err || roles?.length < 1)
+
+      requestRoles: (roles, options, callback) ->
+        if typeof options is 'function'
+          callback = options
+          options = null
+        options ?= {}
+        user = @
+        request = (role, done) ->
+          data =
+            UserId: user.id
+            RoleId: role.id
+          models.RoleUser.create(data, options).done (err) ->
+            done err
+
+        async.mapSeries roles, request, callback
