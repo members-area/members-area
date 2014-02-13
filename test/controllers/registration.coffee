@@ -31,7 +31,9 @@ describe 'RegistrationController', ->
     registerWith data, done, (err) ->
       return done err if err
       expect(@template).to.eql "success"
-      models.User.getLast().done (err, user) ->
+      models.User.getLast().done catchErrors done, (err, user) ->
+        return done err if err
+        expect(user.meta.verified).to.not.exist
         user.getActiveRoles().done catchErrors done, (err, roles) ->
           return done err if err
           expect(roles).to.have.length(2)
@@ -50,7 +52,9 @@ describe 'RegistrationController', ->
     registerWith data, done, (err) ->
       return done err if err
       expect(@template).to.eql "success"
-      models.User.getLast().done (err, user) ->
+      models.User.getLast().done catchErrors done, (err, user) ->
+        return done err if err
+        expect(user.meta.verified).to.not.exist
         user.getActiveRoles().done catchErrors done, (err, roles) ->
           return done err if err
           expect(roles).to.have.length(0)
