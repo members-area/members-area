@@ -128,11 +128,18 @@ reqres = (callback) ->
   return
 
 catchErrors = (done, fn) ->
-  return ->
+  worker = ->
     try
       fn.apply this, arguments
     catch e
       done(e)
+  switch fn.length
+    when 0 then return worker
+    when 1 then return (a) -> worker.apply this, arguments
+    when 2 then return (a, b) -> worker.apply this, arguments
+    when 3 then return (a, b, c) -> worker.apply this, arguments
+    when 4 then return (a, b, c, d) -> worker.apply this, arguments
+    else return (a, b, c, d, e) -> worker.apply this, arguments
 
 module.exports = {app, catchErrors, chai, expect, models, reqres, sinon, Sequelize}
 module.exports[k] ?= v for k, v of models
