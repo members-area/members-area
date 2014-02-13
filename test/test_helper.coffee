@@ -130,7 +130,7 @@ reqres = (callback) ->
 catchErrors = (done, fn) ->
   return ->
     try
-      fn.call @, arguments
+      fn.apply this, arguments
     catch e
       done(e)
 
