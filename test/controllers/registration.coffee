@@ -1,4 +1,4 @@
-{catchErrors, expect, reqres, sinon} = require '../test_helper'
+{catchErrors, expect, reqres, sinon, User} = require '../test_helper'
 RegistrationController = require '../../controllers/registration'
 
 registerWith = (data, done, callback) ->
@@ -28,7 +28,12 @@ describe 'RegistrationController', ->
     registerWith data, done, (err) ->
       return done err if err
       expect(@template).to.eql "success"
-      done()
+      User.getLast().done (err, user) ->
+        user.getActiveRoles().done catchErrors done, (err, roles) ->
+          return done err if err
+          expect(roles).to.have.length(2)
+          expect([roles[0].name, roles[1].name].sort()).to.eql ['Friend', 'Trustee']
+          done()
 
   it 'requires passwords to match', (done) ->
     data =

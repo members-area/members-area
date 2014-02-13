@@ -22,9 +22,9 @@ module.exports = (sequelize, DataTypes) ->
     hooks:
       beforeCreate: (roleUser, next) ->
         return next() if roleUser.approved?
-        role = models.Role.getById(roleUser.id)
-        userId = roleUser.id
-        if userId is 1 and role in [role.base, role.owner]
+        role = models.Role.getById(roleUser.RoleId)
+        userId = roleUser.UserId
+        if userId is 1 and role in [models.Role.roles.base, models.Role.roles.owner]
           roleUser.approved = new Date()
           return next()
         # Should we auto-grant this role?

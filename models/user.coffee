@@ -74,6 +74,19 @@ module.exports = (sequelize, DataTypes) ->
             emitter.emit 'success', (err || roles?.length < 1)
         return promise.run()
 
+      getActiveRoles: ->
+        promise = new Sequelize.Utils.CustomEventEmitter (emitter) =>
+          models.RoleUser.findAll(
+            where: ["approved IS NOT NULL AND rejected IS NULL AND UserId = ?", @id]
+          ).done (err, roleUsers) =>
+            return emitter.emit 'error', err if err
+            roles = []
+            for roleUser in roleUsers
+              role = models.Role.getById(roleUser.RoleId)
+              roles.push role if role
+            emitter.emit 'success', roles
+        return promise.run()
+
       requestRoles: (roles, options = {}) ->
         promise = new Sequelize.Utils.CustomEventEmitter (emitter) =>
           user = @
