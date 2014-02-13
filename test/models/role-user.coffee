@@ -26,7 +26,7 @@ describe RoleUser.name, ->
   describe 'requirements', ->
     it 'passes text', (done) ->
       roleUser = RoleUser.build()
-      roleUser.checkRequirement {type: 'text', text: 'Arbitrary'}, (err) ->
+      roleUser._checkRequirement {type: 'text', text: 'Arbitrary'}, (err) ->
         expect(err).to.not.exist
         done()
 
@@ -41,7 +41,7 @@ describe RoleUser.name, ->
         promise = new Sequelize.Utils.CustomEventEmitter (emitter) =>
           emitter.emit 'success', @user
         return promise.run()
-      roleUser.checkRequirement {type: 'role', roleId: @role.id}, catchErrors done, (err) =>
+      roleUser._checkRequirement {type: 'role', roleId: @role.id}, catchErrors done, (err) =>
         expect(err).to.not.exist
         @user.hasActiveRole.restore()
         done()
@@ -57,7 +57,7 @@ describe RoleUser.name, ->
         promise = new Sequelize.Utils.CustomEventEmitter (emitter) =>
           emitter.emit 'success', @user
         return promise.run()
-      roleUser.checkRequirement {type: 'role', roleId: @role.id}, (err) =>
+      roleUser._checkRequirement {type: 'role', roleId: @role.id}, (err) =>
         expect(err).to.exist
         @user.hasActiveRole.restore()
         done()

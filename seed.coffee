@@ -2,7 +2,7 @@ async = require 'async'
 models = (model for name, model of require('./models') when name.match /^[A-Z]/)
 
 seed = (model, callback) ->
-  model.seed callback
+  model._seed callback
 
 done = (err) ->
   if err

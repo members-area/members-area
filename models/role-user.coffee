@@ -28,20 +28,20 @@ module.exports = (sequelize, DataTypes) ->
           roleUser.approved = new Date()
           return next()
         # Should we auto-grant this role?
-        roleUser.shouldAutoApprove (autoApprove) =>
+        roleUser._shouldAutoApprove (autoApprove) =>
           if autoApprove
             roleUser.approved = new Date()
           next()
 
     instanceMethods:
-      shouldAutoApprove: (callback) ->
+      _shouldAutoApprove: (callback) ->
         role = models.Role.getById(@RoleId)
         return callback new Error("Not found") unless role
         requirements = role.meta.requirements ? []
-        async.map requirements, @checkRequirement.bind(this), (err) ->
+        async.map requirements, @_checkRequirement.bind(this), (err) ->
           callback !err
 
-      checkRequirement: (requirement, callback) ->
+      _checkRequirement: (requirement, callback) ->
         models = require('./')
         switch requirement.type
           when 'text'

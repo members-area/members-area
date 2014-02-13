@@ -10,7 +10,7 @@ sequelize = new Sequelize config.database, config.username, config.password, _.d
     charset: 'utf8'
     collate: 'utf8_general_ci'
     classMethods:
-      seed: (callback) ->
+      _seed: (callback) ->
         @count().done (err, count) =>
           return callback err if err
           return callback() if count > 0
