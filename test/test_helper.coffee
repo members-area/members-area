@@ -27,7 +27,7 @@ app.__defineGetter__ 'roles', ->
   Role = models.Role
   baseRole = Role.build
     id: 1
-    name: 'Base'
+    name: 'Friend'
   friendRole = baseRole
   supporterRole = Role.build
     id: 2
