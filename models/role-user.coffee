@@ -50,8 +50,8 @@ module.exports = (sequelize, DataTypes) ->
             # models.User.find(@UserId).done
             @getUser().done (err, user) =>
               return callback "Error #{err} #{@UserId} #{user}" if err or !user?
-              user.hasActiveRole models.Role.getById(requirement.roleId), (hasRole) ->
-                return callback "Nope" unless hasRole
+              user.hasActiveRole(models.Role.getById(requirement.roleId)).done (err, hasRole = false) ->
+                return callback new Error "Nope" unless hasRole
                 callback()
           when 'approval'
             {roleId, count} = requirement
