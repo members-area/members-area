@@ -20,6 +20,10 @@ sequelize = new Sequelize config.database, config.username, config.password, _.d
           create = (entry, done) =>
             @create(entry).done done
           async.mapSeries @seedData, create, callback
+      getLast: ->
+        @find
+          order: [['id', 'DESC']]
+          limit: 1
 
 sequelize.membersMeta =
   type: Sequelize.TEXT
