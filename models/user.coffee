@@ -57,7 +57,7 @@ module.exports = (sequelize, DataTypes) ->
         hasMultipleLines: (value) -> throw "Must have multiple lines" unless /(\n|,)/.test(value)
         hasPostcode: (value) -> throw "Must have valid postcode" unless /(GIR 0AA)|((([A-Z][0-9][0-9]?)|(([A-Z][A-Z][0-9][0-9]?)|(([A-Z][0-9][A-HJKSTUW])|([A-Z][A-Z][0-9][ABEHMNPRVWXY])))) ?[0-9][A-Z]{2})/i.test(value)
 
-    approved:
+    verified:
       type: DataTypes.DATE
       allowNull: true
 

@@ -36,7 +36,7 @@ module.exports =
         type: DataTypes.TEXT
         allowNull: true
 
-      approved:
+      verified:
         type: DataTypes.DATE
         allowNull: true
 
