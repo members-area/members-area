@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) ->
         }
       ]
       loadAll: ->
-        promise = new CustomEventEmitter (emitter) =>
+        promise = new Sequelize.Utils.CustomEventEmitter (emitter) =>
           @findAll().complete (err, roles) =>
             return emitter.emit 'error', err if err
             return emitter.emit 'error', new Error("No roles") unless roles?.length
