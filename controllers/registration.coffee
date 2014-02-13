@@ -42,7 +42,7 @@ module.exports = class RegistrationController extends Controller
           roles = [@req.app.roles.base]
           if user.id is 1
             roles.push [@req.app.roles.owner]
-          user.requestRoles roles, {transaction: t}, (err) =>
+          user.requestRoles(roles, {transaction: t}).done (err) =>
             if err
               console.error err
               addError 'base', 'Could not apply for registration'

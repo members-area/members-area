@@ -1,3 +1,4 @@
+Sequelize = require 'sequelize'
 async = require 'async'
 bcrypt = require 'bcrypt'
 models = require './'
@@ -73,17 +74,17 @@ module.exports = (sequelize, DataTypes) ->
             emitter.emit 'success', (err || roles?.length < 1)
         return promise.run()
 
-      requestRoles: (roles, options, callback) ->
-        if typeof options is 'function'
-          callback = options
-          options = null
-        options ?= {}
-        user = @
-        request = (role, done) ->
-          data =
-            UserId: user.id
-            RoleId: role.id
-          models.RoleUser.create(data, options).done (err) ->
-            done err
+      requestRoles: (roles, options = {}) ->
+        promise = new Sequelize.Utils.CustomEventEmitter (emitter) =>
+          user = @
+          request = (role, done) ->
+            data =
+              UserId: user.id
+              RoleId: role.id
+            models.RoleUser.create(data, options).done (err) ->
+              done err
 
-        async.mapSeries roles, request, callback
+          async.mapSeries roles, request, (err, result) ->
+            return emitter.emit 'error', err if err
+            emitter.emit 'success'
+        return promise.run()
