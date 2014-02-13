@@ -1,4 +1,4 @@
-{catchErrors, expect, reqres, sinon, User} = require '../test_helper'
+{catchErrors, expect, reqres, sinon, models} = require '../test_helper'
 RegistrationController = require '../../controllers/registration'
 
 registerWith = (data, done, callback) ->
@@ -16,7 +16,10 @@ registerWith = (data, done, callback) ->
       done new Error("Didn't render?")
 
 describe 'RegistrationController', ->
-  it 'enables registration', (done) ->
+  before (done) ->
+    models.sequelize.sync(force:true).done done
+
+  it 'grants first user base and owner roles automatically', (done) ->
     data =
       fullname: 'Southampton Makerspace'
       email: 'example@example.com'
@@ -28,11 +31,29 @@ describe 'RegistrationController', ->
     registerWith data, done, (err) ->
       return done err if err
       expect(@template).to.eql "success"
-      User.getLast().done (err, user) ->
+      models.User.getLast().done (err, user) ->
         user.getActiveRoles().done catchErrors done, (err, roles) ->
           return done err if err
           expect(roles).to.have.length(2)
           expect([roles[0].name, roles[1].name].sort()).to.eql ['Friend', 'Trustee']
+          done()
+
+  it 'requires approval for further users', (done) ->
+    data =
+      fullname: 'User Two'
+      email: 'user2@example.com'
+      username: 'User2'
+      address: 'Unit K6, Pitt Road, Southampton, SO15 3FQ'
+      password:  's3kr17??'
+      password2: 's3kr17??'
+      terms: 'on'
+    registerWith data, done, (err) ->
+      return done err if err
+      expect(@template).to.eql "success"
+      models.User.getLast().done (err, user) ->
+        user.getActiveRoles().done catchErrors done, (err, roles) ->
+          return done err if err
+          expect(roles).to.have.length(0)
           done()
 
   it 'requires passwords to match', (done) ->
