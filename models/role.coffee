@@ -1,3 +1,5 @@
+Sequelize = require 'sequelize'
+
 module.exports = (sequelize, DataTypes) ->
   return sequelize.define 'Role',
     name:
@@ -23,21 +25,23 @@ module.exports = (sequelize, DataTypes) ->
             owner: true
         }
       ]
-      loadAll: (callback) ->
-        @findAll().complete (err, roles) ->
-          return callback err if err
-          return callback new Error("No roles") unless roles?.length
-          roles.base = null
-          roles.owner = null
-          for role in roles ? []
-            if role.meta.base
-              roles.base ?= role
-            else if role.meta.owner
-              roles.owner ?= role
-          return callback new Error("No base role") unless roles.base
-          return callback new Error("No owner role") unless roles.owner
-          @roles = roles
-          return callback null, @roles
+      loadAll: ->
+        promise = new CustomEventEmitter (emitter) =>
+          @findAll().complete (err, roles) =>
+            return emitter.emit 'error', err if err
+            return emitter.emit 'error', new Error("No roles") unless roles?.length
+            roles.base = null
+            roles.owner = null
+            for role in roles ? []
+              if role.meta.base
+                roles.base ?= role
+              else if role.meta.owner
+                roles.owner ?= role
+            return emitter.emit 'error', new Error("No base role") unless roles.base
+            return emitter.emit 'error', new Error("No owner role") unless roles.owner
+            @roles = roles
+            return emitter.emit 'success', @roles
+        return promise.run()
       getById: (id) ->
         @roles ?= []
         return role for role in @roles when role.id is id

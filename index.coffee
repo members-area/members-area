@@ -80,7 +80,7 @@ start = ->
     listen port
 
 if require.main is module
-  require('./models').Role.loadAll (err, roles) ->
+  require('./models').Role.loadAll().done (err, roles) ->
     if err
       console.error "Error loading roles:", err
       process.exit 1
