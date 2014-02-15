@@ -13,13 +13,13 @@ Fields
  - roleId
  - approved: date, optional
  - rejected: date, optional
- - rejectionReason: string, optional
  - meta: JSON
 
 Meta fields
 -----------
 
  - approvals, array of `{userId, roleId}` of people who approved this
+ - rejectionReason: string
 
 [Users]: users.md
 [Roles]: roles.md
