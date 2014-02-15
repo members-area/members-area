@@ -6,8 +6,6 @@ fs = require 'fs'
 net = require 'net'
 require './env' # Fix/load/check environmental variables
 
-process.chdir __dirname
-
 makeIntegerIfPossible = (str) ->
   return parseInt(str, 10) if str?.match?(/^[0-9]+$/)
   str

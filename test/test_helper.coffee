@@ -3,20 +3,18 @@ process.env.NODE_ENV ?= 'test'
 if process.env.NODE_ENV isnt 'test'
   console.error "Aborting test because environment is wrong: #{process.env.NODE_ENV}"
   process.exit 1
-process.env.NODE_ENV = "test"
 fs = require 'fs'
 http = require 'http'
 async = require 'async'
 chai = require 'chai'
 expect = chai.expect
 sinon = require 'sinon'
+require '../env'
 models = require('../models')
 Sequelize = require 'sequelize'
 
 before (done) ->
   models.sequelize.sync(force:true).done done
-
-process.chdir "#{__dirname}/.."
 
 # Why would you not want this?!
 chai.Assertion.includeStack = true
