@@ -1,26 +1,46 @@
 async = require 'async'
-models = require('./')
 
-module.exports = (sequelize, DataTypes) ->
-  return sequelize.define 'RoleUser',
+module.exports = (db, models) ->
+  RoleUser = db.define 'role_user', {
+    id:
+      type: 'number'
+      serial: true
+      required: true
+      primary: true
+
+    role_id:
+      type: 'number'
+      required: true
+
+    user_id:
+      type: 'number'
+      required: true
+
     approved:
-      type: DataTypes.DATE
-      allowNull: true
+      type: 'date'
+      required: false
 
     rejected:
-      type: DataTypes.DATE
-      allowNull: true
+      type: 'date'
+      required: false
 
-    rejectionReason:
-      type: DataTypes.TEXT
-      allowNull: true
+    meta:
+      type: 'object'
+      required: true
 
-    meta: sequelize.membersMeta
-  ,
-    tableName: 'RolesUsers'
+    createdAt:
+      type: 'date'
+      required: true
+      time: true
 
-    hooks:
-      beforeCreate: (roleUser, next) ->
+    updatedAt:
+      type: 'date'
+      required: true
+      time: true
+  },
+    _hooks:
+      beforeCreate: (next) ->
+        roleUser = @
         return next() if roleUser.approved?
         role = models.Role.getById(roleUser.RoleId)
         userId = roleUser.UserId
@@ -33,7 +53,7 @@ module.exports = (sequelize, DataTypes) ->
             roleUser.approved = new Date()
           next()
 
-    instanceMethods:
+    _methods:
       _shouldAutoApprove: (callback) ->
         role = models.Role.getById(@RoleId)
         return callback new Error("Not found") unless role
@@ -65,3 +85,6 @@ module.exports = (sequelize, DataTypes) ->
             console.error "Requirement type '#{requirement.type}' not known."
             process.nextTick ->
               callback "Unknown"
+
+  RoleUser.modelName = 'RoleUser'
+  return RoleUser
