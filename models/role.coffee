@@ -22,12 +22,14 @@ module.exports = (db, models) ->
 
   Role.seedData = [
     {
+      id: 1
       name: "Registered"
       meta:
         base: true
         grants: ['usage']
     }
     {
+      id: 2
       name: "Owner"
       meta:
         owner: true

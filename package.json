@@ -7,9 +7,9 @@
     "doc": "docs"
   },
   "scripts": {
-    "rollback": "./node_modules/.bin/sequelize -u",
-    "migrate": "./node_modules/.bin/sequelize -m",
+    "migrate": "./scripts/db/migrate",
     "seed": "./node_modules/.bin/coffee seed.coffee",
+    "setup": "npm run migrate; npm run seed",
     "test": "mocha test"
   },
   "repository": {
