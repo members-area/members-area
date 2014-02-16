@@ -20,15 +20,16 @@ groupErrors = (errors) ->
 applyCommonClassMethods = (klass) ->
   methods =
     _seed: (callback) ->
-      @count().done (err, count) =>
+      @count (err, count) =>
         return callback err if err
         return callback() if count > 0
         # No data, so seed away.
         return callback() unless @seedData
-        console.log "Seeding #{model.name}"
+        console.log "Seeding #{@modelName}"
         create = (entry, done) =>
-          @create(entry).done done
+          @create entry, done
         async.mapSeries @seedData, create, callback
+
     getLast: (callback) ->
       @find()
       .order('-id')

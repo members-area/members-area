@@ -1,14 +1,20 @@
 async = require 'async'
-models = (model for name, model of require('./models') when name.match /^[A-Z]/)
+require './env'
 
-seed = (model, callback) ->
-  model._seed callback
+require('orm').connect process.env.DATABASE_URL, (err, db) ->
+  throw err if err
+  require('./models') db, (err, models) ->
+    throw err if err
+    models = (model for name, model of models when name.match /^[A-Z]/)
 
-done = (err) ->
-  if err
-    console.error "Error:", err
-    process.exit 1
-  else
-    console.log "All done"
+    seed = (model, callback) ->
+      model._seed callback
 
-async.mapSeries models, seed, done
+    done = (err) ->
+      if err
+        console.error "Error:", err
+        process.exit 1
+      else
+        console.log "All done"
+
+    async.mapSeries models, seed, done
