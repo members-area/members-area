@@ -45,7 +45,7 @@ module.exports = (db, models) ->
             roleUser.approved = new Date()
           next()
 
-    _methods:
+    methods:
       _shouldAutoApprove: (callback) ->
         role = models.Role.getById(@RoleId)
         return callback new Error("Not found") unless role
@@ -60,9 +60,10 @@ module.exports = (db, models) ->
             process.nextTick callback
           when 'role'
             # models.User.find(@UserId).done
-            @getUser().done (err, user) =>
-              return callback "Error #{err} #{@UserId} #{user}" if err or !user?
-              user.hasActiveRole(models.Role.getById(requirement.roleId)).done (err, hasRole = false) ->
+            @getUser (err, user) =>
+              return callback err if err
+              return callback new Error "User not found" unless user?
+              user.hasActiveRole requirement.roleId, (hasRole = false) ->
                 return callback new Error "Nope" unless hasRole
                 callback()
           when 'approval'

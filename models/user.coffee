@@ -57,14 +57,11 @@ module.exports = (db, models) ->
   },
     timestamp: true
     hooks: db.applyCommonHooks {}
-    _methods:
-      hasActiveRole: (roleId) ->
-        promise = new Sequelize.Utils.CustomEventEmitter (emitter) =>
-          roleId = roleId.id if typeof roleId is 'object'
-          @getRoles(where: ["id = ? AND rejected IS NULL AND accepted IS NOT NULL", roleId]).done (err, roles) ->
-            return emitter.emit 'error', err if err
-            emitter.emit 'success', (err || roles?.length < 1)
-        return promise.run()
+    methods:
+      hasActiveRole: (roleId, callback) ->
+        roleId = roleId.id if typeof roleId is 'object'
+        @getRoleUsers {where: ["id = ? AND rejected IS NULL AND accepted IS NOT NULL", roleId]}, (err, roles) ->
+          callback (err || roles?.length < 1)
 
       getActiveRoles: ->
         promise = new Sequelize.Utils.CustomEventEmitter (emitter) =>
