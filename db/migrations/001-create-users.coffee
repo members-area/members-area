@@ -7,7 +7,6 @@ module.exports =
         type: 'number'
         serial: true
         required: true
-        primary: true
 
       email:
         type: 'text'
@@ -55,12 +54,12 @@ module.exports =
         time: true
 
     emailIndex =
-      table: 'users'
+      table: 'user'
       columns: ['email']
       unique: true
 
     usernameIndex =
-      table: 'users'
+      table: 'user'
       columns: ['username']
       unique: true
 
@@ -68,7 +67,11 @@ module.exports =
       createTable: (next) => @createTable 'user', columns, next
       addEmailIndex: (next) => @addIndex 'user_email_idx', emailIndex, next
       addUsernameIndex: (next) => @addIndex 'user_username_idx', usernameIndex, next
-    , done
+    , (err) ->
+      console.dir err if err
+      done err
 
   down: (done) ->
-    @dropTable 'user', done
+    @dropTable 'user', (err) ->
+      console.dir err if err
+      done err

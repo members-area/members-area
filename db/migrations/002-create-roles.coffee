@@ -7,7 +7,6 @@ module.exports =
         type: 'number'
         required: true
         serial: true
-        primary: true
 
       name:
         type: 'text'
@@ -35,7 +34,11 @@ module.exports =
     async.series
       createTable: (next) => @createTable 'role', columns, next
       addNameIndex: (next) => @addIndex 'role_name_idx', nameIndex, next
-    , done
+    , (err) ->
+      console.dir err if err
+      done err
 
   down: (done) ->
-    @dropTable 'role', done
+    @dropTable 'role', (err) ->
+      console.dir err if err
+      done err

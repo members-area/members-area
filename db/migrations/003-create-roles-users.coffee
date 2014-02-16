@@ -7,7 +7,6 @@ module.exports =
         type: 'number'
         serial: true
         required: true
-        primary: true
 
       role_id:
         type: 'number'
@@ -41,13 +40,17 @@ module.exports =
 
     roleUserIndex =
       table: 'role_user'
-      columns: ['user', 'role']
+      columns: ['user_id', 'role_id']
       unique: false
 
     async.series
       createTable: (next) => @createTable 'role_user', columns, next
       addRoleUserIndex: (next) => @addIndex 'role_user_ref_idx', roleUserIndex, next
-    , done
+    , (err) ->
+      console.dir err if err
+      done err
 
   down: (done) ->
-    @dropTable 'role_user', done
+    @dropTable 'role_user', (err) ->
+      console.dir err if err
+      done err
