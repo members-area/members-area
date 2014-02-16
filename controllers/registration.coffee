@@ -25,9 +25,7 @@ module.exports = class RegistrationController extends Controller
 
     return done() if @errors
 
-    delete @data.url
-    delete @data.terms
-    delete @data.password2
+    @data = @makeSafe @data
     @req.db.transaction (err, t) =>
       return done err if err
       @req.models.User.create @data, (err, user) =>
@@ -59,3 +57,8 @@ module.exports = class RegistrationController extends Controller
 
   requireNotLoggedIn: ->
     @redirectTo "/" if @req.user?
+
+  makeSafe: (data) ->
+    newData = {}
+    newData[k] = String(v) for k, v of data when k in ['email', 'username', 'password', 'fullname', 'address']
+    return newData
