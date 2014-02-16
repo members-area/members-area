@@ -28,7 +28,7 @@ module.exports = (db, models) ->
       required: true
       defaultValue: {}
   },
-    timestamps: true
+    timestamp: true
     hooks: db.applyCommonHooks {}
     _hooks:
       beforeCreate: (next) ->

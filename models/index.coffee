@@ -39,16 +39,14 @@ applyCommonClassMethods = (klass) ->
 getModelsForConnection = (db, done) ->
   db.use orm_timestamps,
     createdProperty: 'createdAt'
-    modifiedProperty: 'modifiedAt'
+    modifiedProperty: 'updatedAt'
     dbtype: {type: 'date', time: true}
     now: -> new Date()
     persist: true
 
   db.applyCommonHooks = (hooks = {}) ->
-    hooks.beforeValidation ?= []
-    hooks.beforeValidation.push ->
-      @updatedAt = new Date()
     return hooks
+
   fs.readdir __dirname, (err, files) ->
     models = {}
     files.forEach (filename) ->
