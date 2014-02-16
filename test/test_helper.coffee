@@ -49,16 +49,16 @@ chai.Assertion.includeStack = true
 
 app.__defineGetter__ 'roles', ->
   return app._roles if app._roles
+middlewares = [
+  require('../logging')(app)
+  require('../http-error')()
+  require('../models').middleware()
+]
 reqres = (callback) ->
   req = new http.IncomingMessage
   res = new http.ServerResponse req
   # Apply middleware
   req.app = app
-  middlewares = [
-    require('../logging')(req.app)
-    require('../http-error')()
-    require('../models').middleware()
-  ]
   iterator = (middleware, done) ->
     middleware(req, res, done)
   async.mapSeries middlewares, iterator, ->
