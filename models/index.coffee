@@ -79,9 +79,11 @@ getModelsForConnection = (db, done) ->
     done null, models
 
 module.exports = getModelsForConnection
+expressMiddleware = null # Prevent double initialisation
 module.exports.middleware = ->
-  orm.express process.env.DATABASE_URL,
+  expressMiddleware ?= orm.express process.env.DATABASE_URL,
     define: (db, models, next) ->
       getModelsForConnection db, (err, _models) ->
         models[k] = v for own k, v of _models
         next()
+  return expressMiddleware
