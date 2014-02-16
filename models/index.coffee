@@ -57,8 +57,8 @@ getModelsForConnection = (db, done) ->
       applyCommonClassMethods model
       models[model.modelName] = model
 
-    models.RoleUser.hasOne 'user', models.User
-    models.RoleUser.hasOne 'role', models.Role
+    models.RoleUser.hasOne 'user', models.User, reverse: 'roleUsers'
+    models.RoleUser.hasOne 'role', models.Role, reverse: 'roleUsers'
 
     done null, models
 
