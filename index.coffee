@@ -77,7 +77,20 @@ start = ->
     # TCP socket
     listen port
 
+checkRoles = ->
+  require('orm').connect process.env.DATABASE_URL, (err, db) ->
+    throw err if err
+    require('./models') db, (err, models) ->
+      throw err if err
+      models.Role.find (err, roles) ->
+        throw err if err
+        for role in roles ? []
+          hasBase = true if role.id is 1
+          hasOwner = true if role.id is 2
+        throw new Error("Required role is missing, try 'npm run setup'") unless hasBase and hasOwner
+        db.close start
+
 if require.main is module
-  start()
+  checkRoles()
 
 module.exports = app
