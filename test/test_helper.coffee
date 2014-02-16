@@ -41,6 +41,9 @@ before (done) ->
         next()
   , done
 
+after ->
+  @_db.close()
+
 # Why would you not want this?!
 chai.Assertion.includeStack = true
 
