@@ -8,6 +8,15 @@ orm_transaction = require 'orm-transaction'
 orm.settings.set 'instance.returnAllErrors', false
 orm.settings.set 'properties.required', false
 
+groupErrors = (errors) ->
+  errors = [errors] if typeof errors is 'object'
+  return null unless errors?.length
+  obj = {}
+  for error in errors ? []
+    obj[error.property] ?= []
+    obj[error.property].push error
+  return obj
+
 applyCommonClassMethods = (klass) ->
   methods =
     _seed: (callback) ->
@@ -25,17 +34,19 @@ applyCommonClassMethods = (klass) ->
         order: [['id', 'DESC']]
         limit: 1
 
-    groupErrors: (errors) ->
-      errors = [errors] if typeof errors is 'object'
-      return null unless errors?.length
-      obj = {}
-      for error in errors ? []
-        obj[error.property] ?= []
-        obj[error.property].push error
-      return obj
+    groupErrors: groupErrors
 
   for k, v of methods
     klass[k] = v
+
+validateAndGroup = (name, properties, opts) ->
+  opts.methods ?= {}
+  opts.methods.groupErrors = groupErrors
+  opts.methods.validateAndGroup = (callback) ->
+    @validate (err, errors) =>
+      return callback err if err
+      errors = @groupErrors errors
+      callback err, errors
 
 getModelsForConnection = (db, done) ->
   db.use orm_timestamps,
@@ -46,6 +57,8 @@ getModelsForConnection = (db, done) ->
     persist: true
 
   db.use orm_transaction
+
+  db.use (db, opts) -> {beforeDefine: validateAndGroup}
 
   db.applyCommonHooks = (hooks = {}) ->
     return hooks
