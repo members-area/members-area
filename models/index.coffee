@@ -3,6 +3,7 @@ require '../env'
 async = require 'async'
 orm = require 'orm'
 orm_timestamps = require 'orm-timestamps'
+orm_transaction = require 'orm-transaction'
 
 orm.settings.set 'instance.returnAllErrors', false
 orm.settings.set 'properties.required', false
@@ -43,6 +44,8 @@ getModelsForConnection = (db, done) ->
     dbtype: {type: 'date', time: true}
     now: -> new Date()
     persist: true
+
+  db.use orm_transaction
 
   db.applyCommonHooks = (hooks = {}) ->
     return hooks
