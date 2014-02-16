@@ -65,13 +65,8 @@ reqres = (callback) ->
     callback req, res
   return
 
-catchErrors = (done, fn) ->
-  worker = ->
-    try
-      fn.apply this, arguments
-    catch e
-      done(e)
-  switch fn.length
+workerWithArity = (worker, arity) ->
+  switch arity
     when 0 then return worker
     when 1 then return (a) -> worker.apply this, arguments
     when 2 then return (a, b) -> worker.apply this, arguments
@@ -79,4 +74,18 @@ catchErrors = (done, fn) ->
     when 4 then return (a, b, c, d) -> worker.apply this, arguments
     else return (a, b, c, d, e) -> worker.apply this, arguments
 
-module.exports = {app, catchErrors, chai, expect, getModelsForConnection, reqres, sinon}
+catchErrors = (done, fn) ->
+  worker = ->
+    try
+      fn.apply this, arguments
+    catch e
+      done(e)
+  return workerWithArity worker, fn.length
+
+stub = (obj, method, worker) ->
+  oldMethod = obj[method]
+  obj[method] = workerWithArity worker, oldMethod.length
+  obj[method].restore = ->
+    obj[method] = oldMethod
+
+module.exports = {app, catchErrors, chai, expect, getModelsForConnection, reqres, sinon, stub}
