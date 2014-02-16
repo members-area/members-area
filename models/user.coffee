@@ -1,5 +1,6 @@
 async = require 'async'
 bcrypt = require 'bcrypt'
+orm = require 'orm'
 
 disallowedUsernameRegexps = [
   /master$/i
@@ -17,7 +18,6 @@ module.exports = (db, models) ->
     id:
       type: 'number'
       serial: true
-      required: true
       primary: true
 
     email:
@@ -53,17 +53,21 @@ module.exports = (db, models) ->
     meta:
       type: 'object'
       required: true
+      defaultValue: {}
 
     createdAt:
       type: 'date'
       required: true
       time: true
+      defaultValue: -> new Date()
 
     updatedAt:
       type: 'date'
       required: true
       time: true
+      defaultValue: -> new Date()
   },
+    hooks: db.applyCommonHooks {}
     _methods:
       hasActiveRole: (roleId) ->
         promise = new Sequelize.Utils.CustomEventEmitter (emitter) =>
@@ -101,23 +105,27 @@ module.exports = (db, models) ->
             emitter.emit 'success'
         return promise.run()
 
-    _validations:
-      email:
-        isEmail: true
-      username:
-        len: {args: [3,14], msg: "Must be between 3 and 14 characters"}
-        isAlphanumeric: (value) -> throw "Must be alphanumeric" unless /^[a-z0-9]*$/i.test value
-        startsWithLetter: (value) -> throw "Must start with a letter" unless /^[a-z]/i.test value
-        isDisallowed: (value) -> throw "Disallowed username" for regexp in disallowedUsernameRegexps when regexp.test value
-      password:
-        len: {args: [6, 9999], msg: "Must be at least 6 characters"}
-      fullname:
-        isName: (value) -> throw "Invalid name" unless /^.+ .+$/.test value
-      address:
-        len: {args: [8, 999], msg: "Too short"}
-        hasMultipleLines: (value) -> throw "Must have multiple lines" unless /(\n|,)/.test(value)
-        hasPostcode: (value) -> throw "Must have valid postcode" unless /(GIR 0AA)|((([A-Z][0-9][0-9]?)|(([A-Z][A-Z][0-9][0-9]?)|(([A-Z][0-9][A-HJKSTUW])|([A-Z][A-Z][0-9][ABEHMNPRVWXY])))) ?[0-9][A-Z]{2})/i.test(value)
-        addressRequired: -> # XXX: if they've a role that requires address, don't allow address to be null, etc.
+    validations:
+      email: [
+        orm.enforce.patterns.email()
+      ]
+      username: [
+        orm.enforce.ranges.length(3, 14, "Must be between 3 and 14 characters")
+        orm.enforce.patterns.match(/^[a-z]/i, null, "Must start with a letter")
+        orm.enforce.patterns.match(/^[a-z0-9]*$/i, null, "Must be alphanumeric")
+        orm.enforce.lists.outside(disallowedUsernameRegexps, "Disallowed username")
+      ]
+      password: [
+        orm.enforce.security.password('8', 'Must contain at least 8 characters.')
+      ]
+      fullname: [
+        orm.enforce.patterns.match(/.+ .+$/, "Invalid full name")
+      ]
+      address: [
+        orm.enforce.ranges.length(8, undefined, "Too short")
+        orm.enforce.patterns.match(/(\n|,)/, null, "Must have multiple lines")
+        orm.enforce.patterns.match(/(GIR 0AA)|((([A-Z][0-9][0-9]?)|(([A-Z][A-Z][0-9][0-9]?)|(([A-Z][0-9][A-HJKSTUW])|([A-Z][A-Z][0-9][ABEHMNPRVWXY])))) ?[0-9][A-Z]{2})/i, null, "Must have a valid postcode")
+      ]
 
   User.modelName = 'User'
   return User

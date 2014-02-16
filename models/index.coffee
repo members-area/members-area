@@ -3,6 +3,9 @@ require '../env'
 async = require 'async'
 orm = require 'orm'
 
+orm.settings.set 'instance.returnAllErrors', false
+orm.settings.set 'properties.required', false
+
 applyCommonClassMethods = (klass) ->
   methods =
     _seed: (callback) ->
@@ -19,10 +22,25 @@ applyCommonClassMethods = (klass) ->
       @find
         order: [['id', 'DESC']]
         limit: 1
+
+    groupErrors: (errors) ->
+      errors = [errors] if typeof errors is 'object'
+      return null unless errors?.length
+      obj = {}
+      for error in errors ? []
+        obj[error.property] ?= []
+        obj[error.property].push error
+      return obj
+
   for k, v of methods
     klass[k] = v
 
 getModelsForConnection = (db, done) ->
+  db.applyCommonHooks = (hooks = {}) ->
+    hooks.beforeValidation ?= []
+    hooks.beforeValidation.push ->
+      @updatedAt = new Date()
+    return hooks
   fs.readdir __dirname, (err, files) ->
     models = {}
     files.forEach (filename) ->
