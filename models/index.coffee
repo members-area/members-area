@@ -29,10 +29,12 @@ applyCommonClassMethods = (klass) ->
         create = (entry, done) =>
           @create(entry).done done
         async.mapSeries @seedData, create, callback
-    getLast: ->
-      @find
-        order: [['id', 'DESC']]
-        limit: 1
+    getLast: (callback) ->
+      @find()
+      .order('-id')
+      .limit(1)
+      .run (err, models) ->
+        callback err, models?[0]
 
     groupErrors: groupErrors
 
@@ -79,11 +81,10 @@ getModelsForConnection = (db, done) ->
     done null, models
 
 module.exports = getModelsForConnection
-expressMiddleware = null # Prevent double initialisation
-module.exports.middleware = ->
-  expressMiddleware ?= orm.express process.env.DATABASE_URL,
-    define: (db, models, next) ->
-      getModelsForConnection db, (err, _models) ->
-        models[k] = v for own k, v of _models
-        next()
-  return expressMiddleware
+module.exports.middleware = -> (req, res, next) ->
+  orm.connect process.env.DATABASE_URL, (err, db) ->
+    return next err if err
+    req.db = db
+    getModelsForConnection db, (err, _models) ->
+      req.models = _models
+      next()

@@ -29,29 +29,30 @@ module.exports = (db, models) ->
       defaultValue: {}
   },
     timestamp: true
-    hooks: db.applyCommonHooks {}
-    _hooks:
+    hooks: db.applyCommonHooks
       beforeCreate: (next) ->
-        roleUser = @
-        return next() if roleUser.approved?
-        role = models.Role.getById(roleUser.RoleId)
-        userId = roleUser.UserId
-        if userId is 1 and role in [models.Role.roles.base, models.Role.roles.owner]
-          roleUser.approved = new Date()
-          return next()
-        # Should we auto-grant this role?
-        roleUser._shouldAutoApprove (autoApprove) =>
-          if autoApprove
-            roleUser.approved = new Date()
-          next()
+        return next() if @approved?
+        @getRole (err, role) =>
+          return next err if err
+          userId = @user_id
+          baseRoleId = 1
+          ownerRoleId = 2
+          if userId is 1 and role.id in [baseRoleId, ownerRoleId]
+            @approved = new Date()
+            return next()
+          # Should we auto-grant this role?
+          @_shouldAutoApprove (autoApprove) =>
+            if autoApprove
+              @approved = new Date()
+            next()
 
     methods:
       _shouldAutoApprove: (callback) ->
-        role = models.Role.getById(@RoleId)
-        return callback new Error("Not found") unless role
-        requirements = role.meta.requirements ? []
-        async.map requirements, @_checkRequirement.bind(this), (err) ->
-          callback !err
+        @getRole (err, role) =>
+          return callback false unless role
+          requirements = role.meta.requirements ? []
+          async.map requirements, @_checkRequirement.bind(this), (err) ->
+            callback !err
 
       _checkRequirement: (requirement, callback) ->
         models = require('./')
@@ -59,7 +60,6 @@ module.exports = (db, models) ->
           when 'text'
             process.nextTick callback
           when 'role'
-            # models.User.find(@UserId).done
             @getUser (err, user) =>
               return callback err if err
               return callback new Error "User not found" unless user?

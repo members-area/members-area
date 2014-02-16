@@ -60,36 +60,35 @@ module.exports = (db, models) ->
     methods:
       hasActiveRole: (roleId, callback) ->
         roleId = roleId.id if typeof roleId is 'object'
-        @getRoleUsers {where: ["id = ? AND rejected IS NULL AND accepted IS NOT NULL", roleId]}, (err, roles) ->
+        @getRoleUsers()
+        .where("id = ? AND rejected IS NULL AND accepted IS NOT NULL", [roleId])
+        .run (err, roles) ->
           callback (err || roles?.length < 1)
 
-      getActiveRoles: ->
-        promise = new Sequelize.Utils.CustomEventEmitter (emitter) =>
-          models.RoleUser.findAll(
-            where: ["approved IS NOT NULL AND rejected IS NULL AND UserId = ?", @id]
-          ).done (err, roleUsers) =>
-            return emitter.emit 'error', err if err
-            roles = []
-            for roleUser in roleUsers
-              role = models.Role.getById(roleUser.RoleId)
-              roles.push role if role
-            emitter.emit 'success', roles
-        return promise.run()
+      getActiveRoles: (callback) ->
+        models.RoleUser.find()
+        .where("approved IS NOT NULL AND rejected IS NULL AND user_id = ?", [@id])
+        .run (err, roleUsers) =>
+          return callback err if err
+          roleIds = (roleUser.role_id for roleUser in roleUsers)
+          if roleIds.length
+            models.Role.find {id:roleIds}, callback
+          else
+            callback null, []
 
-      requestRoles: (roles, options = {}) ->
-        promise = new Sequelize.Utils.CustomEventEmitter (emitter) =>
-          user = @
-          request = (role, done) ->
-            data =
-              UserId: user.id
-              RoleId: role.id
-            models.RoleUser.create(data, options).done (err) ->
-              done err
+      requestRoles: (roles, callback) ->
+        user_id = @id
+        request = (role_id, done) ->
+          # XXX: prevent requesting the same role twice
+          role_id = role_id.id if typeof role_id is 'object'
+          data =
+            user_id: user_id
+            role_id: role_id
+          models.RoleUser.create data, done
 
-          async.mapSeries roles, request, (err, result) ->
-            return emitter.emit 'error', err if err
-            emitter.emit 'success'
-        return promise.run()
+        async.mapSeries roles, request, (err, result) ->
+          return callback err if err
+          callback()
 
     validations:
       email: [
