@@ -2,7 +2,6 @@ module.exports = (db, models) ->
   Role = db.define 'role', {
     id:
       type: 'number'
-      required: true
       serial: true
       primary: true
 
@@ -13,17 +12,21 @@ module.exports = (db, models) ->
     meta:
       type: 'object'
       required: true
+      defaultValue: {}
 
     createdAt:
       type: 'date'
       required: true
       time: true
+      defaultValue: -> new Date()
 
     updatedAt:
       type: 'date'
       required: true
       time: true
+      defaultValue: -> new Date()
   },
+    hooks: db.applyCommonHooks {}
     _validations:
       name:
         isAlphanumeric: true

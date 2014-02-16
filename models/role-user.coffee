@@ -5,7 +5,6 @@ module.exports = (db, models) ->
     id:
       type: 'number'
       serial: true
-      required: true
       primary: true
 
     role_id:
@@ -27,17 +26,21 @@ module.exports = (db, models) ->
     meta:
       type: 'object'
       required: true
+      defaultValue: {}
 
     createdAt:
       type: 'date'
       required: true
       time: true
+      defaultValue: -> new Date()
 
     updatedAt:
       type: 'date'
       required: true
       time: true
+      defaultValue: -> new Date()
   },
+    hooks: db.applyCommonHooks {}
     _hooks:
       beforeCreate: (next) ->
         roleUser = @
