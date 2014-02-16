@@ -1,7 +1,6 @@
-Sequelize = require 'sequelize'
 async = require 'async'
 bcrypt = require 'bcrypt'
-models = require './'
+orm = require 'orm'
 
 disallowedUsernameRegexps = [
   /master$/i
@@ -14,90 +13,104 @@ disallowedUsernameRegexps = [
   /^(admin|join|social|info|queries)$/i
 ]
 
-module.exports = (sequelize, DataTypes) ->
-  return sequelize.define 'User',
+module.exports = (db, models) ->
+  User = db.define 'user', {
+    id:
+      type: 'number'
+      serial: true
+      primary: true
+
     email:
-      type: DataTypes.STRING
-      allowNull: false
-      unique: true
-      validate:
-        isEmail: true
+      type: 'text'
+      required: true
 
     username:
-      type: DataTypes.STRING
-      allowNull: false
-      unique: true
-      validate:
-        len: {args: [3,14], msg: "Must be between 3 and 14 characters"}
-        isAlphanumeric: (value) -> throw "Must be alphanumeric" unless /^[a-z0-9]*$/i.test value
-        startsWithLetter: (value) -> throw "Must start with a letter" unless /^[a-z]/i.test value
-        isDisallowed: (value) -> throw "Disallowed username" for regexp in disallowedUsernameRegexps when regexp.test value
+      type: 'text'
+      required: true
 
     password:
-      type: DataTypes.STRING
-      allowNull: false
-      validate:
-        len: {args: [6, 9999], msg: "Must be at least 6 characters"}
+      type: 'text'
+      required: true
 
     paidUntil:
-      type: DataTypes.DATE
-      allowNull: true
+      type: 'date'
+      required: false
+      time: false
 
     fullname:
-      type: DataTypes.STRING
-      allowNull: true
-      validate:
-        isName: (value) -> throw "Invalid name" unless /^.+ .+$/.test value
+      type: 'text'
+      required: false
 
     address:
-      type: DataTypes.TEXT
-      allowNull: true
-      validate:
-        len: {args: [8, 999], msg: "Too short"}
-        hasMultipleLines: (value) -> throw "Must have multiple lines" unless /(\n|,)/.test(value)
-        hasPostcode: (value) -> throw "Must have valid postcode" unless /(GIR 0AA)|((([A-Z][0-9][0-9]?)|(([A-Z][A-Z][0-9][0-9]?)|(([A-Z][0-9][A-HJKSTUW])|([A-Z][A-Z][0-9][ABEHMNPRVWXY])))) ?[0-9][A-Z]{2})/i.test(value)
+      type: 'text'
+      required: false
 
     verified:
-      type: DataTypes.DATE
-      allowNull: true
+      type: 'date'
+      required: false
+      time: true
 
-    meta: sequelize.membersMeta
-  ,
-    validate:
-      addressRequired: -> # XXX: if they've a role that requires address, don't allow address to be null, etc.
-    instanceMethods:
-      hasActiveRole: (roleId) ->
-        promise = new Sequelize.Utils.CustomEventEmitter (emitter) =>
-          roleId = roleId.id if typeof roleId is 'object'
-          @getRoles(where: ["id = ? AND rejected IS NULL AND accepted IS NOT NULL", roleId]).done (err, roles) ->
-            return emitter.emit 'error', err if err
-            emitter.emit 'success', (err || roles?.length < 1)
-        return promise.run()
+    meta:
+      type: 'object'
+      required: true
+      defaultValue: {}
+  },
+    timestamp: true
+    hooks: db.applyCommonHooks {}
+    methods:
+      hasActiveRole: (roleId, callback) ->
+        roleId = roleId.id if typeof roleId is 'object'
+        @getRoleUsers()
+        .where("id = ? AND rejected IS NULL AND accepted IS NOT NULL", [roleId])
+        .run (err, roles) ->
+          callback (err || roles?.length < 1)
 
-      getActiveRoles: ->
-        promise = new Sequelize.Utils.CustomEventEmitter (emitter) =>
-          models.RoleUser.findAll(
-            where: ["approved IS NOT NULL AND rejected IS NULL AND UserId = ?", @id]
-          ).done (err, roleUsers) =>
-            return emitter.emit 'error', err if err
-            roles = []
-            for roleUser in roleUsers
-              role = models.Role.getById(roleUser.RoleId)
-              roles.push role if role
-            emitter.emit 'success', roles
-        return promise.run()
+      getActiveRoles: (callback) ->
+        models.RoleUser.find()
+        .where("approved IS NOT NULL AND rejected IS NULL AND user_id = ?", [@id])
+        .run (err, roleUsers) =>
+          return callback err if err
+          roleIds = (roleUser.role_id for roleUser in roleUsers)
+          if roleIds.length
+            models.Role.find {id:roleIds}, callback
+          else
+            callback null, []
 
-      requestRoles: (roles, options = {}) ->
-        promise = new Sequelize.Utils.CustomEventEmitter (emitter) =>
-          user = @
-          request = (role, done) ->
-            data =
-              UserId: user.id
-              RoleId: role.id
-            models.RoleUser.create(data, options).done (err) ->
-              done err
+      requestRoles: (roles, callback) ->
+        user_id = @id
+        request = (role_id, done) ->
+          # XXX: prevent requesting the same role twice
+          role_id = role_id.id if typeof role_id is 'object'
+          data =
+            user_id: user_id
+            role_id: role_id
+          models.RoleUser.create data, done
 
-          async.mapSeries roles, request, (err, result) ->
-            return emitter.emit 'error', err if err
-            emitter.emit 'success'
-        return promise.run()
+        async.mapSeries roles, request, (err, result) ->
+          return callback err if err
+          callback()
+
+    validations:
+      email: [
+        orm.enforce.patterns.email()
+      ]
+      username: [
+        orm.enforce.ranges.length(3, 14, "Must be between 3 and 14 characters")
+        orm.enforce.patterns.match(/^[a-z]/i, null, "Must start with a letter")
+        orm.enforce.patterns.match(/^[a-z0-9]*$/i, null, "Must be alphanumeric")
+        orm.enforce.lists.outside(disallowedUsernameRegexps, "Disallowed username")
+      ]
+      password: [
+        orm.enforce.security.password('8', 'Must contain at least 8 characters.')
+      ]
+      fullname: [
+        orm.enforce.patterns.match(/.+ .+$/, "Invalid full name")
+      ]
+      address: [
+        orm.enforce.ranges.length(8, undefined, "Too short")
+        orm.enforce.patterns.match(/(\n|,)/, null, "Must have multiple lines")
+        orm.enforce.patterns.match(/(GIR 0AA)|((([A-Z][0-9][0-9]?)|(([A-Z][A-Z][0-9][0-9]?)|(([A-Z][0-9][A-HJKSTUW])|([A-Z][A-Z][0-9][ABEHMNPRVWXY])))) ?[0-9][A-Z]{2})/i, null, "Must have a valid postcode")
+      ]
+
+  User.modelName = 'User'
+  return User

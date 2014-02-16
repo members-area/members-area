@@ -28,28 +28,32 @@ module.exports = class RegistrationController extends Controller
     delete @data.url
     delete @data.terms
     delete @data.password2
-    user = @req.User.build @data
-    user.validate().done (err, @errors) =>
-      addError 'base', 'Errors occurred during validation' if err
-      return done() if @errors
-      @req.sequelize.transaction (t) =>
-        user.save(transaction: t).done (err) =>
+    @req.db.transaction (err, t) =>
+      return done err if err
+      @req.models.User.create @data, (err, user) =>
+        if err
+          if Array.isArray(err)
+            @errors = @req.models.User.groupErrors err
+          else
+            addError 'base', 'Errors occurred during validation'
+          return t.rollback done
+        # Request base role.
+        baseRoleId = 1
+        ownerRoleId = 2
+        roles = [baseRoleId]
+        if user.id is 1
+          roles.push ownerRoleId
+        user.requestRoles roles, (err) =>
           if err
-            console.dir err
-            addError 'base', 'Could not create user'
-            return t.rollback()
-          # Request base role.
-          roles = [@req.app.roles.base]
-          if user.id is 1
-            roles.push @req.app.roles.owner
-          user.requestRoles(roles, {transaction: t}).done (err) =>
-            if err
-              console.error err
-              addError 'base', 'Could not apply for registration'
-              return t.rollback()
+            console.error err
+            console.log err.stack
+            addError 'base', 'Could not apply for registration'
+            return t.rollback done
+          t.commit (err) =>
+            return done err if err
             @template = "success"
-            return t.commit()
-        t.done done
+            done()
+
 
   # ---------------
 

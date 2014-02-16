@@ -1,6 +1,6 @@
-{User, expect, models} = require '../test_helper'
+{expect} = require '../test_helper'
 
-describe User.name, ->
+describe "User", ->
   describe 'validations', ->
     beforeEach ->
       @data =
@@ -8,11 +8,12 @@ describe User.name, ->
         username: "Freddy"
         password: "sekrit1!"
 
-      @getErrors = (callback) ->
-        user = User.build @data
-        user.validate(user).done (err, validationErrors) ->
+      @getErrors = (callback) =>
+        user = new @_models.User @data
+        user.validate (err, errors) =>
           expect(err).to.not.exist
-          callback validationErrors
+          errors = @_models.User.groupErrors(errors)
+          callback errors
 
       @expectSuccess = (done) =>
         @getErrors (errors) ->

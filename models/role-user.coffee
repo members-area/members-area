@@ -1,45 +1,58 @@
 async = require 'async'
-models = require('./')
 
-module.exports = (sequelize, DataTypes) ->
-  return sequelize.define 'RoleUser',
+module.exports = (db, models) ->
+  RoleUser = db.define 'role_user', {
+    id:
+      type: 'number'
+      serial: true
+      primary: true
+
+    role_id:
+      type: 'number'
+      required: true
+
+    user_id:
+      type: 'number'
+      required: true
+
     approved:
-      type: DataTypes.DATE
-      allowNull: true
+      type: 'date'
+      required: false
 
     rejected:
-      type: DataTypes.DATE
-      allowNull: true
+      type: 'date'
+      required: false
 
-    rejectionReason:
-      type: DataTypes.TEXT
-      allowNull: true
+    meta:
+      type: 'object'
+      required: true
+      defaultValue: {}
+  },
+    timestamp: true
+    hooks: db.applyCommonHooks
+      beforeCreate: (next) ->
+        return next() if @approved?
+        @getRole (err, role) =>
+          return next err if err
+          userId = @user_id
+          baseRoleId = 1
+          ownerRoleId = 2
+          if userId is 1 and role.id in [baseRoleId, ownerRoleId]
+            @approved = new Date()
+            return next()
+          # Should we auto-grant this role?
+          @_shouldAutoApprove (autoApprove) =>
+            if autoApprove
+              @approved = new Date()
+            next()
 
-    meta: sequelize.membersMeta
-  ,
-    tableName: 'RolesUsers'
-
-    hooks:
-      beforeCreate: (roleUser, next) ->
-        return next() if roleUser.approved?
-        role = models.Role.getById(roleUser.RoleId)
-        userId = roleUser.UserId
-        if userId is 1 and role in [models.Role.roles.base, models.Role.roles.owner]
-          roleUser.approved = new Date()
-          return next()
-        # Should we auto-grant this role?
-        roleUser._shouldAutoApprove (autoApprove) =>
-          if autoApprove
-            roleUser.approved = new Date()
-          next()
-
-    instanceMethods:
+    methods:
       _shouldAutoApprove: (callback) ->
-        role = models.Role.getById(@RoleId)
-        return callback new Error("Not found") unless role
-        requirements = role.meta.requirements ? []
-        async.map requirements, @_checkRequirement.bind(this), (err) ->
-          callback !err
+        @getRole (err, role) =>
+          return callback false unless role
+          requirements = role.meta.requirements ? []
+          async.map requirements, @_checkRequirement.bind(this), (err) ->
+            callback !err
 
       _checkRequirement: (requirement, callback) ->
         models = require('./')
@@ -47,10 +60,10 @@ module.exports = (sequelize, DataTypes) ->
           when 'text'
             process.nextTick callback
           when 'role'
-            # models.User.find(@UserId).done
-            @getUser().done (err, user) =>
-              return callback "Error #{err} #{@UserId} #{user}" if err or !user?
-              user.hasActiveRole(models.Role.getById(requirement.roleId)).done (err, hasRole = false) ->
+            @getUser (err, user) =>
+              return callback err if err
+              return callback new Error "User not found" unless user?
+              user.hasActiveRole requirement.roleId, (hasRole = false) ->
                 return callback new Error "Nope" unless hasRole
                 callback()
           when 'approval'
@@ -65,3 +78,6 @@ module.exports = (sequelize, DataTypes) ->
             console.error "Requirement type '#{requirement.type}' not known."
             process.nextTick ->
               callback "Unknown"
+
+  RoleUser.modelName = 'RoleUser'
+  return RoleUser

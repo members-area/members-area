@@ -1,0 +1,4 @@
+#!/usr/bin/env coffee
+
+migrator = require '../../lib/migrator'
+migrator.runMigration 'generate', process.argv[2]

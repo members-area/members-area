@@ -1,4 +1,4 @@
-{catchErrors, expect, reqres, sinon, models} = require '../test_helper'
+{catchErrors, expect, reqres, stub} = require '../test_helper'
 RegistrationController = require '../../controllers/registration'
 
 registerWith = (data, done, callback) ->
@@ -8,7 +8,7 @@ registerWith = (data, done, callback) ->
       controller: 'registration'
       action: 'register'
     req.body = data
-    sinon.stub RegistrationController.prototype, "render", catchErrors done, (next) ->
+    stub RegistrationController.prototype, "render", catchErrors done, (next) ->
       RegistrationController.prototype.render.restore()
       catchErrors(done, callback).call this
     RegistrationController.handle params, req, res, ->
@@ -16,10 +16,8 @@ registerWith = (data, done, callback) ->
       done new Error("Didn't render?")
 
 describe 'RegistrationController', ->
-  before (done) ->
-    models.sequelize.sync(force:true).done done
-
   it 'grants first user base and owner roles automatically', (done) ->
+    models = @_models
     data =
       fullname: 'Southampton Makerspace'
       email: 'example@example.com'
@@ -28,19 +26,20 @@ describe 'RegistrationController', ->
       password:  's3kr17??'
       password2: 's3kr17??'
       terms: 'on'
-    registerWith data, done, (err) ->
+    registerWith.call this, data, done, (err) ->
       return done err if err
       expect(@template).to.eql "success"
-      models.User.getLast().done catchErrors done, (err, user) ->
+      models.User.getLast catchErrors done, (err, user) ->
         return done err if err
         expect(user.meta.verified).to.not.exist
-        user.getActiveRoles().done catchErrors done, (err, roles) ->
+        user.getActiveRoles catchErrors done, (err, roles) ->
           return done err if err
           expect(roles).to.have.length(2)
           expect([roles[0].name, roles[1].name].sort()).to.eql ['Friend', 'Trustee']
           done()
 
   it 'requires approval for further users', (done) ->
+    models = @_models
     data =
       fullname: 'User Two'
       email: 'user2@example.com'
@@ -52,10 +51,10 @@ describe 'RegistrationController', ->
     registerWith data, done, (err) ->
       return done err if err
       expect(@template).to.eql "success"
-      models.User.getLast().done catchErrors done, (err, user) ->
+      models.User.getLast catchErrors done, (err, user) ->
         return done err if err
         expect(user.meta.verified).to.not.exist
-        user.getActiveRoles().done catchErrors done, (err, roles) ->
+        user.getActiveRoles catchErrors done, (err, roles) ->
           return done err if err
           expect(roles).to.have.length(0)
           done()

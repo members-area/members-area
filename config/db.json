@@ -1,0 +1,4 @@
+{
+  "development": "sqlite:///members.sqlite",
+  "test": "sqlite:///members-test.sqlite"
+}

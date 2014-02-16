@@ -1,60 +1,91 @@
 fs = require 'fs'
-Sequelize = require 'sequelize'
-_ = require 'underscore'
 require '../env'
-config = require('../config/config.json')[process.env.NODE_ENV]
-async = require('async')
+async = require 'async'
+orm = require 'orm'
+orm_timestamps = require 'orm-timestamps'
+orm_transaction = require 'orm-transaction'
 
-sequelize = new Sequelize config.database, config.username, config.password, _.defaults config,
-  define:
-    charset: 'utf8'
-    collate: 'utf8_general_ci'
-    classMethods:
-      _seed: (callback) ->
-        @count().done (err, count) =>
-          return callback err if err
-          return callback() if count > 0
-          # No data, so seed away.
-          return callback() unless @seedData
-          console.log "Seeding #{model.name}"
-          create = (entry, done) =>
-            @create(entry).done done
-          async.mapSeries @seedData, create, callback
-      getLast: ->
-        @find
-          order: [['id', 'DESC']]
-          limit: 1
+orm.settings.set 'instance.returnAllErrors', false
+orm.settings.set 'properties.required', false
 
-sequelize.membersMeta =
-  type: Sequelize.TEXT
-  allowNull: false
-  defaultValue: "{}"
-  get: ->
-    try
-      return JSON.parse @getDataValue('meta')
-    catch
-      return {}
-  set: (v) ->
-    v = {} if v is "{}"
-    throw new Error("Can only set meta to object.") unless typeof v is 'object'
-    @setDataValue('meta', JSON.stringify(v))
-    return
+groupErrors = (errors) ->
+  errors = [errors] if typeof errors is 'object'
+  return null unless errors?.length
+  obj = {}
+  for error in errors ? []
+    obj[error.property] ?= []
+    obj[error.property].push error
+  return obj
 
-exports.sequelize = sequelize
+applyCommonClassMethods = (klass) ->
+  methods =
+    _seed: (callback) ->
+      @count (err, count) =>
+        return callback err if err
+        return callback() if count > 0
+        # No data, so seed away.
+        return callback() unless @seedData
+        console.log "Seeding #{@modelName}"
+        create = (entry, done) =>
+          @create entry, done
+        async.mapSeries @seedData, create, callback
 
-fs.readdirSync(__dirname).forEach (filename) ->
-  [ignore, name, ext] = filename.match /^(.*?)(?:\.(js|coffee))?$/
-  return if name is 'index' or name.substr(0,1) is '.'
-  return unless ext?.length
-  model = sequelize.import "#{__dirname}/#{name}"
-  exports[model.name] = model
+    getLast: (callback) ->
+      @find()
+      .order('-id')
+      .limit(1)
+      .run (err, models) ->
+        callback err, models?[0]
 
-exports.middleware = -> (req, res, next) ->
-  req[k] = v for own k, v of exports
-  next()
+    groupErrors: groupErrors
 
-exports.User.hasMany exports.RoleUser
-exports.RoleUser.belongsTo exports.User
+  for k, v of methods
+    klass[k] = v
 
-exports.Role.hasMany exports.RoleUser
-exports.RoleUser.belongsTo exports.Role
+validateAndGroup = (name, properties, opts) ->
+  opts.methods ?= {}
+  opts.methods.groupErrors = groupErrors
+  opts.methods.validateAndGroup = (callback) ->
+    @validate (err, errors) =>
+      return callback err if err
+      errors = @groupErrors errors
+      callback err, errors
+
+getModelsForConnection = (db, done) ->
+  db.use orm_timestamps,
+    createdProperty: 'createdAt'
+    modifiedProperty: 'updatedAt'
+    dbtype: {type: 'date', time: true}
+    now: -> new Date()
+    persist: true
+
+  db.use orm_transaction
+
+  db.use (db, opts) -> {beforeDefine: validateAndGroup}
+
+  db.applyCommonHooks = (hooks = {}) ->
+    return hooks
+
+  fs.readdir __dirname, (err, files) ->
+    models = {}
+    files.forEach (filename) ->
+      [ignore, name, ext] = filename.match /^(.*?)(?:\.(js|coffee))?$/
+      return if name is 'index' or name.substr(0,1) is '.'
+      return unless ext?.length
+      model = require("#{__dirname}/#{name}")(db, models)
+      applyCommonClassMethods model
+      models[model.modelName] = model
+
+    models.RoleUser.hasOne 'user', models.User, reverse: 'roleUsers'
+    models.RoleUser.hasOne 'role', models.Role, reverse: 'roleUsers'
+
+    done null, models
+
+module.exports = getModelsForConnection
+module.exports.middleware = -> (req, res, next) ->
+  orm.connect process.env.DATABASE_URL, (err, db) ->
+    return next err if err
+    req.db = db
+    getModelsForConnection db, (err, _models) ->
+      req.models = _models
+      next()

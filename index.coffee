@@ -6,8 +6,6 @@ fs = require 'fs'
 net = require 'net'
 require './env' # Fix/load/check environmental variables
 
-process.chdir __dirname
-
 makeIntegerIfPossible = (str) ->
   return parseInt(str, 10) if str?.match?(/^[0-9]+$/)
   str
@@ -79,12 +77,20 @@ start = ->
     # TCP socket
     listen port
 
+checkRoles = ->
+  require('orm').connect process.env.DATABASE_URL, (err, db) ->
+    throw err if err
+    require('./models') db, (err, models) ->
+      throw err if err
+      models.Role.find (err, roles) ->
+        throw err if err
+        for role in roles ? []
+          hasBase = true if role.id is 1
+          hasOwner = true if role.id is 2
+        throw new Error("Required role is missing, try 'npm run setup'") unless hasBase and hasOwner
+        db.close start
+
 if require.main is module
-  require('./models').Role.loadAll().done (err, roles) ->
-    if err
-      console.error "Error loading roles:", err
-      process.exit 1
-    app.roles = roles
-    start()
+  checkRoles()
 
 module.exports = app
