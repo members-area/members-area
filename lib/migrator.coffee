@@ -3,9 +3,9 @@ url = require 'url'
 MigrationTask = require 'migrate-orm2'
 orm = require 'orm'
 require '../env'
-{DATABASE_URL} = process.env
 
 exports.runMigration = (operation, arg, done = ->) ->
+  {DATABASE_URL} = process.env
   orm.settings.set 'connection.debug', true
   orm.connect DATABASE_URL, (err, connection) ->
     throw err if err
@@ -15,4 +15,6 @@ exports.runMigration = (operation, arg, done = ->) ->
     migrationTask = new MigrationTask connection.driver,
       dir: 'db/migrations'
       coffee: true
-    migrationTask[operation] arg, done
+    migrationTask[operation] arg, (err) ->
+      connection.close ->
+        done err
