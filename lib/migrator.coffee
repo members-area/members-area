@@ -6,7 +6,6 @@ require '../env'
 
 exports.runMigration = (operation, arg, done = ->) ->
   {DATABASE_URL} = process.env
-  orm.settings.set 'connection.debug', true
   orm.connect DATABASE_URL, (err, connection) ->
     throw err if err
     connection.on 'error', (err) ->
