@@ -2,6 +2,7 @@ fs = require 'fs'
 require '../env'
 async = require 'async'
 orm = require 'orm'
+orm_timestamps = require 'orm-timestamps'
 
 orm.settings.set 'instance.returnAllErrors', false
 orm.settings.set 'properties.required', false
@@ -36,6 +37,13 @@ applyCommonClassMethods = (klass) ->
     klass[k] = v
 
 getModelsForConnection = (db, done) ->
+  db.use orm_timestamps,
+    createdProperty: 'createdAt'
+    modifiedProperty: 'modifiedAt'
+    dbtype: {type: 'date', time: true}
+    now: -> new Date()
+    persist: true
+
   db.applyCommonHooks = (hooks = {}) ->
     hooks.beforeValidation ?= []
     hooks.beforeValidation.push ->

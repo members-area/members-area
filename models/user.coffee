@@ -54,19 +54,8 @@ module.exports = (db, models) ->
       type: 'object'
       required: true
       defaultValue: {}
-
-    createdAt:
-      type: 'date'
-      required: true
-      time: true
-      defaultValue: -> new Date()
-
-    updatedAt:
-      type: 'date'
-      required: true
-      time: true
-      defaultValue: -> new Date()
   },
+    timestamps: true
     hooks: db.applyCommonHooks {}
     _methods:
       hasActiveRole: (roleId) ->
