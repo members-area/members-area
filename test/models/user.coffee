@@ -1,4 +1,4 @@
-{expect} = require '../test_helper'
+{expect, catchErrors} = require '../test_helper'
 
 describe "User", ->
   describe 'validations', ->
@@ -6,10 +6,11 @@ describe "User", ->
       @data =
         email: "me@example.com"
         username: "Freddy"
-        password: "sekrit1!"
+      @password = "sekrit1!"
 
       @getErrors = (callback) =>
         user = new @_models.User @data
+        user.password = @password
         user.validate (err, errors) =>
           expect(err).to.not.exist
           errors = @_models.User.groupErrors(errors)
@@ -55,3 +56,18 @@ describe "User", ->
       it 'requires postcode', (done) ->
         @data.address = "1 Street Road, Townington, Shireshire"
         @expectErrors 'address', /postcode/i, done
+
+  describe 'bcrypt\'s password', ->
+    it 'bcrypts on save', (done) ->
+      user = new @_models.User
+        username: "Testing"
+        fullname: "Test Ing"
+        email: "bcrypt@example.com"
+      user.password = "MyPassword"
+      expect(user.password).to.eq "MyPassword"
+      expect(user.hashed_password).to.not.exist
+      user.save catchErrors done, (err) ->
+        expect(err).to.not.exist
+        expect(user.password).to.not.exist
+        expect(user.hashed_password).to.exist
+        done()

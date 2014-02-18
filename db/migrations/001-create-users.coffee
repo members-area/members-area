@@ -17,7 +17,7 @@ module.exports =
         type: 'text'
         required: true
 
-      password:
+      hashed_password:
         type: 'text'
         required: true
 

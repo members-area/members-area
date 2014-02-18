@@ -28,7 +28,7 @@ module.exports = (db, models) ->
       type: 'text'
       required: true
 
-    password:
+    hashed_password:
       type: 'text'
       required: true
 
@@ -56,7 +56,16 @@ module.exports = (db, models) ->
       defaultValue: {}
   },
     timestamp: true
-    hooks: db.applyCommonHooks {}
+    hooks: db.applyCommonHooks
+      beforeValidation: (done) ->
+        if @password?
+          bcrypt.hash @password, 10, (err, hash) =>
+            return done err if err
+            delete @password
+            @hashed_password = hash
+            done()
+        else
+          done()
     methods:
       hasActiveRole: (roleId, callback) ->
         roleId = roleId.id if typeof roleId is 'object'
@@ -99,9 +108,6 @@ module.exports = (db, models) ->
         orm.enforce.patterns.match(/^[a-z]/i, null, "Must start with a letter")
         orm.enforce.patterns.match(/^[a-z0-9]*$/i, null, "Must be alphanumeric")
         orm.enforce.lists.outside(disallowedUsernameRegexps, "Disallowed username")
-      ]
-      password: [
-        orm.enforce.security.password('8', 'Must contain at least 8 characters.')
       ]
       fullname: [
         orm.enforce.patterns.match(/.+ .+$/, "Invalid full name")

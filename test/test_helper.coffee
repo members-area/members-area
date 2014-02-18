@@ -17,7 +17,8 @@ roleFixtures = require './fixtures/role'
 app = require '../index'
 db = null
 before (done) ->
-  fs.unlinkSync "#{__dirname}/../members-test.sqlite"
+  try
+    fs.unlinkSync "#{__dirname}/../members-test.sqlite"
   migrator = require '../lib/migrator'
   async.series
     createDb: (next) => migrator.runMigration 'up', null, next
