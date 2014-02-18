@@ -26,13 +26,17 @@ module.exports = class RegistrationController extends Controller
     return done() if @errors
 
     @data = @makeSafe @data
+    password = @data.password
+    user = new @req.models.User @data
+    user.password = password
     @req.db.transaction (err, t) =>
       return done err if err
-      @req.models.User.create @data, (err, user) =>
+      user.save (err, user) =>
         if err
           if Array.isArray(err)
             @errors = @req.models.User.groupErrors err
           else
+            console.error err
             addError 'base', 'Errors occurred during validation'
           return t.rollback done
         # Request base role.
