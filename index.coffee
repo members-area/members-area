@@ -34,6 +34,7 @@ app.configure 'development', ->
   app.use express.errorHandler()
 app.use require('./models').middleware()
 app.use require('./passport').initialize()
+app.use require('./passport').session()
 
 require('./router')(app)
 

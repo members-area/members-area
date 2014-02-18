@@ -1,0 +1,24 @@
+extends ../layout
+
+block body
+  .row
+    .span4.offset4.login-form
+      h2 Login
+      form(action='', method='POST')
+        fieldset
+          - var controlGroupClass = (!!err ? "error" : "")
+          .control-group(class=controlGroupClass)
+            input(type='hidden', name='form', value=(typeof formName === 'undefined' ? 'login' : formName))
+            .clearfix
+              - var email = data.email || ""
+              input.text(type='text', name='username', placeholder='Username', value=data.username)
+            .clearfix
+              input.text(type='password', name='password', placeholder='Password')
+          if err
+            p.text-error Email or password incorrect
+          button.btn.btn-primary.btn-large(type='submit') Sign in
+        br
+        a.register(href="/forgot") Forgot password?
+        br
+        br
+        a.register.btn.btn-success(href="/register") Register
