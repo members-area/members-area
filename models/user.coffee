@@ -67,6 +67,9 @@ module.exports = (db, models) ->
         else
           done()
     methods:
+      checkPassword: (password, callback) ->
+        bcrypt.compare password, @hashed_password, callback
+
       hasActiveRole: (roleId, callback) ->
         roleId = roleId.id if typeof roleId is 'object'
         @getRoleUsers()

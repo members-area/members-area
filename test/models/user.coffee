@@ -70,4 +70,7 @@ describe "User", ->
         expect(err).to.not.exist
         expect(user.password).to.not.exist
         expect(user.hashed_password).to.exist
-        done()
+        user.checkPassword "MyPassword", (err, correct) ->
+          expect(err).to.not.exist
+          expect(correct).to.eq true
+          done()
