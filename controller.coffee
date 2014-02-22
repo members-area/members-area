@@ -73,12 +73,12 @@ class Controller
     @rendered = true
 
   generateNav: (done) ->
-    return done() unless @req.user
+    return done() unless @req.user?
     # XXX: Get additional nav items from plugins
     @activeNavigationId ?= "#{@templateParent}-#{@template}"
     @navigation = [
       {
-        title: @loggedInUser.fullname
+        title: @req.user.fullname
         header: true
         id: 'user'
         items: [
