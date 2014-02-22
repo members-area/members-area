@@ -33,8 +33,23 @@ html
                 li
                   a(href='http://wiki.somakeit.org.uk/') Wiki
               ul.nav.pull-right
-                li.active
-                  a(href='/') Members area
+                if loggedInUser
+                  li.active.dropdown
+                    a.dropdown-toggle(data-toggle="dropdown", data-target="#", href="/") #{loggedInUser.fullname}
+                      b.caret
+                    ul.dropdown-menu
+                      li
+                        a(href='/') Dashboard
+                      li
+                        a(href='/account') My Account
+                      li.divider
+                      li
+                        form(id="logoutform", action="/logout", method="POST")
+                          input(type="hidden", name="form", value="logout")
+                        a(href='/logout', onclick="document.getElementById('logoutform').submit(); return false") Log out
+                else
+                  li.active
+                    a(href='/') Members area
 
       #main.container
         block body
