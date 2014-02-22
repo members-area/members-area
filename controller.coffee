@@ -64,7 +64,7 @@ class Controller
       @res.send html
       done()
 
-  redirectTo: (url, {status}) ->
+  redirectTo: (url, {status} = {}) ->
     if status?
       @res.redirect status, url
     else
