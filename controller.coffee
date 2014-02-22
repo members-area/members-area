@@ -58,6 +58,7 @@ class Controller
     @title = "Members Area"
 
   render: (done) ->
+    return if @rendered
     vars = {}
     vars[k] = v for own k, v of @ when typeof k isnt 'function'
     @res.render "#{@templateParent}/#{@template}", vars, (err, html) =>
@@ -67,6 +68,7 @@ class Controller
       done()
 
   redirectTo: (url, {status} = {}) ->
+    return if @rendered
     if status?
       @res.redirect status, url
     else
