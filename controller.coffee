@@ -55,6 +55,7 @@ class Controller
     @templateParent ?= @params.controller
     @template ?= @params.action
     @data = @req.body ? {}
+    @title = "Members Area"
 
   render: (done) ->
     vars = {}
