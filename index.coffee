@@ -4,6 +4,7 @@ http = require 'http'
 path = require 'path'
 fs = require 'fs'
 net = require 'net'
+FSStore = require('./connect-fs')(express)
 require './env' # Fix/load/check environmental variables
 
 makeIntegerIfPossible = (str) ->
@@ -29,7 +30,13 @@ app.use require('./http-error')()
 app.use express.bodyParser()
 app.use express.methodOverride()
 app.use express.cookieParser(process.env.SECRET ? String(Math.random()))
-app.use express.session()
+
+sessionStore = new FSStore
+
+app.use express.session
+  secret: process.env.SECRET
+  store: sessionStore
+
 app.configure 'development', ->
   app.use express.errorHandler()
 app.use require('./models').middleware()
