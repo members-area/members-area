@@ -24,5 +24,9 @@ module.exports = class SessionController extends Controller
           done()
     passport.authenticate('local', handle)(@req, @res, @next)
 
+  logout: ->
+    @req.logout()
+    @redirectTo "/", status: 303
+
   requireNotLoggedIn: ->
     @redirectTo "/" if @req.user?
