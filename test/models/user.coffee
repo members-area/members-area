@@ -60,8 +60,8 @@ describe "User", ->
   describe 'bcrypt\'s password', ->
     it 'bcrypts on save', (done) ->
       user = new @_models.User
-        username: "Testing"
-        fullname: "Test Ing"
+        username: "BcryptTest"
+        fullname: "Bcrypt Test"
         email: "bcrypt@example.com"
       user.password = "MyPassword"
       expect(user.password).to.eq "MyPassword"
