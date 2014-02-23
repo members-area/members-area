@@ -77,7 +77,7 @@ getModelsForConnection = (db, done) ->
       models[model.modelName] = model
 
     models.RoleUser.hasOne 'user', models.User, reverse: 'roleUsers'
-    models.RoleUser.hasOne 'role', models.Role, reverse: 'roleUsers'
+    models.RoleUser.hasOne 'role', models.Role, reverse: 'roleUsers', autoFetch: true
 
     done null, models
 

@@ -1,16 +1,15 @@
 {expect, sinon, stub, catchErrors} = require '../test_helper'
 
 describe 'RoleUser', ->
-  before ->
+  before (done) ->
     @user = new @_models.User
-      id: 9324
-      email:"example@example.com"
-      username: "example"
-      password: "s3krit!!"
+      email:"roleusertest@example.com"
+      username: "roleusertest"
+    @user.password = "s3krit!!"
+    @user.save done
 
-  before ->
+  before (done) ->
     @role = new @_models.Role
-      id: 2345
       name: 'Arbitrary'
       meta:
         requirements: [
@@ -19,6 +18,7 @@ describe 'RoleUser', ->
             text: "Arbitrary"
           }
         ]
+    @role.save done
 
   describe 'requirements', ->
     it 'passes text', (done) ->
@@ -61,4 +61,18 @@ describe 'RoleUser', ->
         @user.hasActiveRole.restore()
         roleUser.getUser.restore()
         expect(err).to.exist
+        done()
+
+  describe 'autofetches', ->
+    before (done) ->
+      @roleUser = new @_models.RoleUser
+        user_id:@user.id
+        role_id:@role.id
+      @roleUser.save done
+
+    it 'role', (done) ->
+      @_models.RoleUser.get @roleUser.id, (err, roleUser) =>
+        expect(err).to.not.exist
+        expect(roleUser.role).to.exist
+        expect(roleUser.role.name).to.eq @role.name
         done()
