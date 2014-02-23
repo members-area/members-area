@@ -4,8 +4,8 @@ http = require 'http'
 path = require 'path'
 fs = require 'fs'
 net = require 'net'
-FSStore = require('./lib/connect-fs')(express)
-require './env' # Fix/load/check environmental variables
+FSStore = require('./app/lib/connect-fs')(express)
+require './app/env' # Fix/load/check environmental variables
 
 makeIntegerIfPossible = (str) ->
   return parseInt(str, 10) if str?.match?(/^[0-9]+$/)
@@ -15,7 +15,7 @@ app = express()
 
 app.set 'trust proxy', true # Required for nginx/etc
 app.set 'port', makeIntegerIfPossible(process.env.PORT) ? 1337
-app.set 'views', __dirname + '/views'
+app.set 'views', __dirname + '/app/views'
 app.set 'view engine', 'jade'
 
 app.use express.static(path.join(__dirname, 'public'))
@@ -24,9 +24,9 @@ app.use express.favicon(path.join(__dirname, 'public', 'img', 'favicon.png'))
 app.use (req, res, next) ->
   req.app = app
   next()
-app.use require('./middleware/logging')(app)
-app.use require('./middleware/stylus')()
-app.use require('./middleware/http-error')()
+app.use require('./app/middleware/logging')(app)
+app.use require('./app/middleware/stylus')()
+app.use require('./app/middleware/http-error')()
 app.use express.bodyParser()
 app.use express.methodOverride()
 app.use express.cookieParser(process.env.SECRET ? String(Math.random()))
@@ -39,11 +39,11 @@ app.use express.session
 
 app.configure 'development', ->
   app.use express.errorHandler()
-app.use require('./models').middleware()
-app.use require('./lib/passport').initialize()
-app.use require('./lib/passport').session()
+app.use require('./app/models').middleware()
+app.use require('./app/lib/passport').initialize()
+app.use require('./app/lib/passport').session()
 
-require('./router')(app)
+require('./app/router')(app)
 
 listen = (port) ->
   server = http.createServer(app)
@@ -88,7 +88,7 @@ start = ->
 checkRoles = ->
   require('orm').connect process.env.DATABASE_URL, (err, db) ->
     throw err if err
-    require('./models') db, (err, models) ->
+    require('./app/models') db, (err, models) ->
       throw err if err
       models.Role.find (err, roles) ->
         throw err if err

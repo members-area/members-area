@@ -1,4 +1,4 @@
 #!/usr/bin/env coffee
 
-migrator = require '../../lib/migrator'
+migrator = require '../../app/lib/migrator'
 migrator.runMigration 'up', process.argv[2]
