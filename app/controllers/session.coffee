@@ -1,5 +1,5 @@
 Controller = require '../controller'
-passport = require '../passport'
+passport = require '../lib/passport'
 
 module.exports = class SessionController extends Controller
   constructor: ->
