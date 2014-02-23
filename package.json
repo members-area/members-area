@@ -52,7 +52,7 @@
     "coffee-script": "~1.7.1",
     "orm-transaction": "0.0.2",
     "orm": "git://github.com/benjie/node-orm2#writable-associations",
-    "migrate-orm2": "~1.1.1",
+    "migrate-orm2": "git://github.com/benjie/node-migrate-orm2.git",
     "orm-timestamps": "~0.2.1"
   },
   "devDependencies": {

@@ -1,10 +1,12 @@
 require('source-map-support').install()
+async = require 'async'
 express = require 'express'
 http = require 'http'
 path = require 'path'
 fs = require 'fs'
 net = require 'net'
 FSStore = require('./app/lib/connect-fs')(express)
+Plugin = require './app/plugin'
 require './app/env' # Fix/load/check environmental variables
 
 makeIntegerIfPossible = (str) ->
@@ -12,6 +14,7 @@ makeIntegerIfPossible = (str) ->
   str
 
 app = express()
+app.path = __dirname
 
 app.set 'trust proxy', true # Required for nginx/etc
 app.set 'port', makeIntegerIfPossible(process.env.PORT) ? 1337
@@ -88,7 +91,7 @@ start = ->
 checkRoles = ->
   require('orm').connect process.env.DATABASE_URL, (err, db) ->
     throw err if err
-    require('./app/models') db, (err, models) ->
+    require('./app/models') app, db, (err, models) ->
       throw err if err
       models.Role.find (err, roles) ->
         throw err if err
@@ -98,7 +101,21 @@ checkRoles = ->
         throw new Error("Required role is missing, try 'npm run setup'") unless hasBase and hasOwner
         db.close start
 
+loadPlugins = ->
+  app.plugins = []
+  fs.readdir 'plugins', (err, dirs = []) ->
+    for dir in dirs
+      try
+        app.plugins.push new Plugin app, dir
+      catch e
+        console.error "Could not load '#{dir}' plugin: #{e}"
+    loadPlugin = (plugin, done) ->
+      plugin.load(done)
+    async.map app.plugins, loadPlugin, (err) ->
+      throw err if err
+      checkRoles()
+
 if require.main is module
-  checkRoles()
+  loadPlugins()
 
 module.exports = app

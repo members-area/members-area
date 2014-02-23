@@ -51,7 +51,7 @@ validateAndGroup = (name, properties, opts) ->
       errors = @groupErrors errors
       callback err, errors
 
-getModelsForConnection = (db, done) ->
+getModelsForConnection = (app, db, done) ->
   db.use orm_timestamps,
     createdProperty: 'createdAt'
     modifiedProperty: 'updatedAt'
@@ -68,24 +68,34 @@ getModelsForConnection = (db, done) ->
 
   fs.readdir __dirname, (err, files) ->
     models = {}
+    filenames = []
     files.forEach (filename) ->
       [ignore, name, ext] = filename.match /^(.*?)(?:\.(js|coffee))?$/
       return if name is 'index' or name.substr(0,1) is '.'
       return unless ext?.length
-      model = require("#{__dirname}/#{name}")(db, models)
-      applyCommonClassMethods model
-      models[model.modelName] = model
+      filenames.push "#{__dirname}/#{name}"
 
-    models.RoleUser.hasOne 'user', models.User, reverse: 'roleUsers'
-    models.RoleUser.hasOne 'role', models.Role, reverse: 'roleUsers', autoFetch: true
+    getModelFilenamesFromPlugin = (plugin, next) ->
+      plugin.modelFilenames next
 
-    done null, models
+    async.map app.plugins, getModelFilenamesFromPlugin, (err, list = []) ->
+      filenames = filenames.concat moreFilenames ? [] for moreFilenames in list
+
+      filenames.forEach (filename) ->
+        model = require(filename)(db, models)
+        applyCommonClassMethods model
+        models[model.modelName] = model
+
+      models.RoleUser.hasOne 'user', models.User, reverse: 'roleUsers'
+      models.RoleUser.hasOne 'role', models.Role, reverse: 'roleUsers', autoFetch: true
+      done null, models
+
 
 module.exports = getModelsForConnection
 module.exports.middleware = -> (req, res, next) ->
   orm.connect process.env.DATABASE_URL, (err, db) ->
     return next err if err
     req.db = db
-    getModelsForConnection db, (err, _models) ->
+    getModelsForConnection req.app, db, (err, _models) ->
       req.models = _models
       next()

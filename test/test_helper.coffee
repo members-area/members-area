@@ -27,7 +27,7 @@ before (done) ->
         @_db = _db
         next()
     setModels: (next) =>
-      getModelsForConnection @_db, (err, models) =>
+      getModelsForConnection app, @_db, (err, models) =>
         @_models = models
         next()
     generateExampleRoles: (next) =>

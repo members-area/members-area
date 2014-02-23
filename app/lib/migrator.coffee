@@ -4,7 +4,16 @@ MigrationTask = require 'migrate-orm2'
 orm = require 'orm'
 require '../env'
 
-exports.runMigration = (operation, arg, done = ->) ->
+exports.runMigration = (operation, arg, pluginName, done) ->
+  dir = 'db/migrations'
+  if typeof pluginName is 'function'
+    done = pluginName
+    pluginName = null
+  tableName = "orm_migrations"
+  if pluginName?
+    dir = "plugins/#{pluginName}/db/migrations"
+    suffix = pluginName.replace(/[^a-z]/g, "_").toLowerCase()
+    tableName += "_#{suffix}"
   {DATABASE_URL} = process.env
   orm.connect DATABASE_URL, (err, connection) ->
     throw err if err
@@ -12,7 +21,8 @@ exports.runMigration = (operation, arg, done = ->) ->
       console.error err.stack
       process.exit 1
     migrationTask = new MigrationTask connection.driver,
-      dir: 'db/migrations'
+      dir: dir
+      tableName: tableName
       coffee: true
     migrationTask[operation] arg, (err) ->
       connection.close ->
