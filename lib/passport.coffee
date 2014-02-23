@@ -8,8 +8,6 @@
 ###
 
 passport = require 'passport'
-models = require './models'
-env = require './env'
 LocalStrategy = require('passport-local').Strategy
 
 ###*

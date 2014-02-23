@@ -4,7 +4,7 @@ http = require 'http'
 path = require 'path'
 fs = require 'fs'
 net = require 'net'
-FSStore = require('./connect-fs')(express)
+FSStore = require('./lib/connect-fs')(express)
 require './env' # Fix/load/check environmental variables
 
 makeIntegerIfPossible = (str) ->
@@ -24,9 +24,9 @@ app.use express.favicon(path.join(__dirname, 'public', 'img', 'favicon.png'))
 app.use (req, res, next) ->
   req.app = app
   next()
-app.use require('./logging')(app)
-app.use require('./stylus')()
-app.use require('./http-error')()
+app.use require('./middleware/logging')(app)
+app.use require('./middleware/stylus')()
+app.use require('./middleware/http-error')()
 app.use express.bodyParser()
 app.use express.methodOverride()
 app.use express.cookieParser(process.env.SECRET ? String(Math.random()))
@@ -40,8 +40,8 @@ app.use express.session
 app.configure 'development', ->
   app.use express.errorHandler()
 app.use require('./models').middleware()
-app.use require('./passport').initialize()
-app.use require('./passport').session()
+app.use require('./lib/passport').initialize()
+app.use require('./lib/passport').session()
 
 require('./router')(app)
 
