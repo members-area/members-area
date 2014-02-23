@@ -2,7 +2,7 @@ url = require 'url'
 orm = require 'orm'
 
 # Make sure we're in the right folder.
-process.chdir __dirname
+process.chdir "#{__dirname}/.."
 
 process.env.NODE_ENV ?= 'development'
 process.env.DATABASE_URL ?= require('../config/db.json')[process.env.NODE_ENV]

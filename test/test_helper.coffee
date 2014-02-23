@@ -9,9 +9,9 @@ async = require 'async'
 chai = require 'chai'
 expect = chai.expect
 sinon = require 'sinon'
-require '../env'
+require '../app/env'
 orm = require 'orm'
-getModelsForConnection = require('../models')
+getModelsForConnection = require('../app/models')
 roleFixtures = require './fixtures/role'
 
 app = require '../index'
@@ -19,7 +19,7 @@ db = null
 before (done) ->
   try
     fs.unlinkSync "#{__dirname}/../members-test.sqlite"
-  migrator = require '../lib/migrator'
+  migrator = require '../app/lib/migrator'
   async.series
     createDb: (next) => migrator.runMigration 'up', null, next
     connectToDb: (next) =>
@@ -51,9 +51,9 @@ chai.Assertion.includeStack = true
 app.__defineGetter__ 'roles', ->
   return app._roles if app._roles
 middlewares = [
-  require('../logging')(app)
-  require('../http-error')()
-  require('../models').middleware()
+  require('../app/middleware/logging')(app)
+  require('../app/middleware/http-error')()
+  require('../app/models').middleware()
 ]
 reqres = (callback) ->
   req = new http.IncomingMessage

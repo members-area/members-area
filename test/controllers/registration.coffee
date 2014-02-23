@@ -1,5 +1,5 @@
 {catchErrors, expect, reqres, stub} = require '../test_helper'
-RegistrationController = require '../../controllers/registration'
+RegistrationController = require '../../app/controllers/registration'
 
 registerWith = (data, done, callback) ->
   reqres (req, res) ->
