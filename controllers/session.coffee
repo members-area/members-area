@@ -2,13 +2,12 @@ Controller = require '../controller'
 passport = require '../passport'
 
 module.exports = class SessionController extends Controller
-  @before 'requireNotLoggedIn'
-
   constructor: ->
     super
     @data[k] = null for k, v of @data when v is ""
 
   login: (done) ->
+    @redirectTo "/" if @req.user?
     return done() unless @req.method is 'POST'
     handle = (err, user, info) =>
       return done err if err
@@ -27,6 +26,3 @@ module.exports = class SessionController extends Controller
   logout: ->
     @req.logout()
     @redirectTo "/", status: 303
-
-  requireNotLoggedIn: ->
-    @redirectTo "/" if @req.user?
