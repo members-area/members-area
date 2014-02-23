@@ -4,5 +4,17 @@ block title
   | Dashboard
 
 block content
-  h1 Dashboard
-  p Welcome to the members' area.
+  h2 Dashboard
+  p.lead.
+    Hello #{loggedInUser.fullname}! Welcome to the So Make It members site.
+    From here you can manage your subscription, view other member profiles, and
+    find your way into our various other services. Your Member's area username
+    and password can be used to log in to the other services we offer, such as
+    the wiki and blog.
+  h4 Roles
+  p.
+    Here are the roles that you have been granted. You can apply for further
+    roles <a href="/roles">here</a>.
+  ul
+    each roleUser in loggedInUser.activeRoleUsers
+      li <strong>#{roleUser.role.name}</strong> granted on <em>#{roleUser.approved}</em>
