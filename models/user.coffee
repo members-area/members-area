@@ -66,6 +66,11 @@ module.exports = (db, models) ->
             done()
         else
           done()
+      afterAutoFetch: (done) ->
+        # Find active roles
+        return done() unless @isPersisted()
+        @getRoleUsers().where("approved IS NOT NULL AND rejected IS NULL", []).run (err, @activeRoleUsers) =>
+          done(err)
     methods:
       checkPassword: (password, callback) ->
         bcrypt.compare password, @hashed_password, callback

@@ -89,4 +89,4 @@ stub = (obj, method, worker) ->
   obj[method].restore = ->
     obj[method] = oldMethod
 
-module.exports = {app, catchErrors, chai, expect, getModelsForConnection, reqres, sinon, stub}
+module.exports = {app, async, catchErrors, chai, expect, getModelsForConnection, reqres, sinon, stub}

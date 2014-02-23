@@ -1,4 +1,4 @@
-{expect, catchErrors} = require '../test_helper'
+{async, expect, catchErrors} = require '../test_helper'
 
 describe "User", ->
   describe 'validations', ->
@@ -74,3 +74,33 @@ describe "User", ->
           expect(err).to.not.exist
           expect(correct).to.eq true
           done()
+
+  describe 'autofetching', ->
+    before (done) ->
+      @user = new @_models.User
+        username: "AutofetchTest"
+        fullname: "Autofetch Test"
+        email: "autofetch@example.com"
+      @user.password = "MyPassword"
+      @user.save done
+    before (done) ->
+      @_models.Role.create {name: 'Role1'}, (err, @role1) => done err
+    before (done) ->
+      @_models.Role.create {name: 'Role2'}, (err, @role2) => done err
+    before (done) ->
+      roleIds = [@role1.id, @role2.id]
+      createRoleUser = (roleId, next) =>
+        data =
+          user_id: @user.id
+          role_id: roleId
+          approved: new Date()
+        @_models.RoleUser.create data, next
+      async.map roleIds, createRoleUser, done
+
+    it 'autofetches active roles', (done) ->
+      @_models.User.get @user.id, (err, user) =>
+        expect(err).to.not.exist
+        expect(user.id).to.eq @user.id
+        expect(user.activeRoleUsers).to.be.an 'array'
+        expect(user.activeRoleUsers.length).to.eq 2
+        done()
