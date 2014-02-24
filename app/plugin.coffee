@@ -6,7 +6,7 @@ migrator = require './lib/migrator'
 class Plugin extends EventEmitter
   @hook: (app) ->
     app.pluginHooks = {}
-    return (hookName, options, callback) ->
+    processHook = (hookName, options, callback) ->
       prioritisedHooks = app.pluginHooks[hookName] ? {}
       priorities = Object.keys prioritisedHooks
       priorities.sort (a, b) -> parseInt(a, 10) - parseInt(b, 10)
@@ -23,6 +23,11 @@ class Plugin extends EventEmitter
       handlePriority = (priority, next) ->
         async.each prioritisedHooks[priority], handleHook, next
       async.eachSeries priorities, handlePriority, callback
+    return (hookNamesString, options, callback) ->
+      hookNames = hookNamesString.split(" ")
+      handleHookName = (hookName, next) ->
+        processHook hookName, options, next
+      async.each hookNames, handleHookName, callback
 
   constructor: (@app, @identifier) ->
     @dirname = "../plugins/#{@identifier}"
