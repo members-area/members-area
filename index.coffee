@@ -14,6 +14,8 @@ makeIntegerIfPossible = (str) ->
   str
 
 app = express()
+app.plugins = []
+app.pluginHook = Plugin.hook app
 app.path = __dirname
 
 app.set 'trust proxy', true # Required for nginx/etc
@@ -102,7 +104,6 @@ checkRoles = ->
         db.close start
 
 loadPlugins = ->
-  app.plugins = []
   fs.readdir 'plugins', (err, dirs = []) ->
     for dir in dirs
       try

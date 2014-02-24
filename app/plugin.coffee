@@ -4,6 +4,26 @@ async = require 'async'
 migrator = require './lib/migrator'
 
 class Plugin extends EventEmitter
+  @hook: (app) ->
+    app.pluginHooks = {}
+    return (hookName, options, callback) ->
+      prioritisedHooks = app.pluginHooks[hookName] ? {}
+      priorities = Object.keys prioritisedHooks
+      priorities.sort (a, b) -> parseInt(a, 10) - parseInt(b, 10)
+      handleHook = (hook, next) ->
+        if hook.length is 1 # No callback, do it live!
+          hook(options)
+          return process.nextTick next
+        done = ->
+          done = -> # Prevent calling twice
+          clearTimeout timer
+          next()
+        timer = setTimeout done, 3000 # Give hook just 3 seconds to do its thang
+        hook options, done
+      handlePriority = (priority, next) ->
+        async.each prioritisedHooks[priority], handleHook, next
+      async.eachSeries priorities, handlePriority, callback
+
   constructor: (@app, @identifier) ->
     @dirname = "../plugins/#{@identifier}"
     try
@@ -36,5 +56,15 @@ class Plugin extends EventEmitter
       @initialize.bind(this)
     ], =>
       @emit 'load'
+
+  hook: (hookName, priority, callback) ->
+    if typeof priority is 'function'
+      callback = priority
+      priority = null
+    priority = parseInt(priority, 10)
+    priority = 0 unless isFinite(priority)
+    @app.pluginHooks[hookName] ?= {}
+    @app.pluginHooks[hookName][priority] ?= []
+    @app.pluginHooks[hookName][priority].push callback
 
 module.exports = Plugin
