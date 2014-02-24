@@ -79,67 +79,104 @@ class Controller
     return done() unless @req.user?
     # XXX: Get additional nav items from plugins
     @activeNavigationId ?= "#{@templateParent}-#{@template}"
-    @navigation = [
+
+
+    sections = [
       {
         title: @req.user.fullname
-        header: true
         id: 'user'
+        priority: 10
         items: [
           {
             title: 'Dashbard'
             href: '/dashboard'
             id: 'user-dashboard'
-          }
-          {
-            title: 'Account'
-            href: '/account'
-            id: 'user-account'
-          }
-          {
-            title: 'Subscription'
-            href: '/subscription'
-            id: 'user-subscription'
-            className: 'pending warning'
+            priority: 10
           }
           {
             title: 'Member list'
             href: '/members'
             id: 'members-index'
+            priority: 100
           }
         ]
       }
       {
-        title: 'Trustees'
-        header: true
-        id: 'trustees'
+        title: 'Admin'
+        id: 'admin'
+        priority: 100
         items: [
           {
             title: 'Register of Members'
             href: '/admin/register'
             id: 'admin-register'
           }
-          {
-            title: 'Banking/Money'
-            href: '/admin/money'
-            id: 'admin-money'
-          }
-          {
-            title: 'Reminders'
-            href: '/admin/reminders'
-            id: 'admin-reminders'
-          }
-          {
-            title: 'Emails'
-            href: '/admin/emails'
-            id: 'admin-emails'
-          }
         ]
       }
+      {
+        title: 'Other'
+        id: ''
+        priority: 1000
+      }
     ]
-    for item in @navigation
-      if item.id is @activeNavigationId
-        item.active = true
-        break
-    done()
+
+    addSection = (section) ->
+      # XXX: check for duplicate id?
+      sections.push section
+
+    addItem = (sectionId, item) ->
+      for section in sections when section.id is sectionId
+        section.items ?= []
+        section.items.push item
+        return
+      addItem '', item
+
+    sorter = (a, b) ->
+      if a.priority < b.priority
+        -1
+      else if a.priority > b.priority
+        1
+      else
+        a.title.localeCompare(b.title)
+
+    async.series [
+      (next) =>
+        @req.app.pluginHook 'navigation_sections', {sections, addSection}, next
+
+      (next) =>
+        sections.sort(sorter)
+        next()
+
+      (next) =>
+        @req.app.pluginHook 'navigation_items', {sections, addItem}, next
+
+      (next) =>
+        for section in sections
+          section.header = true
+          section.items ?= []
+          section.items.sort(sorter)
+        next()
+
+      (next) =>
+        @req.app.pluginHook 'navigation', {sections}, next
+    ], =>
+      # Prune by permissions
+      for section in sections
+        for item, i in section.items ? [] by -1
+          items.splice(i, 1) unless @req.user.can item.permissions
+
+      # Prune empty items
+      for section, i in sections by -1
+        sections.splice(i, 1) unless section.items?.length
+
+      @navigation = sections
+
+      # Find active link
+      for item in @navigation
+        if item.id is @activeNavigationId
+          item.active = true
+          break
+
+      done()
 
 module.exports = Controller

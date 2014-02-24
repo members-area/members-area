@@ -107,6 +107,17 @@ module.exports = (db, models) ->
           return callback err if err
           callback()
 
+      can: (permissions) ->
+        permissions = [permissions] unless Array.isArray permissions
+        for permission in permissions when permission?.length
+          found = false
+          for activeRoleUser in @activeRoleUsers
+            if permission in activeRoleUser.meta.grants
+              found = true
+              break
+          return false unless found
+        return true
+
     validations:
       email: [
         orm.enforce.patterns.email()

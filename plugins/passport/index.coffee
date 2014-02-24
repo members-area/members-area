@@ -7,6 +7,13 @@ module.exports = (done) ->
   env = require "#{@app.path}/app/env"
   app = @app
 
+  @hook 'navigation_items', ({addItem}) ->
+    addItem 'user',
+      title: 'Accounts'
+      id: 'passport-passport-accounts'
+      href: '/accounts'
+      priority: 20
+
   ###*
    * GitHub Auth
   ###
