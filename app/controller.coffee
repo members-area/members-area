@@ -63,9 +63,11 @@ class Controller
     vars[k] = v for own k, v of @ when typeof k isnt 'function'
     @res.render "#{@templateParent}/#{@template}", vars, (err, html) =>
       return done err if err
-      @rendered = true
-      @res.send html
-      done()
+      options = {controller: this, html: html}
+      @req.app.pluginHook "render render-#{@templateParent}-#{@template}", options, =>
+        @rendered = true
+        @res.send options.html
+        done()
 
   redirectTo: (url, {status} = {}) ->
     return if @rendered

@@ -14,6 +14,18 @@ module.exports = (done) ->
       href: '/accounts'
       priority: 20
 
+  @hook 'render-session-login', (options, done) ->
+    {controller, html} = options
+    htmlToAdd = "
+      <span>With: </span><br />
+      <a class='register' href='/auth/facebook'>Facebook</a> |
+      <a class='register' href='/auth/github'>GitHub</a> |
+      <a class='register' href='/auth/twitter'>Twitter</a><br />
+      "
+    options.html = html.replace("</h2>", "</h2>"+htmlToAdd)
+
+    done()
+
   ###*
    * GitHub Auth
   ###
