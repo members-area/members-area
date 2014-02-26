@@ -26,4 +26,4 @@ exports.runMigration = (operation, arg, pluginName, done) ->
       coffee: true
     migrationTask[operation] arg, (err) ->
       connection.close ->
-        done err
+        done? err
