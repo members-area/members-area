@@ -4,4 +4,3 @@ module.exports = ({get, post, all}) ->
   all '/logout', 'session#logout'
   all '/register', 'registration#register'
   all '/dashboard', 'user#dashboard'
-  all '/*', 'static#404'

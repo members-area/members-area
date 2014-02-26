@@ -54,7 +54,11 @@ app.use require('./app/models').middleware()
 app.use require('./app/lib/passport').initialize()
 app.use require('./app/lib/passport').session()
 
+app.use app.router
 require('./app/router')(app)
+
+app.use require('./app/middleware/404')()
+app.use require('./app/middleware/error-handler')()
 
 listen = (port) ->
   server = http.createServer(app)
