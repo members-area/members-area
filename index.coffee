@@ -26,7 +26,8 @@ app.path = __dirname
 
 app.set 'trust proxy', true # Required for nginx/etc
 app.set 'port', makeIntegerIfPossible(process.env.PORT) ? 1337
-app.set 'views', __dirname + '/app/views'
+app.locals.basedir = path.join __dirname, 'app', 'views'
+app.set 'views', app.locals.basedir
 app.set 'view engine', 'jade'
 
 app.use express.static(path.join(__dirname, 'public'))
