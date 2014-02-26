@@ -119,6 +119,12 @@ class Controller
         ]
       }
       {
+        title: 'Settings'
+        id: 'settings'
+        priority: 200
+        items: []
+      }
+      {
         title: 'Other'
         id: ''
         priority: 1000
