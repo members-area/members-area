@@ -1,5 +1,6 @@
 require('source-map-support').install()
 async = require 'async'
+crypto = require 'crypto'
 express = require 'express'
 http = require 'http'
 path = require 'path'
@@ -8,6 +9,11 @@ net = require 'net'
 FSStore = require('./app/lib/connect-fs')(express)
 Plugin = require './app/plugin'
 require './app/env' # Fix/load/check environmental variables
+
+unless process.env.SECRET
+  console.error "ERROR: You must set the 'SECRET' environmental variable, e.g."
+  console.error "    SECRET=\"#{crypto.pseudoRandomBytes(18).toString('base64')}\""
+  process.exit 1
 
 makeIntegerIfPossible = (str) ->
   return parseInt(str, 10) if str?.match?(/^[0-9]+$/)
@@ -34,7 +40,7 @@ app.use require('./app/middleware/stylus')()
 app.use require('./app/middleware/http-error')()
 app.use express.bodyParser()
 app.use express.methodOverride()
-app.use express.cookieParser(process.env.SECRET ? String(Math.random()))
+app.use express.cookieParser(process.env.SECRET)
 
 sessionStore = new FSStore
 

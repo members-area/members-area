@@ -1,5 +1,6 @@
 require('source-map-support').install()
 process.env.NODE_ENV ?= 'test'
+process.env.SECRET ?= String(Math.random()) + "|" + String(Math.random()) + "|" + String(Math.random())
 if process.env.NODE_ENV isnt 'test'
   console.error "Aborting test because environment is wrong: #{process.env.NODE_ENV}"
   process.exit 1
