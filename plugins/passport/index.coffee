@@ -7,12 +7,19 @@ module.exports = (done) ->
   env = require "#{@app.path}/app/env"
   app = @app
 
+  app.addRoute 'all', '/settings/passport', 'passport#passport#settings'
+
   @hook 'navigation_items', ({addItem}) ->
     addItem 'user',
       title: 'Accounts'
       id: 'passport-passport-accounts'
       href: '/accounts'
       priority: 20
+    addItem 'settings',
+      title: 'Social login'
+      id: 'passport-passport-settings'
+      href: '/settings/passport'
+      priority: 100
 
   @hook 'render-session-login', (options, done) ->
     {controller, html} = options
