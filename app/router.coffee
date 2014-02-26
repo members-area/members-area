@@ -1,12 +1,13 @@
 class Router
   constructor: (@app) ->
+    @app.addRoute = @addRoute
     methods = {}
     for method in ['get', 'post', 'all']
       methods[method] = => @addRoute method, arguments...
     require('./routes')(methods)
     return
 
-  addRoute: (method, path, args...) ->
+  addRoute: (method, path, args...) =>
     params = @parseParams args...
     @app[method] path, @handler params
     return
@@ -16,7 +17,15 @@ class Router
     for arg in args
       switch (typeof arg)
         when 'string'
-          [controller, action] = arg.split "#"
+          parts = arg.split "#"
+          switch parts.length
+            when 2
+              [controller, action] = parts
+            when 3
+              [plugin, controller, action] = parts
+            else
+              throw new Error "Invalid route string."
+          params.plugin = plugin if plugin?
           params.controller = controller if controller?
           params.action = action if action?
         when 'object'
@@ -29,7 +38,10 @@ class Router
     return (req, res, next) ->
       try
         throw new req.HTTPError(404) unless params.controller? and params.action?
-        Controller = require("./controllers/#{params.controller}")
+        if params.plugin
+          Controller = require("../plugins/#{params.plugin}/controllers/#{params.controller}")
+        else
+          Controller = require("./controllers/#{params.controller}")
         Controller.handle params, req, res, next
       catch e
         next e
