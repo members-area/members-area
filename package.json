@@ -8,7 +8,7 @@
   },
   "scripts": {
     "migrate": "./scripts/db/migrate",
-    "seed": "./node_modules/.bin/coffee seed.coffee",
+    "seed": "./node_modules/.bin/coffee app/seed.coffee",
     "setup": "npm run migrate; npm run seed",
     "test": "mocha test"
   },

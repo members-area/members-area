@@ -1,9 +1,10 @@
 async = require 'async'
 require './env'
+app = require '../index'
 
 require('orm').connect process.env.DATABASE_URL, (err, db) ->
   throw err if err
-  require('./models') db, (err, models) ->
+  require('./models') app, db, (err, models) ->
     throw err if err
     models = (model for name, model of models when name.match /^[A-Z]/)
 
@@ -16,5 +17,6 @@ require('orm').connect process.env.DATABASE_URL, (err, db) ->
         process.exit 1
       else
         console.log "All done"
+        process.exit 0
 
     async.mapSeries models, seed, done
