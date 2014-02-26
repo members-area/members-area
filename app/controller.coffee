@@ -28,7 +28,7 @@ class Controller
 
   @handle: (params, req, res, next) ->
     {action} = params
-    throw new req.HTTPError 404 unless @prototype[action]
+    return next new req.HTTPError 404 unless @prototype[action]
 
     instance = new this params, req, res
 
