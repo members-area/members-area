@@ -30,7 +30,7 @@ class Controller
     {action} = params
     return next new req.HTTPError 404 unless @prototype[action]
 
-    instance = new this params, req, res
+    instance = new this req.app, params, req, res
 
     array = @callbacks('before')
     array = array.concat(action)
@@ -54,8 +54,11 @@ class Controller
     async.eachSeries array, run, (err) =>
       next err unless instance.rendered
 
-  constructor: (@params, @req, @res) ->
-    @templateParent ?= @params.controller
+  constructor: (@app, @params, @req, @res) ->
+    if @params.plugin
+      @templateParent ?= "#{@app.path}/plugins/#{@params.plugin}/views/#{@params.controller}"
+    else
+      @templateParent ?= @params.controller
     @template ?= @params.action
     @data = @req.body ? {}
     @title = "Members Area"
