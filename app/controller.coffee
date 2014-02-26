@@ -39,14 +39,17 @@ class Controller
     array = array.concat @callbacks('after')
 
     run = (entry, done) ->
-      if typeof entry is 'string'
-        entry = method: entry, options: {}
-      fn = instance[entry.method]
-      if fn.length > 0
-        fn.call instance, done
-      else
-        fn.call instance
-        process.nextTick done
+      try
+        if typeof entry is 'string'
+          entry = method: entry, options: {}
+        fn = instance[entry.method]
+        if fn.length > 0
+          fn.call instance, done
+        else
+          fn.call instance
+          process.nextTick done
+      catch e
+        next e
 
     async.eachSeries array, run, (err) =>
       next err unless instance.rendered
