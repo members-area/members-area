@@ -1,5 +1,3 @@
-crypto = require 'crypto'
-
 module.exports = (db, models) ->
   Setting = db.define 'setting', {
     id:
@@ -18,15 +16,6 @@ module.exports = (db, models) ->
   },
     timestamp: true
     hooks: db.applyCommonHooks {}
-
-  Setting.seedData = [
-    {
-      id: 1
-      name: "SECRET"
-      meta:
-        value: crypto.pseudoRandomBytes(16).toString('base64')
-    }
-  ]
 
   Setting.modelName = 'Setting'
   return Setting
