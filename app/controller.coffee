@@ -63,6 +63,7 @@ class Controller
     @template ?= @params.action
     @data = @req.body ? {}
     @title = "Members Area"
+    @loggedInUser = @req.user
 
   render: (done) ->
     return if @rendered

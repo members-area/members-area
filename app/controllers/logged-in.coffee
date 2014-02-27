@@ -5,6 +5,5 @@ class LoggedInController extends Controller
 
   requireLoggedIn: ->
     @redirectTo "/login?next=#{encodeURIComponent @req.path}" unless @req.user?
-    @loggedInUser = @req.user
 
 module.exports = LoggedInController

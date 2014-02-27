@@ -8,9 +8,7 @@ module.exports = class StaticController extends Controller
       @redirectTo "/login", status: 307
 
   404: ->
-    @loggedInUser = @req.user
     @template = '404-loggedin' if @loggedInUser?
 
   error: ->
-    @loggedInUser = @req.user
     @template = 'error-loggedin' if @loggedInUser?
