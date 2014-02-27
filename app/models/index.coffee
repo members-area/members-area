@@ -1,6 +1,7 @@
 fs = require 'fs'
 require '../env'
 async = require 'async'
+_ = require 'underscore'
 orm = require 'orm'
 orm_timestamps = require 'orm-timestamps'
 orm_transaction = require 'orm-transaction'
@@ -50,6 +51,15 @@ validateAndGroup = (name, properties, opts) ->
       return callback err if err
       errors = @groupErrors errors
       callback err, errors
+  opts.methods.setMeta = (changes) ->
+    meta = _.clone @meta
+    for key, value of changes
+      if value?
+        meta[key] = value
+      else
+        delete meta[key]
+    @meta = meta
+    return
 
 getModelsForConnection = (app, db, done) ->
   db.use orm_timestamps,
