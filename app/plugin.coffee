@@ -2,6 +2,7 @@ EventEmitter = require('events').EventEmitter
 fs = require 'fs'
 async = require 'async'
 migrator = require './lib/migrator'
+_ = require 'underscore'
 
 class Plugin extends EventEmitter
   @hook: (app) ->
@@ -58,9 +59,30 @@ class Plugin extends EventEmitter
     @once 'load', callback if callback?
     async.series [
       @migrate.bind(this)
+      @loadSettings.bind(this)
       @initialize.bind(this)
     ], =>
       @emit 'load'
+
+  loadSettings: (callback) ->
+    next = =>
+      callback()
+    settingName = "plugin.#{@identifier}"
+    @models.Setting.find()
+    .where(name:settingName)
+    .first (err, @setting) =>
+      throw err if err
+      console.log "GOT SETTING" if @setting
+      return next() if @setting
+      data =
+        name: settingName
+        meta:
+          settings: {}
+      @models.Setting.create data, (err, @setting) =>
+        throw err if err
+        console.log "CREATED SETTING" if @setting
+        return next() if @setting
+        throw new Error("Couldn't create settings.")
 
   hook: (hookName, priority, callback) ->
     if typeof priority is 'function'
