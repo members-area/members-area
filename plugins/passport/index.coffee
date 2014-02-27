@@ -37,10 +37,11 @@ module.exports = (done) ->
    * GitHub Auth
   ###
 
-  if env.GITHUB_ID and env.GITHUB_SECRET
+  settings = @get()
+  if settings.GITHUB_APP_ID and settings.GITHUB_SECRET
     passport.use new GitHubStrategy(
-      clientID: env.GITHUB_ID
-      clientSecret: env.GITHUB_SECRET
+      clientID: settings.GITHUB_APP_ID
+      clientSecret: settings.GITHUB_SECRET
       callbackURL: env.SERVER_ADDRESS + '/auth/github/callback'
     , (accessToken, refreshToken, profile, done) ->
       done null, profile
@@ -52,10 +53,10 @@ module.exports = (done) ->
    * Facebook Auth
   ###
 
-  if env.FACEBOOK_ID and env.FACEBOOK_SECRET
+  if settings.FACEBOOK_APP_ID and settings.FACEBOOK_SECRET
     passport.use new FacebookStrategy(
-      clientID: env.FACEBOOK_ID
-      clientSecret: env.FACEBOOK_SECRET
+      clientID: settings.FACEBOOK_APP_ID
+      clientSecret: settings.FACEBOOK_SECRET
       callbackURL: env.SERVER_ADDRESS + '/auth/facebook/callback'
     , (accessToken, refreshToken, profile, done) ->
         done null, profile
@@ -67,10 +68,10 @@ module.exports = (done) ->
    * Twitter Auth
   ###
 
-  if env.TWITTER_KEY and env.TWITTER_SECRET
+  if settings.TWITTER_APP_ID and settings.TWITTER_SECRET
     passport.use new TwitterStrategy(
-      consumerKey: env.TWITTER_KEY
-      consumerSecret: env.TWITTER_SECRET
+      consumerKey: settings.TWITTER_APP_ID
+      consumerSecret: settings.TWITTER_SECRET
       callbackURL: env.SERVER_ADDRESS + "/auth/twitter/callback"
     , (token, tokenSecret, profile, done) ->
       done null, profile
