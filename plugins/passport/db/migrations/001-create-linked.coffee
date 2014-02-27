@@ -8,9 +8,13 @@ async = require 'async'
 module.exports =
   up: (done) ->
     columns =
+      id:
+        type: 'number'
+        required: true
+        serial: true
+
       user_id:
         type: 'number'
-        serial: true
         required: true
 
       type:
@@ -38,7 +42,7 @@ module.exports =
 
     typeIndex =
       table: 'user_linked'
-      columns: ['type']
+      columns: ['user_id', 'type']
       unique: true
 
     identifierIndex =

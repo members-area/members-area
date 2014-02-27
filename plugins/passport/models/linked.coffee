@@ -1,9 +1,13 @@
 module.exports = (db, models) ->
-  models.UserLinked = models.User.extendsTo 'linked', {
-    user_id:
+  UserLinked = db.define 'user_linked', {
+    id:
       type: 'number'
       serial: true
       primary: true
+
+    user_id:
+      type: 'number'
+      required: true
 
     type:
       type: 'text'
@@ -33,4 +37,5 @@ module.exports = (db, models) ->
     hooks: db.applyCommonHooks {}
 
   UserLinked.modelName = 'UserLinked'
+  UserLinked.hasOne 'user', models.User, reverse: 'userLinkeds', autoFetch: true
   return UserLinked
