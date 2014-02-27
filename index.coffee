@@ -40,6 +40,7 @@ app.use express.favicon(path.join(__dirname, 'public', 'img', 'favicon.png'))
 
 app.use (req, res, next) ->
   req.app = app
+  res.locals.restartRequired = app.restartRequired ? false
   next()
 app.use require('./app/middleware/logging')(app)
 app.use require('./app/middleware/stylus')()

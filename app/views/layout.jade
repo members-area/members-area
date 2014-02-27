@@ -14,6 +14,10 @@ html
     script(src='/js/jquery-migrate.min.js')
     script(src='/js/bootstrap.min.js')
   body
+    block topmost
+      if restartRequired
+        div(style='background-color:red; text-align: center; font-size:1.3em;padding:6px;font-weight:bold') RESTART REQUIRED
+
     block everything
       .navbar.navbar-inverse.navbar-static-top
         .navbar-inner
