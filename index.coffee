@@ -107,23 +107,19 @@ start = ->
     listen port
 
 checkRoles = ->
-  require('orm').connect process.env.DATABASE_URL, (err, db) ->
+  app.models.Role.find (err, roles) ->
     throw err if err
-    require('./app/models') app, db, (err, models) ->
-      throw err if err
-      models.Role.find (err, roles) ->
-        throw err if err
-        for role in roles ? []
-          hasBase = true if role.id is 1
-          hasOwner = true if role.id is 2
-        throw new Error("Required role is missing, try 'npm run setup'") unless hasBase and hasOwner
-        db.close start
+    for role in roles ? []
+      hasBase = true if role.id is 1
+      hasOwner = true if role.id is 2
+    throw new Error("Required role is missing, try 'npm run setup'") unless hasBase and hasOwner
+    start()
 
 loadPlugins = ->
   fs.readdir 'plugins', (err, dirs = []) ->
     for dir in dirs
       try
-        app.plugins.push new Plugin app, dir
+        app.plugins.push new Plugin app, dir, app.models
       catch e
         console.error "Could not load '#{dir}' plugin: #{e}"
     loadPlugin = (plugin, done) ->
@@ -132,7 +128,16 @@ loadPlugins = ->
       throw err if err
       checkRoles()
 
+connectToDb = ->
+  require('orm').connect process.env.DATABASE_URL, (err, db) ->
+    throw err if err
+    require('./app/models') app, db, (err, models) ->
+      throw err if err
+      app.globalDb = db
+      app.models = models
+      loadPlugins()
+
 if require.main is module
-  loadPlugins()
+  connectToDb()
 
 module.exports = app

@@ -29,7 +29,7 @@ class Plugin extends EventEmitter
         processHook hookName, options, next
       async.each hookNames, handleHookName, callback
 
-  constructor: (@app, @identifier) ->
+  constructor: (@app, @identifier, @models) ->
     @dirname = "../plugins/#{@identifier}"
     try
       @meta = require "#{@dirname}/package.json"
