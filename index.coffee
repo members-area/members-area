@@ -23,6 +23,9 @@ makeIntegerIfPossible = (str) ->
 
 app = express()
 app.plugins = []
+app.getPlugin = (id) ->
+  return plugin for plugin in app.plugins when plugin.identifier is id
+  return
 app.pluginHook = Plugin.hook app
 app.path = __dirname
 
