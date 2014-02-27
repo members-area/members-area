@@ -94,4 +94,22 @@ class Plugin extends EventEmitter
     @app.pluginHooks[hookName][priority] ?= []
     @app.pluginHooks[hookName][priority].push callback
 
+  get: (setting) ->
+    if setting?
+      return @setting.meta.settings[setting]
+    else
+      return _.clone @setting.meta.settings
+
+  set: (values, callback) ->
+    settings = @setting.meta.settings ? {}
+    for k, v of values
+      if v?
+        settings[k] = v
+      else
+        delete settings[k]
+    @setting.setMeta {settings}
+    callback ?= (err) ->
+      console.error err if err
+    @setting.save callback
+
 module.exports = Plugin
