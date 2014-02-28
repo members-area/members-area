@@ -64,5 +64,5 @@ module.exports = class RegistrationController extends Controller
 
   makeSafe: (data) ->
     newData = {}
-    newData[k] = String(v) for k, v of data when k in ['email', 'username', 'password', 'fullname', 'address']
+    newData[k] = String(v) for k, v of data when k in ['email', 'username', 'password', 'fullname', 'address'] and v?
     return newData
