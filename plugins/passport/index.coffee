@@ -33,22 +33,6 @@ module.exports = (done) ->
 
     done()
 
-  auth =
-    socialProvider: (socialProvider) ->
-      (req, res, next) ->
-        profile = req.user
-        delete req.user
-        req.models.UserLinked.find()
-        .where(type:socialProvider,identifier:String(profile.id))
-        .first (err, userLinked) ->
-          if userLinked?
-            req.login userLinked.user, (err) ->
-              return next err if err
-              # XXX: honour ?next
-              res.redirect "/"
-          else if req.session
-            res.send 501, "UNIMPLEMENTED"
-
   socialProvider = (socialProvider, req, profile, done) ->
     req.models.UserLinked.find()
     .where(type:socialProvider,identifier:String(profile.id))
@@ -66,6 +50,9 @@ module.exports = (done) ->
         # XXX: Better error message
         return done new Error("Unrecognised and no account")
 
+  loggedin = -> (req, res, next) ->
+    res.redirect "/"
+
   ###*
    * GitHub Auth
   ###
@@ -76,11 +63,12 @@ module.exports = (done) ->
       clientID: settings.GITHUB_APP_ID
       clientSecret: settings.GITHUB_SECRET
       callbackURL: env.SERVER_ADDRESS + '/auth/github/callback'
-    , (accessToken, refreshToken, profile, done) ->
-      done null, profile
+      passReqToCallback: true
+    , (req, accessToken, refreshToken, profile, done) ->
+      socialProvider('github', req, profile, done)
     )
     app.get '/auth/github', passport.authenticate('github')
-    app.get '/auth/github/callback', passport.authenticate('github'), auth.socialProvider('github')
+    app.get '/auth/github/callback', passport.authenticate('github'), loggedin()
 
   ###*
    * Facebook Auth
@@ -93,10 +81,10 @@ module.exports = (done) ->
       callbackURL: env.SERVER_ADDRESS + '/auth/facebook/callback'
       passReqToCallback: true
     , (req, accessToken, refreshToken, profile, done) ->
-        socialProvider('facebook', req, profile, done)
+      socialProvider('facebook', req, profile, done)
     )
     app.get '/auth/facebook', passport.authenticate('facebook')
-    app.get '/auth/facebook/callback', passport.authenticate('facebook')
+    app.get '/auth/facebook/callback', passport.authenticate('facebook'), loggedin()
 
   ###*
    * Twitter Auth
@@ -107,10 +95,11 @@ module.exports = (done) ->
       consumerKey: settings.TWITTER_APP_ID
       consumerSecret: settings.TWITTER_SECRET
       callbackURL: env.SERVER_ADDRESS + "/auth/twitter/callback"
-    , (token, tokenSecret, profile, done) ->
-      done null, profile
+      passReqToCallback: true
+    , (req, token, tokenSecret, profile, done) ->
+      socialProvider('twitter', req, profile, done)
     )
     app.get '/auth/twitter', passport.authenticate('twitter')
-    app.get '/auth/twitter/callback', passport.authenticate('twitter'), auth.socialProvider('twitter')
+    app.get '/auth/twitter/callback', passport.authenticate('twitter'), loggedin()
 
   done()
