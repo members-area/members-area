@@ -28,7 +28,7 @@ class Controller
 
   @handle: (params, req, res, next) ->
     {action} = params
-    return next new req.HTTPError 404 unless @prototype[action]
+    return next new req.HTTPError 404, "'#{params.controller}' controller has no '#{action}' method" unless @prototype[action]
 
     instance = new this req.app, params, req, res
 
@@ -43,6 +43,8 @@ class Controller
         if typeof entry is 'string'
           entry = method: entry, options: {}
         fn = instance[entry.method]
+        unless fn
+          throw new Error "#{params.controller} has no method #{entry.method}"
         if fn.length > 0
           fn.call instance, done
         else
