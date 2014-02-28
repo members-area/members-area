@@ -122,6 +122,7 @@ class Controller
             title: 'Register of Members'
             href: '/admin/register'
             id: 'admin-register'
+            priority: 100
           }
         ]
       }
@@ -129,7 +130,14 @@ class Controller
         title: 'Settings'
         id: 'settings'
         priority: 200
-        items: []
+        items: [
+          {
+            title: 'Core Settings'
+            href: '/settings'
+            id: 'admin-settings'
+            priority: 10
+          }
+        ]
       }
       {
         title: 'Other'

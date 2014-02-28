@@ -1,0 +1,24 @@
+extends /sidebar
+
+mixin controlGroup(name, id, label)
+  .control-group
+    label.control-label(for=name+"-"+id)= label
+    .controls
+      input(id=name+"-"+id, name=name+"["+id+"]", value=data[name][id])
+
+block title
+  | Core Settings
+
+block content
+  h2 Core Settings
+  p Here you can configure the core settings for the Members Area.
+
+  form.form-horizontal(method="POST")
+    h4 Email
+    +controlGroup("email", "service", "Service")
+    +controlGroup("email", "username", "Username")
+    +controlGroup("email", "password", "Password")
+
+    .control-group
+      .controls
+        button.btn-success(type="Submit") Save

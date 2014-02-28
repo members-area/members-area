@@ -122,6 +122,15 @@ loadPlugins = ->
       throw err if err
       checkRoles()
 
+loadSettings = ->
+  app.models.Setting.find()
+  .where(name:'email')
+  .first (err, emailSetting) ->
+    throw err if err
+    throw new Error "No email setting, try seeding the database" unless emailSetting
+    app.emailSetting = emailSetting
+    loadPlugins()
+
 connectToDb = ->
   require('orm').connect process.env.DATABASE_URL, (err, db) ->
     throw err if err
@@ -129,7 +138,7 @@ connectToDb = ->
       throw err if err
       app.globalDb = db
       app.models = models
-      loadPlugins()
+      loadSettings()
 
 if require.main is module
   unless process.env.SECRET
