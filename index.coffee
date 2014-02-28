@@ -10,13 +10,6 @@ FSStore = require('./app/lib/connect-fs')(express)
 Plugin = require './app/plugin'
 require './app/env' # Fix/load/check environmental variables
 
-unless process.env.SECRET
-  crypto.randomBytes 18, (err, bytes) ->
-    console.error "ERROR: You must set the 'SECRET' environmental variable, e.g."
-    console.error "    SECRET=\"#{bytes.toString('base64') ? "SecretStringHere"}\""
-    process.exit 1
-  return
-
 makeIntegerIfPossible = (str) ->
   return parseInt(str, 10) if str?.match?(/^[0-9]+$/)
   str
@@ -139,6 +132,12 @@ connectToDb = ->
       loadPlugins()
 
 if require.main is module
+  unless process.env.SECRET
+    crypto.randomBytes 18, (err, bytes) ->
+      console.error "ERROR: You must set the 'SECRET' environmental variable, e.g."
+      console.error "    SECRET=\"#{bytes.toString('base64') ? "SecretStringHere"}\""
+      process.exit 1
+    return
   connectToDb()
 
 module.exports = app
