@@ -12,6 +12,10 @@ module.exports = class SessionController extends Controller
     handle = (err, user, info) =>
       return done err if err
       return done() unless user
+      unless user.verified
+        @template = 'unverified'
+        @email = user.email
+        return done()
       user.hasActiveRole 1, (approved) =>
         if approved
           @req.login user, (err) =>
