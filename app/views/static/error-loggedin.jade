@@ -1,10 +1,10 @@
 extends /sidebar
 
 block title
-  | Error
+  | #{errorMessage}
 
 block content
-  h1 An Error Occurred
+  h1 #{errorMessage}
   if process.env.NODE_ENV == 'development'
     h3= params.error.message
     pre
