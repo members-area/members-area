@@ -52,6 +52,7 @@ validateAndGroup = (name, properties, opts) ->
       errors = @groupErrors errors
       callback err, errors
   opts.methods.setMeta = (changes) ->
+    throw new Error "model.setMeta() must be called with an object" unless typeof changes is 'object'
     meta = _.clone @meta
     for key, value of changes
       if value?
