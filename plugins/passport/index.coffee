@@ -54,14 +54,14 @@ module.exports = (done) ->
     .where(type:socialProvider,identifier:String(profile.id))
     .first (err, userLinked) ->
       if userLinked?
-        return done null, userLinked.user
+        userLinked.getUser done
       else if req.user
         data =
           type: socialProvider
           identifier: String(profile.id)
           user_id: req.user.id
         req.models.UserLinked.create data, (err, userLinked) ->
-          return done err, userLinked?.user
+          userLinked.getUser done
       else
         # XXX: Better error message
         return done new Error("Unrecognised and no account")
