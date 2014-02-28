@@ -37,7 +37,7 @@ class Plugin extends EventEmitter
       {@name, @version} = @meta
     @name ?= @identifier
     try
-      @initialize = require "#{@dirname}"
+      _.extend @, require "#{@dirname}"
 
   initialize: (done) ->
     done()
