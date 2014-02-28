@@ -31,7 +31,7 @@ class Plugin extends EventEmitter
       async.each hookNames, handleHookName, callback
 
   constructor: (@app, @identifier, @models) ->
-    @dirname = "../plugins/#{@identifier}"
+    @dirname = "#{@app.path}/plugins/#{@identifier}"
     try
       @meta = require "#{@dirname}/package.json"
       {@name, @version} = @meta
