@@ -112,7 +112,7 @@ module.exports = (db, models) ->
         for permission in permissions when permission?.length
           found = false
           for activeRoleUser in @activeRoleUsers
-            if permission in activeRoleUser.meta.grants
+            if activeRoleUser.role.meta.owner or permission in (activeRoleUser.role.meta.grants ? [])
               found = true
               break
           return false unless found
