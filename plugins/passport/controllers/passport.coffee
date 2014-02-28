@@ -2,6 +2,10 @@ Controller = require '../../../app/controller'
 
 module.exports = class PassportController extends Controller
   settings: (done) ->
+    unless @req.user and @req.user.can('configure_passport')
+      err = new Error "Permission denied"
+      err.status = 403
+      return done err
     @data = @plugin.get() if @req.method is 'GET'
     return done() if @req.method isnt 'POST'
     console.dir @data
