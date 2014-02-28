@@ -8,6 +8,7 @@ module.exports =
     env = require "#{@app.path}/app/env"
     app = @app
 
+    app.addRoute 'all', '/accounts', 'passport#passport#accounts'
     app.addRoute 'all', '/settings/passport', 'passport#passport#settings'
 
     @hook 'navigation_items', ({addItem}) ->
@@ -58,8 +59,9 @@ module.exports =
      * GitHub Auth
     ###
 
+    supportedProviders = @supportedProviders()
     settings = @get()
-    if settings.GITHUB_APP_ID and settings.GITHUB_SECRET
+    if supportedProviders.github
       passport.use new GitHubStrategy(
         clientID: settings.GITHUB_APP_ID
         clientSecret: settings.GITHUB_SECRET
@@ -75,7 +77,7 @@ module.exports =
      * Facebook Auth
     ###
 
-    if settings.FACEBOOK_APP_ID and settings.FACEBOOK_SECRET
+    if supportedProviders.facebook
       passport.use new FacebookStrategy(
         clientID: settings.FACEBOOK_APP_ID
         clientSecret: settings.FACEBOOK_SECRET
@@ -91,7 +93,7 @@ module.exports =
      * Twitter Auth
     ###
 
-    if settings.TWITTER_APP_ID and settings.TWITTER_SECRET
+    if supportedProviders.twitter
       passport.use new TwitterStrategy(
         consumerKey: settings.TWITTER_APP_ID
         consumerSecret: settings.TWITTER_SECRET
@@ -104,3 +106,11 @@ module.exports =
       app.get '/auth/twitter/callback', passport.authenticate('twitter'), loggedin()
 
     done()
+
+  supportedProviders: ->
+    settings = @get()
+    providers =
+      github: settings.GITHUB_APP_ID and settings.GITHUB_SECRET
+      facebook: settings.FACEBOOK_APP_ID and settings.FACEBOOK_SECRET
+      twitter: settings.TWITTER_APP_ID and settings.TWITTER_SECRET
+    return providers
