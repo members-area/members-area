@@ -17,5 +17,14 @@ module.exports = (db, models) ->
     timestamp: true
     hooks: db.applyCommonHooks {}
 
+  Setting.seedData = [
+    {
+      id: 1
+      name: "email"
+      meta:
+        settings: {}
+    }
+  ]
+
   Setting.modelName = 'Setting'
   return Setting
