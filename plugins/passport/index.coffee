@@ -41,12 +41,30 @@ module.exports = (done) ->
         req.models.UserLinked.find()
         .where(type:socialProvider,identifier:String(profile.id))
         .first (err, userLinked) ->
-          return next err if err
-          return next new Error("User not found") unless userLinked?.user
-          req.login userLinked.user, (err) ->
-            return next err if err
-            # XXX: honour ?next
-            res.redirect "/"
+          if userLinked?
+            req.login userLinked.user, (err) ->
+              return next err if err
+              # XXX: honour ?next
+              res.redirect "/"
+          else if req.session
+            res.send 501, "UNIMPLEMENTED"
+
+  socialProvider = (socialProvider, req, profile, done) ->
+    req.models.UserLinked.find()
+    .where(type:socialProvider,identifier:String(profile.id))
+    .first (err, userLinked) ->
+      if userLinked?
+        return done null, userLinked.user
+      else if req.user
+        data =
+          type: socialProvider
+          identifier: String(profile.id)
+          user_id: req.user.id
+        req.models.UserLinked.create data, (err, userLinked) ->
+          return done err, userLinked?.user
+      else
+        # XXX: Better error message
+        return done new Error("Unrecognised and no account")
 
   ###*
    * GitHub Auth
@@ -73,11 +91,12 @@ module.exports = (done) ->
       clientID: settings.FACEBOOK_APP_ID
       clientSecret: settings.FACEBOOK_SECRET
       callbackURL: env.SERVER_ADDRESS + '/auth/facebook/callback'
-    , (accessToken, refreshToken, profile, done) ->
-        done null, profile
+      passReqToCallback: true
+    , (req, accessToken, refreshToken, profile, done) ->
+        socialProvider('facebook', req, profile, done)
     )
     app.get '/auth/facebook', passport.authenticate('facebook')
-    app.get '/auth/facebook/callback', passport.authenticate('facebook'), auth.socialProvider('facebook')
+    app.get '/auth/facebook/callback', passport.authenticate('facebook')
 
   ###*
    * Twitter Auth
