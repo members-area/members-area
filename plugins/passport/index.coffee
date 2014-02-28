@@ -33,6 +33,21 @@ module.exports = (done) ->
 
     done()
 
+  auth =
+    socialProvider: (socialProvider) ->
+      (req, res, next) ->
+        profile = req.user
+        delete req.user
+        req.models.UserLinked.find()
+        .where(type:socialProvider,identifier:String(profile.id))
+        .first (err, userLinked) ->
+          return next err if err
+          return next new Error("User not found") unless userLinked?.user
+          req.login userLinked.user, (err) ->
+            return next err if err
+            # XXX: honour ?next
+            res.redirect "/"
+
   ###*
    * GitHub Auth
   ###
