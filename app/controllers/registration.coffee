@@ -56,6 +56,15 @@ module.exports = class RegistrationController extends Controller
             @template = "success"
             done()
 
+  verify: (done) ->
+    {id, code} = @req.query
+    return done() unless id and code
+    @req.models.User.get id, (err, user) =>
+      @valid = true if user?.verified
+      return done() if !user? or user.verified
+      user.verify code, (err) =>
+        @valid = true unless err
+        return done()
 
   # ---------------
 

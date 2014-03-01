@@ -1,0 +1,14 @@
+extends /layout
+
+block title
+  | Verification
+
+block body
+  .row
+    .span8.offset2
+      if valid
+        h2 Account validated
+        p Thanks!
+      else
+        h2 Wrong validation code
+        p Please check the link and try again.

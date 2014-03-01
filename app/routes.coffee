@@ -3,5 +3,6 @@ module.exports = ({get, post, all}) ->
   all '/login', 'session#login'
   all '/logout', 'session#logout'
   all '/register', 'registration#register'
+  all '/verify', 'registration#verify'
   all '/dashboard', 'user#dashboard'
   all '/settings', 'admin#settings'

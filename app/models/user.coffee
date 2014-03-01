@@ -60,6 +60,13 @@ module.exports = (db, models, app) ->
   },
     timestamp: true
     hooks: db.applyCommonHooks
+      afterCreate: (done) ->
+        if @id is 1
+          @verified = new Date()
+          @save done
+        else
+          @sendVerificationMail()
+          done()
       beforeValidation: (done) ->
         if @password?
           bcrypt.hash @password, 10, (err, hash) =>
@@ -75,6 +82,18 @@ module.exports = (db, models, app) ->
         @getRoleUsers().where("approved IS NOT NULL AND rejected IS NULL", []).run (err, @activeRoleUsers) =>
           done(err)
     methods:
+      verify: (code, done) ->
+        return done() if @verified
+        verificationCode = @meta.emailVerificationCode
+        if code is verificationCode
+          delete @meta.emailVerificationCode
+          @verified = new Date()
+          @save done
+        else
+          # XXX: limit attempts
+          err = new Error "Incorrect verification code"
+          done err
+
       sendVerificationMail: (done) ->
         done ?= (err) ->
           console.error err if err?
@@ -101,7 +120,7 @@ module.exports = (db, models, app) ->
               app.mailTransport.sendMail mailOptions, done
         unless @meta.emailVerificationCode
           crypto.randomBytes 8, (err, bytes) =>
-            @meta.emailVerificationCode = bytes.toString('hex')
+            @setMeta emailVerificationCode: bytes.toString('hex')
             @save next
         else
           next()
