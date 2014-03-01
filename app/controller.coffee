@@ -36,10 +36,11 @@ class Controller
     array = array.concat(action)
     array = array.concat('generateNav')
     array = array.concat('render')
-    array = array.concat @callbacks('after')
+    #array = array.concat @callbacks('after')
 
     run = (entry, done) ->
       try
+        return done() if instance.rendered
         if typeof entry is 'string'
           entry = method: entry, options: {}
         fn = instance[entry.method]
