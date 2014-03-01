@@ -33,7 +33,7 @@
     "express": "~3.4.8",
     "jade": "~1.1.5",
     "stylus": "~0.42.2",
-    "nodemailer": "~0.6.0",
+    "nodemailer": "~0.6.1",
     "bcrypt": "~0.7.7",
     "nib": "~1.0.2",
     "source-map-support": "~0.2.5",
@@ -53,7 +53,9 @@
     "orm-transaction": "0.0.2",
     "orm": "git://github.com/benjie/node-orm2#writable-associations",
     "migrate-orm2": "git://github.com/benjie/node-migrate-orm2.git",
-    "orm-timestamps": "~0.2.1"
+    "orm-timestamps": "~0.2.1",
+    "juice": "~0.4.0",
+    "html-to-text": "0.0.8"
   },
   "devDependencies": {
     "sqlite3": "~2.2.0",

@@ -93,7 +93,7 @@ getModelsForConnection = (app, db, done) ->
       filenames = filenames.concat moreFilenames ? [] for moreFilenames in list
 
       filenames.forEach (filename) ->
-        model = require(filename)(db, models)
+        model = require(filename)(db, models, app)
         applyCommonClassMethods model
         models[model.modelName] = model
 

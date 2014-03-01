@@ -15,6 +15,7 @@ block content
 
   form.form-horizontal(method="POST")
     h4 Email
+    +controlGroup("email", "from_address", "From Address")
     +controlGroup("email", "service", "Service")
     +controlGroup("email", "username", "Username")
     +controlGroup("email", "password", "Password")

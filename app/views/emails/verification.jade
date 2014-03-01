@@ -1,0 +1,9 @@
+extends ./base
+
+block content
+  p Hi #{user.fullname},
+  p Thanks for registering! Please verify your email address by clicking the link below:
+  p
+    a(href=verifyURL)= verifyURL
+  p Thanks,
+  p The So Make It web team

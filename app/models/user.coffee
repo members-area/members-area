@@ -1,5 +1,8 @@
 async = require 'async'
 bcrypt = require 'bcrypt'
+crypto = require 'crypto'
+juice = require 'juice'
+htmlToText = require 'html-to-text'
 orm = require 'orm'
 
 disallowedUsernameRegexps = [
@@ -13,7 +16,7 @@ disallowedUsernameRegexps = [
   /^(admin|join|social|info|queries)$/i
 ]
 
-module.exports = (db, models) ->
+module.exports = (db, models, app) ->
   User = db.define 'user', {
     id:
       type: 'number'
@@ -72,6 +75,37 @@ module.exports = (db, models) ->
         @getRoleUsers().where("approved IS NOT NULL AND rejected IS NULL", []).run (err, @activeRoleUsers) =>
           done(err)
     methods:
+      sendVerificationMail: (done) ->
+        done ?= (err) ->
+          console.error err if err?
+        next = =>
+          code = @meta.emailVerificationCode
+          verifyURL = "#{process.env.SERVER_ADDRESS}/verify?id=#{@id}&code=#{encodeURIComponent code}"
+          locals =
+            user: @
+            email: @email
+            code: code
+            verifyURL: verifyURL
+          app.render "emails/verification", locals, (err, html) =>
+            return done err if err
+            options =
+              url: process.env.SERVER_ADDRESS
+            juice.juiceContent html, options, (err, html) =>
+              return done err if err
+              mailOptions =
+                from: app.emailSetting.meta.settings.from_address ? "members-area@example.com"
+                to: "#{@fullname} <#{@email}>"
+                subject: "Email Verification"
+                html: html
+                text: htmlToText.fromString(html, tables: true)
+              app.mailTransport.sendMail mailOptions, done
+        unless @meta.emailVerificationCode
+          crypto.randomBytes 8, (err, bytes) =>
+            @meta.emailVerificationCode = bytes.toString('hex')
+            @save next
+        else
+          next()
+
       checkPassword: (password, callback) ->
         bcrypt.compare password, @hashed_password, callback
 

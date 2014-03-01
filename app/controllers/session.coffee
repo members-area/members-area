@@ -13,6 +13,7 @@ module.exports = class SessionController extends Controller
       return done err if err
       return done() unless user
       unless user.verified
+        user.sendVerificationMail()
         @template = 'unverified'
         @email = user.email
         return done()

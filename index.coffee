@@ -6,6 +6,7 @@ http = require 'http'
 path = require 'path'
 fs = require 'fs'
 net = require 'net'
+nodemailer = require 'nodemailer'
 FSStore = require('./app/lib/connect-fs')(express)
 Plugin = require './app/plugin'
 require './app/env' # Fix/load/check environmental variables
@@ -20,6 +21,17 @@ app.getPlugin = (id) ->
   return plugin for plugin in app.plugins when plugin.identifier is id
   return
 app.pluginHook = Plugin.hook app
+
+app.updateEmailTransport = ->
+  if app.emailSetting.meta.settings?.service?.length
+    app.mailTransport = nodemailer.createTransport "SMTP",
+      service: app.emailSetting.meta.settings.service
+      auth:
+        user: app.emailSetting.meta.settings.username
+        pass: app.emailSetting.meta.settings.password
+  else
+    app.mailTransport = nodemailer.mail
+
 app.path = __dirname
 
 app.set 'trust proxy', true # Required for nginx/etc
@@ -129,6 +141,7 @@ loadSettings = ->
     throw err if err
     throw new Error "No email setting, try seeding the database" unless emailSetting
     app.emailSetting = emailSetting
+    app.updateEmailTransport()
     loadPlugins()
 
 connectToDb = ->
@@ -141,6 +154,10 @@ connectToDb = ->
       loadSettings()
 
 if require.main is module
+  # XXX: merge these two together.
+  unless process.env.SERVER_ADDRESS
+    console.error "ERROR: You must set the 'SERVER_ADDRESS' environmental variable."
+    process.exit 1
   unless process.env.SECRET
     crypto.randomBytes 18, (err, bytes) ->
       console.error "ERROR: You must set the 'SECRET' environmental variable, e.g."

@@ -13,7 +13,9 @@ module.exports = class AdminController extends Controller
     else
       if typeof @data.email is 'object'
         @app.emailSetting.setMeta {settings: @data.email}
-        @app.emailSetting.save done
+        @app.emailSetting.save (err) =>
+          @app.updateEmailTransport()
+          done err
       else
         @data.email = @app.emailSetting.meta.settings
         done()
