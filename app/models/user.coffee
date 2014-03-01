@@ -60,7 +60,9 @@ module.exports = (db, models, app) ->
   },
     timestamp: true
     hooks: db.applyCommonHooks
-      afterCreate: (done) ->
+      afterCreate: (created) ->
+        done = ->
+        return done() if !created and !@id
         if @id is 1
           @verified = new Date()
           @save done
