@@ -51,7 +51,7 @@
     "passport-twitter": "~1.0.2",
     "coffee-script": "~1.7.1",
     "orm-transaction": "0.0.2",
-    "orm": "git://github.com/benjie/node-orm2#writable-associations",
+    "orm": "git://github.com/dresende/node-orm2.git",
     "migrate-orm2": "git://github.com/benjie/node-migrate-orm2.git",
     "orm-timestamps": "~0.2.1",
     "juice": "~0.4.0",
