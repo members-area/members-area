@@ -91,8 +91,9 @@ class Controller
   generateNav: (done) ->
     return done() unless @req.user?
     # XXX: Get additional nav items from plugins
-    @activeNavigationId ?= "#{@templateParent}-#{@template}"
-
+    unless @activeNavigationId
+      @activeNavigationId = "#{@params.controller}-#{@params.action}"
+      @activeNavigationId = "#{@params.plugin}-#{@activeNavigationId}" if @params.plugin
 
     sections = [
       {
@@ -160,7 +161,7 @@ class Controller
           {
             title: 'Roles'
             href: '/settings/roles'
-            id: 'role-settings'
+            id: 'role-admin'
             priority: 20
           }
         ]
@@ -224,10 +225,11 @@ class Controller
       @navigation = sections
 
       # Find active link
-      for item in @navigation
-        if item.id is @activeNavigationId
-          item.active = true
-          break
+      for section in @navigation
+        for item in section.items
+          if item.id is @activeNavigationId
+            item.active = true
+            break
 
       done()
 
