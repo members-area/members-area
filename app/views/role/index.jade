@@ -1,0 +1,19 @@
+extends /sidebar
+
+block title
+  | Roles
+
+block content
+  h2 Roles
+  each role in roles
+    h3= role.name
+    if role.meta.description
+      p.lead= role.meta.description
+    if activeRoleIds.indexOf(role.id) >= 0
+      p.text-success You have this role
+    h4= Requirements
+    each requirement in role.meta.requirements || []
+      if requirement.type == 'approval'
+        p Requires the approval of #{requirement.count || 1} person with role: #{requirement.roleId}
+      else
+        p We've not yet coded the description of this requirement.

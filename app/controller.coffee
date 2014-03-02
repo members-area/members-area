@@ -109,7 +109,26 @@ class Controller
           {
             title: 'Member list'
             href: '/members'
-            id: 'members-index'
+            id: 'member-index'
+            priority: 100
+          }
+        ]
+      }
+      {
+        title: 'Roles'
+        id: 'roles'
+        priority: 50
+        items: [
+          {
+            title: 'Apply'
+            href: '/roles'
+            id: 'role-index'
+            priority: 10
+          }
+          {
+            title: 'Applications'
+            href: '/roles/applications'
+            id: 'role-applications'
             priority: 100
           }
         ]
@@ -137,6 +156,12 @@ class Controller
             href: '/settings'
             id: 'admin-settings'
             priority: 10
+          }
+          {
+            title: 'Roles'
+            href: '/settings/roles'
+            id: 'role-settings'
+            priority: 20
           }
         ]
       }
