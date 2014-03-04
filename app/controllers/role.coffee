@@ -149,6 +149,8 @@ module.exports = class RoleController extends LoggedInController
         ]
       }
     ]
-    @requirementTypeIndex = {}
-    @requirementTypeIndex[requirementType.type] = i for requirementType, i in @requirementTypes
-    done()
+
+    @req.app.pluginHook 'requirement_types', {@requirementTypes}, =>
+      @requirementTypeIndex = {}
+      @requirementTypeIndex[requirementType.type] = i for requirementType, i in @requirementTypes
+      done()
