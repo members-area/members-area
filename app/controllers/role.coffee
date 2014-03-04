@@ -17,7 +17,20 @@ module.exports = class RoleController extends LoggedInController
 
   admin: (done) ->
     return done new @req.HTTPError 403, "Permission denied" unless @req.user.can('admin_roles')
-    done()
+    if @req.method is 'POST' and @data.name?.length
+      console.dir("CREATE #{@data.name}")
+      role = new @req.models.Role(name:String(@data.name))
+      role.save (err, role) =>
+        return done err if err
+        @redirectTo "/settings/roles/#{role.id}", status: 303
+        done()
+    else
+      done()
+
+  edit: (done) ->
+    return done new @req.HTTPError 403, "Permission denied" unless @req.user.can('admin_roles')
+    @req.models.Role.get @req.params.role_id, (err, @role) =>
+      done()
 
   loadRoles: (done) ->
     @req.models.Role.find (err, @roles) =>

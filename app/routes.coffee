@@ -10,3 +10,4 @@ module.exports = ({get, post, all}) ->
   all '/roles/applications/:id', 'role#application'
   all '/settings', 'admin#settings'
   all '/settings/roles', 'role#admin'
+  all '/settings/roles/:role_id', 'role#edit'

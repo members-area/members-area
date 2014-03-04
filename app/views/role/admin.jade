@@ -5,5 +5,20 @@ block title
 
 block content
   h2 Configure Roles
-  p Add or edit roles here.
-  p Coming soon...
+  p Add or edit roles here; note it's not possible to delete roles at this time.
+
+  h3 Existing roles
+  ul
+    each role in roles
+      li
+        a(href="/settings/roles/" + role.id)= role.name
+
+  h3 Create new role
+  form.form-horizontal(method="POST")
+    .control-group
+      label.control-label(for="name") Role Name
+      .controls
+        input(type="text", name="name", value=data.name)
+    .control-group
+      .controls
+        button.btn-success(type="submit") Create Role
