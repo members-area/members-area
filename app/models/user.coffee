@@ -184,7 +184,7 @@ module.exports = (db, models, app) ->
         orm.enforce.lists.outside(disallowedUsernameRegexps, "Disallowed username")
       ]
       fullname: [
-        orm.enforce.patterns.match(/.+ .+$/, "Invalid full name")
+        orm.enforce.patterns.match(/.+ .+$/, null, "Invalid full name")
       ]
       address: [
         orm.enforce.ranges.length(8, undefined, "Too short")

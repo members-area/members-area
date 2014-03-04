@@ -33,7 +33,7 @@ module.exports = class RegistrationController extends Controller
       return done err if err
       user.save (err, user) =>
         if err
-          if Array.isArray(err)
+          if Array.isArray(err) or err.property?
             @errors = @req.models.User.groupErrors err
           else
             console.error err
