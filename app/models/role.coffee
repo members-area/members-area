@@ -98,7 +98,9 @@ module.exports = (db, models, app) ->
       ]
 
       app.pluginHook 'requirement_types', {requirementTypes}, =>
-        callback(null, requirementTypes)
+        object = {}
+        object[requirementType.type] = requirementType for requirementType in requirementTypes
+        callback(null, object)
 
   Role.modelName = 'Role'
   return Role

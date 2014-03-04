@@ -5,7 +5,7 @@ block title
 
 mixin formFor(mode, type, data, index)
   - data = data || {}
-  - var requirementType = requirementTypes[requirementTypeIndex[type]]
+  - var requirementType = requirementTypes[type]
   h4= requirementType.title
   if mode === 'add'
     p= requirementType.description

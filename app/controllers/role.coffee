@@ -35,10 +35,7 @@ module.exports = class RoleController extends LoggedInController
       index = parseInt(@data.index, 10)
 
       getRequirement = =>
-        for aRequirementType in @requirementTypes
-          if aRequirementType.type is @data.type
-            requirementType = aRequirementType
-            break
+        requirementType = @requirementTypes[@data.type]
         throw new Error "Couldn't find requirement type '#{@data.type}'" unless requirementType
         requirement =
           type: @data.type
@@ -93,6 +90,4 @@ module.exports = class RoleController extends LoggedInController
 
   generateRequirementTypes: (done) ->
     @req.models.Role.generateRequirementTypes (err, @requirementTypes) =>
-      @requirementTypeIndex = {}
-      @requirementTypeIndex[requirementType.type] = i for requirementType, i in @requirementTypes
       done()
