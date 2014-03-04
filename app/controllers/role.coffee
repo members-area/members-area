@@ -92,65 +92,7 @@ module.exports = class RoleController extends LoggedInController
       done err
 
   generateRequirementTypes: (done) ->
-    roleOptions = ({value: role.id, label: role.name} for role in @roles)
-    roleValidator = (value) ->
-      value = parseInt(value, 10)
-      throw new Error("Invalid roleId") unless isFinite(value)
-      for role in @roles
-        return role.id if role.id is value
-      throw new Error("Non-existent roleId")
-
-    @requirementTypes = [
-      {
-        type: 'text'
-        title: "Text instruction"
-        inputs: [
-          {
-            label: "Instruction"
-            type: "text"
-            name: "text"
-          }
-        ]
-      }
-      {
-        type: 'approval'
-        title: 'Approvals'
-        inputs: [
-          {
-            label: "Role"
-            type: "select"
-            name: "roleId"
-            options: roleOptions
-            validator: roleValidator
-          }
-          {
-            label: "Number of approvals"
-            type: "text"
-            name: "count"
-            value: "1"
-            validator: (value) ->
-              value = parseInt(value, 10)
-              throw new Error("Invalid count") unless isFinite(value) and value > 0
-              return value
-          }
-        ]
-      }
-      {
-        type: 'role'
-        title: 'Must hold role'
-        inputs: [
-          {
-            label: "Role"
-            type: "select"
-            name: "roleId"
-            options: roleOptions
-            validator: roleValidator
-          }
-        ]
-      }
-    ]
-
-    @req.app.pluginHook 'requirement_types', {@requirementTypes}, =>
+    @req.models.Role.generateRequirementTypes (err, @requirementTypes) =>
       @requirementTypeIndex = {}
       @requirementTypeIndex[requirementType.type] = i for requirementType, i in @requirementTypes
       done()
