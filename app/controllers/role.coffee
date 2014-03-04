@@ -1,7 +1,9 @@
 LoggedInController = require './logged-in'
 
 module.exports = class RoleController extends LoggedInController
-  @before 'loadRoles', only: ['index', 'admin']
+  @before 'loadRoles', only: ['index', 'admin', 'edit']
+  @before 'ensureAdminRoles', only: ['admin', 'edit']
+  @before 'getRole', only: ['edit']
 
   index: (done) ->
     @req.user.getActiveRoles (err, @activeRoles) =>
@@ -16,7 +18,6 @@ module.exports = class RoleController extends LoggedInController
     done()
 
   admin: (done) ->
-    return done new @req.HTTPError 403, "Permission denied" unless @req.user.can('admin_roles')
     if @req.method is 'POST' and @data.name?.length
       console.dir("CREATE #{@data.name}")
       role = new @req.models.Role(name:String(@data.name))
@@ -28,10 +29,24 @@ module.exports = class RoleController extends LoggedInController
       done()
 
   edit: (done) ->
-    return done new @req.HTTPError 403, "Permission denied" unless @req.user.can('admin_roles')
-    @req.models.Role.get @req.params.role_id, (err, @role) =>
+    if @req.method is 'POST'
+      if @data.name?.length
+        @role.name = @data.name
+      @role.save done
+    else
+      @data = @role
       done()
+
+  #----------------
 
   loadRoles: (done) ->
     @req.models.Role.find (err, @roles) =>
       done(err)
+
+  ensureAdminRoles: (done) ->
+    return done new @req.HTTPError 403, "Permission denied" unless @req.user.can('admin_roles')
+    done()
+
+  getRole: (done) ->
+    @req.models.Role.get @req.params.role_id, (err, @role) =>
+      done err

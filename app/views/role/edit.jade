@@ -5,4 +5,12 @@ block title
 
 block content
   h2 Edit Role: #{role.name}
-  p Coming soon...
+
+  form.form-horizontal(method="POST")
+    .control-group
+      label.control-label(for="name") Role Name
+      .controls
+        input(type="text", name="name", value=data.name)
+    .control-group
+      .controls
+        button.btn-success(type="submit") Update Role
