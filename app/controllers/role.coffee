@@ -8,8 +8,8 @@ module.exports = class RoleController extends LoggedInController
 
   index: (done) ->
     @req.user.getActiveRoles (err, @activeRoles) =>
-      @activeRoleIds = (role.id for role in @activeRoles)
       return done err if err
+      @activeRoleIds = (role.id for role in @activeRoles)
       done()
 
   applications: (done) ->
