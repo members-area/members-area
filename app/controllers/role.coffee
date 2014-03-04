@@ -16,5 +16,5 @@ module.exports = class RoleController extends LoggedInController
     done()
 
   admin: (done) ->
-    return done @req.HTTPError 403, "Permission denied" unless @req.user.can('admin_roles')
+    return done new @req.HTTPError 403, "Permission denied" unless @req.user.can('admin_roles')
     done()
