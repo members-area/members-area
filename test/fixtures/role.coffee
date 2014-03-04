@@ -32,7 +32,7 @@ exports.trustee =
       }
       {
         type: 'approval'
-        roleId: 20
+        roleId: trusteeRoleId
         count: 3
       }
     ]
