@@ -89,6 +89,7 @@ class Controller
     @rendered = true
 
   generateNav: (done) ->
+    @loggedInUser = @req.user # Update in case this changed
     return done() unless @req.user?
     # XXX: Get additional nav items from plugins
     unless @activeNavigationId
