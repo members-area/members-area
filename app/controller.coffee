@@ -15,6 +15,8 @@ class Controller
 
   @callback: (event, method, options = {}) ->
     @makeCallbacksLocal()
+    options.only = [options.only] if options.only? and !Array.isArray(options.only)
+    options.except = [options.except] if options.except? and !Array.isArray(options.except)
     @_callbacks[event] ?= []
     @_callbacks[event].push method: method, options: options
     return
@@ -43,6 +45,8 @@ class Controller
         return done() if instance.rendered
         if typeof entry is 'string'
           entry = method: entry, options: {}
+        return done() if entry.options.only and action not in entry.options.only
+        return done() if entry.options.except and action in entry.options.except
         fn = instance[entry.method]
         unless fn
           throw new Error "#{params.controller} has no method #{entry.method}"
