@@ -4,7 +4,7 @@ module.exports = class RoleController extends LoggedInController
   @before 'loadRoles', only: ['index', 'admin', 'edit']
   @before 'ensureAdminRoles', only: ['admin', 'edit']
   @before 'getRole', only: ['edit']
-  @before 'generateRequirementTypes', only: ['edit']
+  @before 'generateRequirementTypes', only: ['index', 'edit']
 
   index: (done) ->
     @req.user.getActiveRoles (err, @activeRoles) =>

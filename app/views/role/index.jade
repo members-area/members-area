@@ -13,7 +13,8 @@ block content
       p.text-success You have this role
     h4= Requirements
     each requirement in role.meta.requirements || []
-      if requirement.type == 'approval'
-        p Requires the approval of #{requirement.count || 1} person with role: #{requirement.roleId}
+      - var requirementType = requirementTypes[requirement.type]
+      if requirementType && requirementType.getSentence
+        p= requirementType.getSentence(requirement)
       else
         p We've not yet coded the description of this requirement.

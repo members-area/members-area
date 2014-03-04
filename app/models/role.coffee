@@ -51,6 +51,8 @@ module.exports = (db, models, app) ->
         {
           type: 'text'
           title: "Text instruction"
+          getSentence: (data) ->
+            data.text
           inputs: [
             {
               label: "Instruction"
@@ -62,6 +64,10 @@ module.exports = (db, models, app) ->
         {
           type: 'approval'
           title: 'Approvals'
+          getSentence: (data) ->
+            roleName = data.roleId
+            roleName = role.name for role in roles when role.id is data.roleId
+            "Must be approved by #{data.count} #{roleName}s"
           inputs: [
             {
               label: "Role"
@@ -85,6 +91,10 @@ module.exports = (db, models, app) ->
         {
           type: 'role'
           title: 'Must hold role'
+          getSentence: (data) ->
+            roleName = data.roleId
+            roleName = role.name for role in roles when role.id is data.roleId
+            "Must hold the '#{roleName}' role."
           inputs: [
             {
               label: "Role"
