@@ -103,7 +103,7 @@ class Controller
         priority: 10
         items: [
           {
-            title: 'Dashbard'
+            title: 'Dashboard'
             href: '/dashboard'
             id: 'user-dashboard'
             priority: 10
@@ -145,6 +145,7 @@ class Controller
             href: '/admin/register'
             id: 'admin-register'
             priority: 100
+            permissions: ['admin']
           }
         ]
       }
@@ -158,12 +159,14 @@ class Controller
             href: '/settings'
             id: 'admin-settings'
             priority: 10
+            permissions: ['root']
           }
           {
             title: 'Roles'
             href: '/settings/roles'
             id: 'role-admin'
             priority: 20
+            permissions: ['admin_roles']
           }
         ]
       }
@@ -217,7 +220,7 @@ class Controller
       # Prune by permissions
       for section in sections
         for item, i in section.items ? [] by -1
-          items.splice(i, 1) unless @req.user.can item.permissions
+          section.items.splice(i, 1) unless @req.user.can item.permissions
 
       # Prune empty items
       for section, i in sections by -1

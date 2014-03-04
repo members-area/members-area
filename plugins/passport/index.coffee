@@ -22,6 +22,7 @@ module.exports =
         id: 'passport-passport-settings'
         href: '/settings/passport'
         priority: 100
+        permissions: ['configure_passport']
 
     @hook 'render-session-login', (options, done) ->
       {controller, html} = options
