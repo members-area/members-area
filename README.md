@@ -14,10 +14,27 @@ Project status
 
 Work in progress, getting there.
 
-Getting started
----------------
+Getting started - Heroku
+------------------------
 
 Heroku instructions coming soon...
+
+Getting started - development
+-----------------------------
+
+For development only you can use the defaults (sqlite) - you probably
+wouldn't want to do this in production.
+
+First, install the dependencies: `npm install`
+
+Next, create the tables and seed them with data: `npm run setup`
+
+Finally run the server. It requires the `SERVER_ADDRESS` and `SECRET`
+environmental variables (optionally you can set the `PORT` too):
+
+```
+SERVER_ADDRESS="http://127.0.0.1:1337" SECRET="YOURSECRETHERE" nodemon index.coffee
+```
 
 Contributing
 ------------
