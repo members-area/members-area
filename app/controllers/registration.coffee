@@ -53,8 +53,14 @@ module.exports = class RegistrationController extends Controller
             return t.rollback done
           t.commit (err) =>
             return done err if err
-            @template = "success"
-            done()
+            if user.id is 1
+              @req.login user, (err) =>
+                @user = user
+                @template = "success"
+                done()
+            else
+              @template = "success"
+              done()
 
   verify: (done) ->
     {id, code} = @req.query

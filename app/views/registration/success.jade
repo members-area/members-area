@@ -6,5 +6,9 @@ block title
 block body
   .row
     .span8.offset2
-      h2 Membership Application Received
-      p Please check your email '#{data.email}' for the email verification link and your password. We'll let you know when your registration has been approved.
+      if user
+        h2 Welcome, user #1!
+        p Because you're the first user we've given you admin priviledges and logged you in. Do <a href="/settings">go and configure the site</a> now!
+      else
+        h2 Membership Application Received
+        p Please check your email '#{data.email}' for the email verification link and your password. We'll let you know when your registration has been approved.
