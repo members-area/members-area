@@ -3,6 +3,36 @@ extends /sidebar
 block title
   | Edit Role: #{role.name}
 
+mixin formFor(mode, type, data, index)
+  - data = data || {}
+  - var requirementType = requirementTypes[requirementTypeIndex[type]]
+  h4= requirementType.title
+  if mode === 'add'
+    p= requirementType.description
+  form.form-horizontal(method="POST")
+    input(type='hidden', name='action', value=mode + "_requirement")
+    if mode === 'edit'
+      input(type='hidden', name='index', value=index)
+    input(type='hidden', name='type', value=requirementType.type)
+    each input in requirementType.inputs
+      .control-group
+        - var inputId = "add-"+requirementType.type+"-"+input.name
+        label.control-label(for=inputId)= input.label
+        .controls
+          if input.type === 'select'
+            select(id=inputId, name=input.name)
+              each option in input.options
+                option(value=option.value, selected=(option.value === data[input.name]))= option.label
+          else
+            input(id=inputId, type="text", name=input.name, value=data[input.name] || input.value)
+    .control-group
+      .controls
+        if mode === 'add'
+          button.btn-success(type="submit") Add Requirement
+        else
+          button.btn-success(type="submit") Edit Requirement
+          button.btn-danger(type="submit",name="delete",value="delete") Delete Requirement
+
 block content
   h2 Edit Role: #{role.name}
 
@@ -14,3 +44,13 @@ block content
     .control-group
       .controls
         button.btn-success(type="submit") Update Role
+
+  h3 Edit requirements
+  p If you delete a requirement then other changes you make at the same time will be lost.
+  each requirement, index in role.meta.requirements
+    +formFor('edit', requirement.type, requirement, index)
+
+  hr
+  h3 Add a requirement
+  each requirementType in requirementTypes
+    +formFor('add', requirementType.type)

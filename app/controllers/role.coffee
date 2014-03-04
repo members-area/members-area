@@ -4,6 +4,7 @@ module.exports = class RoleController extends LoggedInController
   @before 'loadRoles', only: ['index', 'admin', 'edit']
   @before 'ensureAdminRoles', only: ['admin', 'edit']
   @before 'getRole', only: ['edit']
+  @before 'generateRequirementTypes', only: ['edit']
 
   index: (done) ->
     @req.user.getActiveRoles (err, @activeRoles) =>
@@ -30,9 +31,47 @@ module.exports = class RoleController extends LoggedInController
 
   edit: (done) ->
     if @req.method is 'POST'
-      if @data.name?.length
+      requirements = @role.meta.requirements[..] ? []
+      index = parseInt(@data.index, 10)
+
+      getRequirement = =>
+        for aRequirementType in @requirementTypes
+          if aRequirementType.type is @data.type
+            requirementType = aRequirementType
+            break
+        throw new Error "Couldn't find requirement type '#{@data.type}'" unless requirementType
+        requirement =
+          type: @data.type
+        for input in requirementType.inputs
+          value = @data[input.name]
+          value = input.validator.call(this, value) if input.validator
+          requirement[input.name] = value
+        return requirement
+
+      if @data.action is 'edit_requirement' and @data.delete is "delete"
+        requirements.splice(index, 1) if 0 <= index < requirements.length
+        @role.setMeta requirements: requirements
+
+      else if @data.action is 'edit_requirement'
+        try
+          requirements.splice(index, 1, getRequirement()) if 0 <= index < requirements.length
+          @role.setMeta requirements: requirements
+        catch e
+          console.error "Could not edit requirement because exception occurred:"
+          console.error e.stack
+
+      else if @data.action is 'add_requirement'
+        try
+          requirements.push getRequirement()
+          @role.setMeta requirements: requirements
+        catch e
+          console.error "Could not add requirement because exception occurred:"
+          console.error e.stack
+
+      else if @data.name?.length
         @role.name = @data.name
       @role.save done
+
     else
       @data = @role
       done()
@@ -49,4 +88,67 @@ module.exports = class RoleController extends LoggedInController
 
   getRole: (done) ->
     @req.models.Role.get @req.params.role_id, (err, @role) =>
+      @role.meta.requirements ?= []
       done err
+
+  generateRequirementTypes: (done) ->
+    roleOptions = ({value: role.id, label: role.name} for role in @roles)
+    roleValidator = (value) ->
+      value = parseInt(value, 10)
+      throw new Error("Invalid roleId") unless isFinite(value)
+      for role in @roles
+        return role.id if role.id is value
+      throw new Error("Non-existent roleId")
+
+    @requirementTypes = [
+      {
+        type: 'text'
+        title: "Text instruction"
+        inputs: [
+          {
+            label: "Instruction"
+            type: "text"
+            name: "text"
+          }
+        ]
+      }
+      {
+        type: 'approval'
+        title: 'Approvals'
+        inputs: [
+          {
+            label: "Role"
+            type: "select"
+            name: "roleId"
+            options: roleOptions
+            validator: roleValidator
+          }
+          {
+            label: "Number of approvals"
+            type: "text"
+            name: "count"
+            value: "1"
+            validator: (value) ->
+              value = parseInt(value, 10)
+              throw new Error("Invalid count") unless isFinite(value) and value > 0
+              return value
+          }
+        ]
+      }
+      {
+        type: 'role'
+        title: 'Must hold role'
+        inputs: [
+          {
+            label: "Role"
+            type: "select"
+            name: "roleId"
+            options: roleOptions
+            validator: roleValidator
+          }
+        ]
+      }
+    ]
+    @requirementTypeIndex = {}
+    @requirementTypeIndex[requirementType.type] = i for requirementType, i in @requirementTypes
+    done()
