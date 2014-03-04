@@ -9,8 +9,6 @@ block content
     h3= role.name
     if role.meta.description
       p.lead= role.meta.description
-    if activeRoleIds.indexOf(role.id) >= 0
-      p.text-success You have this role
     h4= Requirements
     each requirement in role.meta.requirements || []
       - var requirementType = requirementTypes[requirement.type]
@@ -18,3 +16,13 @@ block content
         p= requirementType.getSentence(requirement)
       else
         p We've not yet coded the description of this requirement.
+    if activeRoleIds.indexOf(role.id) >= 0
+      p.text-success You have this role
+    else if appliedRoleIds.indexOf(role.id) >= 0
+      p.text-warning You've already applied for this role
+    else if eligibleRoleIds.indexOf(role.id) < 0
+      p.text-error You're not eligible for this role
+    else
+      form(method="POST")
+        input(type="hidden", name="role_id", value=role.id)
+        button.btn.btn-success(type="submit") Apply

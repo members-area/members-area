@@ -7,10 +7,20 @@ module.exports = class RoleController extends LoggedInController
   @before 'generateRequirementTypes', only: ['index', 'edit']
 
   index: (done) ->
-    @req.user.getActiveRoles (err, @activeRoles) =>
-      return done err if err
-      @activeRoleIds = (role.id for role in @activeRoles)
-      done()
+    next = =>
+      @req.user.getRoleUsers (err, roleUsers) =>
+        return done err if err
+        @activeRoleIds = (roleUser.role_id for roleUser in roleUsers when roleUser.approved? and !roleUser.rejected?)
+        @appliedRoleIds = (roleUser.role_id for roleUser in roleUsers when !roleUser.approved? and !roleUser.rejected?)
+        @eligibleRoleIds = (role.id for role in @roles) # XXX: improve this!
+        done()
+    if @req.method is 'POST' and @req.body.role_id?
+      roleId = parseInt(@req.body.role_id, 10)
+      @req.user.requestRoles [roleId], (err) ->
+        return done err if err
+        next()
+    else
+      next()
 
   applications: (done) ->
     done()
