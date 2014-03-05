@@ -54,10 +54,12 @@ module.exports = class RegistrationController extends Controller
           t.commit (err) =>
             return done err if err
             if user.id is 1
-              @req.login user, (err) =>
-                @user = user
-                @template = "success"
-                done()
+              # Refetch so all the triggers are called
+              @req.models.User.get 1, (err, user) =>
+                @req.login user, (err) =>
+                  @user = user
+                  @template = "success"
+                  done()
             else
               @template = "success"
               done()
