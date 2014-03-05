@@ -1,10 +1,11 @@
 extends /sidebar
 
-mixin controlGroup(name, id, label)
+mixin controlGroup(name, id, label, defaultValue)
   .control-group
     label.control-label(for=name+"-"+id)= label
     .controls
-      input(id=name+"-"+id, name=name+"["+id+"]", value=data[name][id])
+      //- XXX: defaultValue needs to make it clear it's not saved
+      input(id=name+"-"+id, name=name+"["+id+"]", value=data[name][id] || defaultValue)
 
 block title
   | Core Settings
@@ -16,9 +17,9 @@ block content
   form.form-horizontal(method="POST")
     h4 Email
     +controlGroup("email", "from_address", "From Address")
-    +controlGroup("email", "service", "Service")
-    +controlGroup("email", "username", "Username")
-    +controlGroup("email", "password", "Password")
+    +controlGroup("email", "service", "Service", (process.env.MAILGUN_SMTP_LOGIN ? "mailgun" : ""))
+    +controlGroup("email", "username", "Username", process.env.MAILGUN_SMTP_LOGIN)
+    +controlGroup("email", "password", "Password", process.env.MAILGUN_SMTP_PASSWORD)
 
     .control-group
       .controls
