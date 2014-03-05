@@ -4,13 +4,15 @@ async = require 'async'
 cloneCallbacks = (oldCallbacks = {}) ->
   result = {}
   for key of oldCallbacks
-    result = (oldCallbacks[key] ? []).slice()
+    result[key] = (oldCallbacks[key] ? []).slice()
   return result
 
 class Controller
   @makeCallbacksLocal: ->
-    unless @hasOwnProperty('_callbacks')
+    clonedCallbacksProperty = "#{@name}_callbacks_cloned"
+    unless @hasOwnProperty(clonedCallbacksProperty)
       @_callbacks = cloneCallbacks @_callbacks
+      @[clonedCallbacksProperty] = true
     return
 
   @callback: (event, method, options = {}) ->
