@@ -36,6 +36,15 @@ environmental variables (optionally you can set the `PORT` too):
 SERVER_ADDRESS="http://127.0.0.1:1337" SECRET="YOURSECRETHERE" nodemon index.coffee
 ```
 
+You'll probably want to set up a [mailgun][] (or similar) account so
+Nodemailer can send the registration emails for further users you
+register without them ending up in spam. Then in Core Settings, set:
+
+- From address: Your Name <you@yourdomain>
+- Service: mailgun
+- Username: postmaster@yourdomain
+- Password: PasswordFromMailgun
+
 Contributing
 ------------
 
@@ -58,3 +67,4 @@ contribute, the documentation can be found there.
 
 [Bootstrap 2.3.2]: http://getbootstrap.com/2.3.2/
 [So Make It]: http://www.somakeit.org.uk/
+[mailgun]: https://mailgun.com
