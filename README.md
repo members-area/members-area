@@ -40,10 +40,10 @@ You'll probably want to set up a [mailgun][] (or similar) account so
 Nodemailer can send the registration emails for further users you
 register without them ending up in spam. Then in Core Settings, set:
 
-- From address: Your Name <you@yourdomain>
-- Service: mailgun
-- Username: postmaster@yourdomain
-- Password: PasswordFromMailgun
+- From address: `Your Name <you@yourdomain>`
+- Service: `mailgun`
+- Username: `postmaster@yourdomain`
+- Password: `PasswordFromMailgun`
 
 Contributing
 ------------
