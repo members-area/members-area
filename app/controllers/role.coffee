@@ -1,4 +1,5 @@
 LoggedInController = require './logged-in'
+_ = require 'underscore'
 
 module.exports = class RoleController extends LoggedInController
   @before 'loadRoles', only: ['index', 'admin', 'edit']
@@ -23,7 +24,20 @@ module.exports = class RoleController extends LoggedInController
       next()
 
   applications: (done) ->
-    done()
+    @req.models.RoleUser.find()
+    .where("approved IS NULL AND rejected IS NULL")
+    .run (err, @roleUsers) =>
+      return done err if err
+      userIds = _.uniq (roleUser.user_id for roleUser in @roleUsers)
+      @req.models.User.find()
+      .where(id:userIds)
+      .run (err, users) =>
+        return done err if err
+        for roleUser in @roleUsers
+          for user in users when user.id is roleUser.user_id
+            roleUser.user = user
+            break
+        done()
 
   application: (done) ->
     done()

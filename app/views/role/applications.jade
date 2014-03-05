@@ -6,4 +6,10 @@ block title
 block content
   h2 Role Applications
   p The people below are applying for roles.
-  p Coming soon...
+  ul
+    each roleUser in roleUsers
+      p
+        a(href="/roles/applications/"+roleUser.id)
+          strong= roleUser.user.fullname
+          |  is applying for role: 
+          strong= roleUser.role.name
