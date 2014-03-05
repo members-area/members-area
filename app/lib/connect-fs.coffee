@@ -33,6 +33,7 @@ module.exports = (connect) ->
             throw err if err
             data = JSON.parse(data)
             return fn null, data.session if data.expiryTime >= +new Date()
+            return fn null, null
           catch e
             if attempts > 3
               return fn(err) # deliberately not 'e'
