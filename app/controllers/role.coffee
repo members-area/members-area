@@ -40,6 +40,7 @@ module.exports = class RoleController extends LoggedInController
         done()
 
   application: (done) ->
+    @activeNavigationId = "role-applications"
     @req.models.RoleUser.get @req.params.id, (err, @roleUser) =>
       return done err if err
       @role = @roleUser.role
@@ -59,6 +60,8 @@ module.exports = class RoleController extends LoggedInController
       done()
 
   edit: (done) ->
+    @activeNavigationId = "role-admin"
+
     if @req.method is 'POST'
       requirements = @role.meta.requirements[..] ? []
       index = parseInt(@data.index, 10)

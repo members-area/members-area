@@ -3,6 +3,7 @@ _ = require 'underscore'
 async = require 'async'
 
 module.exports = class PersonController extends LoggedInController
+  activeNavigationId: "person-index"
   index: (done) ->
     async.series
       getUsers: (done) =>
