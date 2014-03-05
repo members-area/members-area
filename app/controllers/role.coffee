@@ -40,7 +40,12 @@ module.exports = class RoleController extends LoggedInController
         done()
 
   application: (done) ->
-    done()
+    @req.models.RoleUser.get @req.params.id, (err, @roleUser) =>
+      return done err if err
+      @role = @roleUser.role
+      @req.models.User.get @roleUser.user_id, (err, @user) =>
+        return done err if err
+        done()
 
   admin: (done) ->
     if @req.method is 'POST' and @data.name?.length

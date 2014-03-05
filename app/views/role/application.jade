@@ -6,4 +6,7 @@ block title
 block content
   h2 Role Application
   p This is a single application. Perhaps you can vote on it?
-  p Coming soon...
+  p
+    strong= user.fullname
+    |  is applying for role: 
+    strong= role.name
