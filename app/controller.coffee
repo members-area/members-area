@@ -113,9 +113,9 @@ class Controller
             priority: 10
           }
           {
-            title: 'Member list'
-            href: '/members'
-            id: 'member-index'
+            title: 'People'
+            href: '/people'
+            id: 'person-index'
             priority: 100
           }
         ]

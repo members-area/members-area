@@ -1,0 +1,10 @@
+extends /sidebar
+
+block title
+  = user.fullname
+
+block content
+  h2= user.fullname
+  p
+    strong Username: 
+    = user.username

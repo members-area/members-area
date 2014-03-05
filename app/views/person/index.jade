@@ -1,0 +1,11 @@
+extends /sidebar
+
+block title
+  | People
+
+block content
+  h2 People
+  ul.user-list
+    each user in users
+      li(class=user.classNames)
+        a(href="/people/"+user.id)= user.fullname
