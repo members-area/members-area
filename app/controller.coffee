@@ -145,15 +145,7 @@ class Controller
         title: 'Admin'
         id: 'admin'
         priority: 100
-        items: [
-          {
-            title: 'Register of Members'
-            href: '/admin/register'
-            id: 'admin-register'
-            priority: 100
-            permissions: ['admin']
-          }
-        ]
+        items: []
       }
       {
         title: 'Settings'
