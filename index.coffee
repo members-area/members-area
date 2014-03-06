@@ -153,7 +153,7 @@ connectToDb = ->
       app.models = models
       loadSettings()
 
-if require.main is module
+app.start = ->
   # XXX: merge these two together.
   unless process.env.SERVER_ADDRESS
     console.error "ERROR: You must set the 'SERVER_ADDRESS' environmental variable."
