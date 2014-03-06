@@ -48,10 +48,15 @@ methods =
       """
     fs.writeFileSync "index.coffee", """
       MembersArea = require 'members-area'
+
+      # Make sure we're in the right folder.
+      process.chdir "#{__dirname}/.."
+
       MembersArea.start()
       """
     fs.mkdirSync "config"
     fs.mkdirSync "log"
+    fs.mkdirSync "public"
     fs.mkdirSync "sessions"
     fs.writeFileSync "config/db.json", JSON.stringify
       development: "sqlite:///members.sqlite"

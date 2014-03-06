@@ -40,8 +40,9 @@ app.locals.basedir = path.join __dirname, 'app', 'views'
 app.set 'views', app.locals.basedir
 app.set 'view engine', 'jade'
 
+app.use express.favicon(path.join(process.cwd(), 'public', 'img', 'favicon.png'))
+app.use express.static(path.join(process.cwd(), 'public'))
 app.use express.static(path.join(__dirname, 'public'))
-app.use express.favicon(path.join(__dirname, 'public', 'img', 'favicon.png'))
 
 app.use (req, res, next) ->
   req.app = app
