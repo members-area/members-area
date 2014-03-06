@@ -1,14 +1,7 @@
 async = require 'async'
 crypto = require 'crypto'
 fs = require 'fs'
-{exec} = child_process = require 'child_process'
-
-# For use in combination with exec
-output = (done) ->
-  (err, stdout, stderr) ->
-    console.log stdout
-    console.error stderr
-    done(err)
+{spawn} = child_process = require 'child_process'
 
 arg = process.argv[2]
 
@@ -28,11 +21,17 @@ cwd = process.cwd()
 methods = new class
   migrate: (done = ->) =>
     console.log "Migrating"
-    exec "#{__dirname}/scripts/db/migrate", {cwd:process.cwd()}, output done
+    proc = spawn "#{__dirname}/scripts/db/migrate", [],
+      cwd: process.cwd()
+      stdio: 'inherit'
+    proc.on 'close', -> done()
 
   seed: (done = ->) =>
     console.log "Seeding"
-    exec "#{__dirname}/scripts/db/seed", {cwd:process.cwd()}, output done
+    proc = spawn "#{__dirname}/scripts/db/seed", [],
+      cwd: process.cwd()
+      stdio: 'inherit'
+    proc.on 'close', -> done()
 
   quickstart: (done = ->) =>
     async.series [
@@ -90,11 +89,10 @@ methods = new class
       test: "sqlite:///members-test.sqlite"
     async.series
       npmInstall: (next) ->
-        exec "npm install", output (err) ->
-          console.error err if err
-          console.error "An error occurred installing the dependencies. Try `npm install` later."
-          # Ignore error
-          next()
+        proc = spawn "npm", ["install"],
+          cwd: process.cwd()
+          stdio: 'inherit'
+        proc.on 'close', -> next()
       setSettings: (next) ->
         crypto.randomBytes 18, (err, bytes) ->
           fs.writeFileSync "config/development.json", JSON.stringify
