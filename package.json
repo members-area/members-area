@@ -10,7 +10,6 @@
     "doc": "docs"
   },
   "scripts": {
-    "prepublish": "coffee -o . -mc .; sed -i '' -e '1i\\\n#!/usr/bin/env node' members.js",
     "migrate": "./scripts/db/migrate",
     "seed": "./node_modules/.bin/coffee app/seed.coffee",
     "setup": "npm run migrate; npm run seed",
