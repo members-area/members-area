@@ -1,6 +1,14 @@
+async = require 'async'
 crypto = require 'crypto'
 fs = require 'fs'
-child_process = require 'child_process'
+{exec} = child_process = require 'child_process'
+
+# For use in combination with exec
+output = (done) ->
+  (err, stdout, stderr) ->
+    console.log stdout
+    console.error stderr
+    done(err)
 
 arg = process.argv[2]
 
@@ -8,19 +16,38 @@ usage = ->
   console.log """
     Usage:
 
-      init    - set up a members are in the current folder
-      migrate - migrate the database
-      seed    - seed the database
-      setup   - migrate then seed
+      quickstart - init && migrate && seed
+      init       - set up a members are in the current folder
+      setup      - migrate && seed
+      migrate    - migrate the database
+      seed       - seed the database
     """
 
 cwd = process.cwd()
 
-methods =
-  migrate: ->
-    console.log "MIGRATE"
+methods = new class
+  migrate: (done = ->) =>
+    console.log "Migrating"
+    exec "#{__dirname}/scripts/db/migrate", {cwd:process.cwd()}, output done
 
-  init: ->
+  seed: (done = ->) =>
+    console.log "Seeding"
+    exec "#{__dirname}/scripts/db/seed", {cwd:process.cwd()}, output done
+
+  quickstart: (done = ->) =>
+    async.series [
+      @init
+      @migrate
+      @seed
+    ], done
+
+  setup: (done = ->) =>
+    async.series [
+      @migrate
+      @seed
+    ], done
+
+  init: (done = ->) =>
     console.log "Initialising a members area in #{cwd}"
     files = fs.readdirSync cwd
     unless files.indexOf("package.json") >= 0
@@ -36,8 +63,6 @@ methods =
     pkg.plugins ?= {}
     pkg.plugins['members-area-passport'] = '*'
     fs.writeFileSync "package.json", JSON.stringify pkg, null, 2
-    child_process.exec "npm install --save members-area", (err) ->
-      throw err if err
     fs.writeFileSync ".gitignore", """
       *.sqlite
       config/
@@ -60,10 +85,20 @@ methods =
     fs.writeFileSync "config/db.json", JSON.stringify
       development: "sqlite:///members.sqlite"
       test: "sqlite:///members-test.sqlite"
-    crypto.randomBytes 18, (err, bytes) ->
-      fs.writeFileSync "config/settings.json", JSON.stringify
-        secret: bytes?.toString('base64') ? "PutSecureSecretHere"
-        serverAddress: "http://localhost:1337"
+    async.series
+      npmInstall: (next) ->
+        exec "npm install --save members-area", output (err) ->
+          console.error err if err
+          console.error "An error occurred installing the members-area module. Try `npm install --save members-area` later."
+          # Ignore error
+          next()
+      setSettings: (next) ->
+        crypto.randomBytes 18, (err, bytes) ->
+          fs.writeFileSync "config/development.json", JSON.stringify
+            secret: bytes?.toString('base64') ? "PutSecureSecretHere"
+            serverAddress: "http://localhost:1337"
+          next()
+    , done
 
 fn = methods[arg]
 if fn?

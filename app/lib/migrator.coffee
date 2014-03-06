@@ -2,10 +2,11 @@ fs = require 'fs'
 url = require 'url'
 MigrationTask = require 'migrate-orm2'
 orm = require 'orm'
+path = require 'path'
 require '../env'
 
 exports.runMigration = (operation, arg, pluginName, done) ->
-  dir = 'db/migrations'
+  dir = path.resolve "#{__dirname}/../../db/migrations"
   if typeof pluginName is 'function'
     done = pluginName
     pluginName = null

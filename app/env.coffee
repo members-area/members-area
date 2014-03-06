@@ -4,6 +4,11 @@ orm = require 'orm'
 process.env.NODE_ENV ?= 'development'
 process.env.DATABASE_URL ?= require('../config/db.json')[process.env.NODE_ENV]
 
+try
+  config = require "#{process.cwd()}/config/#{process.env.NODE_ENV}.json"
+  process.env.SERVER_ADDRESS ?= config.serverAddress
+  process.env.SECRET ?= config.secret
+
 unless process.env.DATABASE_URL
   console.error "No DATABASE_URL - exiting."
   process.exit 1
