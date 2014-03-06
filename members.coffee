@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 crypto = require 'crypto'
 fs = require 'fs'
 child_process = require 'child_process'
