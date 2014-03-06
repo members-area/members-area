@@ -1,6 +1,7 @@
 require '../app/lib/coffee-support'
 process.env.NODE_ENV ?= 'test'
 process.env.SECRET ?= String(Math.random()) + "|" + String(Math.random()) + "|" + String(Math.random())
+process.env.SERVER_ADDRESS ?= "http://example.com"
 if process.env.NODE_ENV isnt 'test'
   console.error "Aborting test because environment is wrong: #{process.env.NODE_ENV}"
   process.exit 1
@@ -55,6 +56,8 @@ middlewares = [
   require('../app/middleware/logging')(app)
   require('../app/middleware/http-error')()
   require('../app/models').middleware()
+  require('../app/lib/passport').initialize()
+  require('../app/lib/passport').session()
 ]
 reqres = (callback) ->
   req = new http.IncomingMessage
@@ -64,6 +67,12 @@ reqres = (callback) ->
   iterator = (middleware, done) ->
     middleware(req, res, done)
   async.mapSeries middlewares, iterator, ->
+    app.emailSetting =
+      meta:
+        settings:
+          from_address: "example@example.com"
+    app.mailTransport =
+      sendMail: -> # XXX: make emails testable
     callback req, res
   return
 
