@@ -2,7 +2,7 @@ url = require 'url'
 orm = require 'orm'
 
 process.env.NODE_ENV ?= 'development'
-process.env.DATABASE_URL ?= require('../config/db.json')[process.env.NODE_ENV]
+process.env.DATABASE_URL ?= require("#{process.cwd()}/config/db.json")[process.env.NODE_ENV]
 
 try
   config = require "#{process.cwd()}/config/#{process.env.NODE_ENV}.json"
