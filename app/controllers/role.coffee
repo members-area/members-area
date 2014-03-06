@@ -29,6 +29,7 @@ module.exports = class RoleController extends LoggedInController
     .run (err, @roleUsers) =>
       return done err if err
       userIds = _.uniq (roleUser.user_id for roleUser in @roleUsers)
+      return done() if userIds.length is 0
       @req.models.User.find()
       .where(id:userIds)
       .run (err, users) =>

@@ -22,18 +22,24 @@ Heroku instructions coming soon...
 Getting started - development
 -----------------------------
 
-For development only you can use the defaults (sqlite) - you probably
-wouldn't want to do this in production.
-
-First, install the dependencies: `npm install`
-
-Next, create the tables and seed them with data: `npm run setup`
-
-Finally run the server. It requires the `SERVER_ADDRESS` and `SECRET`
-environmental variables (optionally you can set the `PORT` too):
+Install CoffeeScript and the members-area software globally:
 
 ```
-SERVER_ADDRESS="http://127.0.0.1:1337" SECRET="YOURSECRETHERE" nodemon index.coffee
+npm install -g coffee-script members-area
+```
+
+Then create a new folder and initialise a new members are inside it:
+
+```
+mkdir myarea
+cd myarea
+members quickstart
+```
+
+You can then run the server:
+
+```
+coffee index.coffee
 ```
 
 You'll probably want to set up a [mailgun][] (or similar) account so
