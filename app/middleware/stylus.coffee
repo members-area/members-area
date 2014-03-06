@@ -9,5 +9,5 @@ stylusCompile = (str, path) ->
     .use(nib())
 
 module.exports = -> stylus.middleware
-  src: path.join(__dirname, 'public')
+  src: path.join(__dirname, "..", "..", 'public')
   compile: stylusCompile
