@@ -1,6 +1,6 @@
 {
   "name": "members-area",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "An area for members of a group to manage their subscription, permissions and resources.",
   "main": "index.js",
   "bin": {
@@ -47,6 +47,8 @@
     "underscore": "~1.5.2",
     "async": "~0.2.10",
     "mysql": "~2.0.1",
+    "pg": "~2.11.1",
+    "sqlite3": "~2.2.0",
     "passport": "~0.2.0",
     "passport-github": "~0.1.5",
     "passport-local": "~0.1.6",
@@ -61,7 +63,6 @@
     "html-to-text": "0.0.8"
   },
   "devDependencies": {
-    "sqlite3": "~2.2.0",
     "nodemon": "~1.0.14",
     "mocha": "~1.17.1",
     "chai": "~1.9.0",
