@@ -14,13 +14,8 @@ Project status
 
 Work in progress, getting there.
 
-Getting started - Heroku
-------------------------
-
-Heroku instructions coming soon...
-
-Getting started - development
------------------------------
+Getting started
+---------------
 
 Install CoffeeScript and the members-area software globally:
 
@@ -53,6 +48,11 @@ register without them ending up in spam. Then in Core Settings, set:
 
 Contributing
 ------------
+
+You can develop the members area by cloning it, then running `npm link`
+inside it. Then in your `myarea` folder you can do `npm link
+members-area` and you'll be using the code from your git clone. Just be
+sure to restart the server every time you make a change to the clone!
 
 I've designed the members area to have a plugin architecture allowing
 for easy expansion. In fact many of the features that could have been
