@@ -1,4 +1,4 @@
-require('source-map-support').install()
+require './app/lib/coffee-support'
 async = require 'async'
 crypto = require 'crypto'
 express = require 'express'

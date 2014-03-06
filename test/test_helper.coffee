@@ -1,4 +1,4 @@
-require('source-map-support').install()
+require '../app/lib/coffee-support'
 process.env.NODE_ENV ?= 'test'
 process.env.SECRET ?= String(Math.random()) + "|" + String(Math.random()) + "|" + String(Math.random())
 if process.env.NODE_ENV isnt 'test'
