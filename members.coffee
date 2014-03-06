@@ -62,6 +62,9 @@ methods = new class
     pkg.scripts.start ?= "coffee index.coffee"
     pkg.plugins ?= {}
     pkg.plugins['members-area-passport'] = '*'
+    pkg.dependencies ?= {}
+    pkg.dependencies["sqlite3"] ?= "~2.2.0"
+    pkg.dependencies["members-area"] ?= "*"
     fs.writeFileSync "package.json", JSON.stringify pkg, null, 2
     fs.writeFileSync ".gitignore", """
       *.sqlite
@@ -87,9 +90,9 @@ methods = new class
       test: "sqlite:///members-test.sqlite"
     async.series
       npmInstall: (next) ->
-        exec "npm install --save members-area", output (err) ->
+        exec "npm install", output (err) ->
           console.error err if err
-          console.error "An error occurred installing the members-area module. Try `npm install --save members-area` later."
+          console.error "An error occurred installing the dependencies. Try `npm install` later."
           # Ignore error
           next()
       setSettings: (next) ->
