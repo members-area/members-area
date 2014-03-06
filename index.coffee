@@ -156,6 +156,10 @@ connectToDb = ->
 
 app.start = ->
   # XXX: merge these two together.
+  try
+    config = require "#{process.cwd()}/config/settings.json"
+    process.env.SERVER_ADDRESS ?= config.serverAddress
+    process.env.SECRET ?= config.secret
   unless process.env.SERVER_ADDRESS
     console.error "ERROR: You must set the 'SERVER_ADDRESS' environmental variable."
     process.exit 1
