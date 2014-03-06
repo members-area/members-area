@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "description": "An area for members of a group to manage their subscription, permissions and resources.",
   "main": "index.js",
+  "bin": {
+    "members": "./members.js"
+  },
   "directories": {
     "doc": "docs"
   },
   "scripts": {
+    "prepublish": "coffee -o . -mc .; sed -i '' -e '1i\\\n#!/usr/bin/env node' members.js",
     "migrate": "./scripts/db/migrate",
     "seed": "./node_modules/.bin/coffee app/seed.coffee",
     "setup": "npm run migrate; npm run seed",
