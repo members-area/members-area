@@ -1,0 +1,7 @@
+.gitignore
+config
+docs
+log
+sessions
+test
+*.sqlite

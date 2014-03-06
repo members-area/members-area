@@ -1,3 +1,5 @@
 *.sqlite
+log
 public/css/style.css
 sessions
+node_modules
