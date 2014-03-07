@@ -41,7 +41,9 @@ class Router
       try
         throw new req.HTTPError(404) unless params.controller? and params.action?
         if params.plugin
-          Controller = require("#{path.dirname(require.resolve(params.plugin))}/controllers/#{params.controller}")
+          Plugin = require './plugin'
+          plugin = Plugin.load params.plugin
+          Controller = require("#{plugin.path}/controllers/#{params.controller}")
         else
           Controller = require("./controllers/#{params.controller}")
         Controller.handle params, req, res, next

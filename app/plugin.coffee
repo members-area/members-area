@@ -4,8 +4,15 @@ path = require 'path'
 async = require 'async'
 migrator = require './lib/migrator'
 _ = require 'underscore'
+resolve = require('resolve').sync
 
 class Plugin extends EventEmitter
+  @plugins = {}
+
+  @load: (identifier, app) ->
+    return @plugins[identifier] if @plugins[identifier]?
+    @plugins[identifier] = new Plugin(identifier, app)
+
   @hook: (app) ->
     app.pluginHooks = {}
     processHook = (hookName, options, callback) ->
@@ -31,14 +38,16 @@ class Plugin extends EventEmitter
         processHook hookName, options, next
       async.each hookNames, handleHookName, callback
 
-  constructor: (@app, @identifier, @models) ->
-    @path = path.dirname require.resolve(@identifier)
+  constructor: (@identifier, @app = require('../index.coffee')) ->
+    @models = @app.models
+    resolved = resolve(@identifier, basedir: "#{process.cwd()}", extensions: Object.keys(require.extensions))
+    @path = path.dirname resolved
     try
       @meta = require "#{@path}/package.json"
       {@name, @version} = @meta
     @name ?= @identifier
     try
-      _.extend @, require @identifier
+      _.extend @, require resolved
     catch e
       console.error "Failed to load plugin: #{e?.message}"
 
