@@ -10,17 +10,36 @@ usage = ->
   console.log """
     Usage:
 
-      quickstart - init && migrate && seed && plugins
+      version    - what version are you running?
+      quickstart - init && migrate && seed && plugins && run
       init       - set up a members are in the current folder
       setup      - migrate && seed && plugins
       migrate    - migrate the database
       seed       - seed the database
       plugins    - npm install plugins
+      run        - run the server (do this in the root folder)
     """
 
 cwd = process.cwd()
 
 methods = new class
+  help: =>
+    usage()
+
+  version: =>
+    pkg = require "#{__dirname}/package.json"
+    console.log "Members Area, v#{pkg.version}"
+
+  run: =>
+    proc = spawn "coffee", ["index.coffee"],
+      cwd: process.cwd()
+      stdio: 'inherit'
+    proc.on 'close', process.exit
+    process.on 'SIGINT', ->
+      proc.kill 'SIGINT'
+    process.on 'SIGTERM', ->
+      proc.kill 'SIGTERM'
+
   plugins: (done = ->) =>
     pluginsJson = require "#{cwd}/config/plugins.json"
     install = ([name, version], next) ->
@@ -50,6 +69,7 @@ methods = new class
       @migrate
       @seed
       @plugins
+      @run
     ], done
 
   setup: (done = ->) =>
@@ -114,6 +134,7 @@ methods = new class
           next()
     , done
 
+arg = arg?.replace /[^a-z]/g, ""
 fn = methods[arg]
 if fn?
   fn()
