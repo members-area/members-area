@@ -1,6 +1,6 @@
 {
   "name": "members-area",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "An area for members of a group to manage their subscription, permissions and resources.",
   "main": "index.js",
   "bin": {
@@ -57,7 +57,8 @@
     "migrate-orm2": "git://github.com/benjie/node-migrate-orm2.git",
     "orm-timestamps": "~0.2.1",
     "juice": "~0.4.0",
-    "html-to-text": "0.0.8"
+    "html-to-text": "0.0.8",
+    "resolve": "~0.6.1"
   },
   "devDependencies": {
     "nodemon": "~1.0.14",
