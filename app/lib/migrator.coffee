@@ -12,7 +12,7 @@ exports.runMigration = (operation, arg, pluginName, done) ->
     pluginName = null
   tableName = "orm_migrations"
   if pluginName?
-    dir = "plugins/#{pluginName}/db/migrations"
+    dir = "#{path.dirname(require.resolve(pluginName))}/db/migrations"
     suffix = pluginName.replace(/[^a-z]/g, "_").toLowerCase()
     tableName += "_#{suffix}"
   {DATABASE_URL} = process.env

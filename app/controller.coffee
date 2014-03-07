@@ -66,7 +66,7 @@ class Controller
   constructor: (@app, @params, @req, @res) ->
     if @params.plugin
       @plugin = @app.getPlugin(@params.plugin)
-      @templateParent ?= "#{@app.path}/plugins/#{@params.plugin}/views/#{@params.controller}"
+      @templateParent ?= "#{@plugin.path}/views/#{@params.controller}"
     else
       @templateParent ?= @params.controller
     @template ?= @params.action

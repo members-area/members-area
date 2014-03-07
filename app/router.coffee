@@ -1,3 +1,5 @@
+path = require 'path'
+
 class Router
   constructor: (@app) ->
     @app.addRoute = @addRoute
@@ -39,7 +41,7 @@ class Router
       try
         throw new req.HTTPError(404) unless params.controller? and params.action?
         if params.plugin
-          Controller = require("../plugins/#{params.plugin}/controllers/#{params.controller}")
+          Controller = require("#{path.dirname(require.resolve(params.plugin))}/controllers/#{params.controller}")
         else
           Controller = require("./controllers/#{params.controller}")
         Controller.handle params, req, res, next

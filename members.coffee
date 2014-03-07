@@ -64,6 +64,7 @@ methods = new class
     pkg.dependencies ?= {}
     pkg.dependencies["sqlite3"] ?= "~2.2.0"
     pkg.dependencies["members-area"] ?= "*"
+    pkg.dependencies["members-area-passport"] ?= "*"
     fs.writeFileSync "package.json", JSON.stringify pkg, null, 2
     fs.writeFileSync ".gitignore", """
       *.sqlite

@@ -123,12 +123,11 @@ checkRoles = ->
     start()
 
 loadPlugins = ->
-  fs.readdir 'plugins', (err, dirs = []) ->
-    for dir in dirs
-      try
-        app.plugins.push new Plugin app, dir, app.models
-      catch e
-        console.error "Could not load '#{dir}' plugin: #{e}"
+  for moduleName of require("#{process.cwd()}/package.json").plugins ? {}
+    try
+      app.plugins.push new Plugin app, moduleName, app.models
+    catch e
+      console.error "Could not load '#{moduleName}' plugin: #{e}"
     loadPlugin = (plugin, done) ->
       plugin.load(done)
     async.map app.plugins, loadPlugin, (err) ->

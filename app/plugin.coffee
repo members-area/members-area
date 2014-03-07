@@ -1,5 +1,6 @@
 EventEmitter = require('events').EventEmitter
 fs = require 'fs'
+path = require 'path'
 async = require 'async'
 migrator = require './lib/migrator'
 _ = require 'underscore'
@@ -31,13 +32,15 @@ class Plugin extends EventEmitter
       async.each hookNames, handleHookName, callback
 
   constructor: (@app, @identifier, @models) ->
-    @dirname = "#{@app.path}/plugins/#{@identifier}"
+    @path = path.dirname require.resolve(@identifier)
     try
-      @meta = require "#{@dirname}/package.json"
+      @meta = require "#{@path}/package.json"
       {@name, @version} = @meta
     @name ?= @identifier
     try
-      _.extend @, require "#{@dirname}"
+      _.extend @, require @identifier
+    catch e
+      console.error "Failed to load plugin: #{e?.message}"
 
   initialize: (done) ->
     done()
@@ -46,13 +49,13 @@ class Plugin extends EventEmitter
     migrator.runMigration 'up', null, @identifier, done
 
   modelFilenames: (done) ->
-    fs.readdir "#{@dirname}/models", (err, files = []) =>
+    fs.readdir "#{@path}/models", (err, files = []) =>
       filenames = []
       files.forEach (filename) =>
         [ignore, name, ext] = filename.match /^(.*?)(?:\.(js|coffee))?$/
         return if name is 'index' or name.substr(0,1) is '.'
         return unless ext?.length
-        filenames.push "#{@dirname}/models/#{name}"
+        filenames.push "#{@path}/models/#{name}"
       done null, filenames
 
   load: (callback) ->
