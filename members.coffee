@@ -82,14 +82,20 @@ methods = new class
   init: (done = ->) =>
     console.log "Initialising a members area in #{cwd}"
     files = fs.readdirSync cwd
-    unless files.indexOf("package.json") >= 0
-      console.error "Please run `npm init` first."
-      process.exit 1
     for file in files
-      unless file.match /^(\..*|package.json|node_modules)$/
+      unless file.match /^(\.(|\.|git)|package.json|node_modules)$/
         console.error "Folder is not empty: '#{file}' forbidden"
         process.exit 1
-    pkg = require "#{cwd}/package.json"
+    try
+      pkg = require "#{cwd}/package.json"
+    pkg ?=
+      name: "MyMembersArea"
+      version: "0.0.0"
+      description: "A Members Area powered by members-area"
+      main: "index.coffee"
+      scripts: {}
+      author: ""
+
     pkg.scripts ?= {}
     pkg.scripts.start ?= "./node_modules/.bin/coffee index.coffee"
     pkg.dependencies ?= {}
