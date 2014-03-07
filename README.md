@@ -17,10 +17,10 @@ Work in progress, getting there.
 Getting started
 ---------------
 
-Install CoffeeScript and the members-area software globally:
+Install members-area software globally:
 
 ```
-npm install -g coffee-script members-area
+npm install -g members-area
 ```
 
 Then create a new folder and initialise a new members are inside it:
@@ -31,11 +31,12 @@ cd myarea
 members quickstart
 ```
 
-You can then run the server:
+After a period of time installing the various dependencies, setting up a
+SQLite database, installing the default plugins, etc the server will be
+up and running on [localhost:1337](http://127.0.0.1:1337/).
 
-```
-coffee index.coffee
-```
+In future you can run the members area with `members run` or `npm start`
+or, if you have installed CoffeeScript globally, `coffee index.coffee`.
 
 You'll probably want to set up a [mailgun][] (or similar) account so
 Nodemailer can send the registration emails for further users you
