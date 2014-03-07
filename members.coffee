@@ -2,6 +2,7 @@ async = require 'async'
 crypto = require 'crypto'
 fs = require 'fs'
 {spawn} = child_process = require 'child_process'
+_ = require 'underscore'
 
 arg = process.argv[2]
 
@@ -9,16 +10,26 @@ usage = ->
   console.log """
     Usage:
 
-      quickstart - init && migrate && seed
+      quickstart - init && migrate && seed && plugins
       init       - set up a members are in the current folder
-      setup      - migrate && seed
+      setup      - migrate && seed && plugins
       migrate    - migrate the database
       seed       - seed the database
+      plugins    - npm install plugins
     """
 
 cwd = process.cwd()
 
 methods = new class
+  plugins: (done = ->) =>
+    pluginsJson = require "#{cwd}/config/plugins.json"
+    install = ([name, version], next) ->
+      proc = spawn "npm", ["install", "--save", "#{name}@#{version}"],
+        cwd: process.cwd()
+        stdio: 'inherit'
+      proc.on 'close', -> next()
+    async.eachSeries _.pairs(pluginsJson), install, done
+
   migrate: (done = ->) =>
     console.log "Migrating"
     proc = spawn "#{__dirname}/scripts/db/migrate", [],
@@ -38,12 +49,14 @@ methods = new class
       @init
       @migrate
       @seed
+      @plugins
     ], done
 
   setup: (done = ->) =>
     async.series [
       @migrate
       @seed
+      @plugins
     ], done
 
   init: (done = ->) =>
@@ -59,12 +72,9 @@ methods = new class
     pkg = require "#{cwd}/package.json"
     pkg.scripts ?= {}
     pkg.scripts.start ?= "coffee index.coffee"
-    pkg.plugins ?= {}
-    pkg.plugins['members-area-passport'] = '*'
     pkg.dependencies ?= {}
     pkg.dependencies["sqlite3"] ?= "~2.2.0"
     pkg.dependencies["members-area"] ?= "*"
-    pkg.dependencies["members-area-passport"] ?= "*"
     fs.writeFileSync "package.json", JSON.stringify pkg, null, 2
     fs.writeFileSync ".gitignore", """
       *.sqlite
@@ -88,6 +98,8 @@ methods = new class
     fs.writeFileSync "config/db.json", JSON.stringify
       development: "sqlite:///members.sqlite"
       test: "sqlite:///members-test.sqlite"
+    fs.writeFileSync "config/plugins.json", JSON.stringify
+      'members-area-passport': '*'
     async.series
       npmInstall: (next) ->
         proc = spawn "npm", ["install"],

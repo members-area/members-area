@@ -123,7 +123,9 @@ checkRoles = ->
     start()
 
 loadPlugins = ->
-  for moduleName of require("#{process.cwd()}/package.json").plugins ? {}
+  try
+    pluginsJson = require("#{process.cwd()}/config/plugins.json")
+  for moduleName of pluginsJson ? {}
     try
       app.plugins.push new Plugin app, moduleName, app.models
     catch e
