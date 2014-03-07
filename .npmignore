@@ -1,4 +1,10 @@
+.nodemonignore
+.npmignore
+.travis.yml
 .gitignore
+LOCAL
+README.md
+node_modules
 config
 docs
 log
