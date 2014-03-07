@@ -25,11 +25,11 @@ passport.deserializeUser = (id, req, done) ->
 ###
 
 passport.use new LocalStrategy {passReqToCallback: true}, (req, username, password, done) ->
-  req.models.User.find().where({username: username}).run (err, users) ->
+  req.models.User.find().where({username: username}).first (err, user) ->
     return done err if err
-    [user] = users
+    return done() unless user
     user.checkPassword password, (err, correct) ->
-      return done err, correct if err or !correct
+      return done err if err or !correct
       return done null, user
 
 ###*
