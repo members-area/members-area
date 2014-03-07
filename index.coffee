@@ -128,11 +128,11 @@ loadPlugins = ->
       app.plugins.push new Plugin app, moduleName, app.models
     catch e
       console.error "Could not load '#{moduleName}' plugin: #{e}"
-    loadPlugin = (plugin, done) ->
-      plugin.load(done)
-    async.map app.plugins, loadPlugin, (err) ->
-      throw err if err
-      checkRoles()
+  loadPlugin = (plugin, done) ->
+    plugin.load(done)
+  async.map app.plugins, loadPlugin, (err) ->
+    throw err if err
+    checkRoles()
 
 loadSettings = ->
   app.models.Setting.find()
