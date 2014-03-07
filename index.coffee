@@ -166,4 +166,7 @@ app.start = ->
     return
   connectToDb()
 
+if require.main is module
+  app.start()
+
 module.exports = app
