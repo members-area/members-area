@@ -31,8 +31,8 @@ methods = new class
     console.log "Members Area, v#{pkg.version}"
 
   run: =>
-    proc = spawn "coffee", ["index.coffee"],
-      cwd: process.cwd()
+    proc = spawn "node", ["#{cwd}/node_modules/.bin/coffee", "index.coffee"],
+      cwd: cwd
       stdio: 'inherit'
     proc.on 'close', process.exit
     process.on 'SIGINT', ->
@@ -91,9 +91,10 @@ methods = new class
         process.exit 1
     pkg = require "#{cwd}/package.json"
     pkg.scripts ?= {}
-    pkg.scripts.start ?= "coffee index.coffee"
+    pkg.scripts.start ?= "./node_modules/.bin/coffee index.coffee"
     pkg.dependencies ?= {}
     pkg.dependencies["sqlite3"] ?= "~2.2.0"
+    pkg.dependencies["coffee-script"] ?= ">1.6"
     pkg.dependencies["members-area"] ?= "*"
     fs.writeFileSync "package.json", JSON.stringify pkg, null, 2
     fs.writeFileSync ".gitignore", """
