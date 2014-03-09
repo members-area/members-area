@@ -60,6 +60,12 @@ app.use express.session
 
 app.use (req, res, next) -> # Custom themes
   try
+    if req.query.unsafe?
+      delete req.session.safe
+    if req.query.safe?
+      req.session.safe = 1
+    if req.session.safe
+      throw new Error "Safe mode"
     themeName = app.themeSetting.meta.settings.identifier
     themePlugin = Plugin.load themeName
     themePlugin = null unless themePlugin.themeMiddleware?
