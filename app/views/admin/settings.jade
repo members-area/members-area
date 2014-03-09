@@ -4,8 +4,11 @@ mixin controlGroup(name, id, label, defaultValue)
   .control-group
     label.control-label(for=name+"-"+id)= label
     .controls
-      //- XXX: defaultValue needs to make it clear it's not saved
-      input(id=name+"-"+id, name=name+"["+id+"]", value=data[name][id] || defaultValue)
+      if block
+        block
+      else
+        //- XXX: defaultValue needs to make it clear it's not saved
+        input(id=name+"-"+id, name=name+"["+id+"]", value=data[name][id] || defaultValue)
 
 block title
   | Core Settings
@@ -20,6 +23,12 @@ block content
     +controlGroup("email", "service", "Service", (process.env.MAILGUN_SMTP_LOGIN ? "mailgun" : ""))
     +controlGroup("email", "username", "Username", process.env.MAILGUN_SMTP_LOGIN)
     +controlGroup("email", "password", "Password", process.env.MAILGUN_SMTP_PASSWORD)
+
+    h4 Theme
+    +controlGroup("theme", "identifier", "Theme")
+      select(name="theme[identifier]")
+        each aTheme in themes
+          option(value=aTheme.value, selected=(data.theme.identifier == aTheme.value))= aTheme.name
 
     .control-group
       .controls

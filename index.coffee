@@ -59,7 +59,10 @@ app.use express.session
   store: sessionStore
 
 app.use (req, res, next) -> # Custom themes
-  themePlugin = null
+  try
+    themeName = app.themeSetting.meta.settings.identifier
+    themePlugin = Plugin.load themeName
+    themePlugin = null unless themePlugin.themeMiddleware?
   if themePlugin
     res.locals.basedir = path.join themePlugin.path, 'views'
     themePlugin.themeMiddleware(req, res, next)
@@ -154,12 +157,22 @@ loadPlugins = ->
 
 loadSettings = ->
   app.models.Setting.find()
-  .where(name:'email')
-  .first (err, emailSetting) ->
+  .where(name:['email', 'theme'])
+  .run (err, settings) ->
     throw err if err
+    for setting in settings
+      emailSetting = setting if setting.name is 'email'
+      themeSetting = setting if setting.name is 'theme'
     throw new Error "No email setting, try seeding the database" unless emailSetting
+    unless themeSetting
+      themeSetting = new app.models.Setting
+        name: 'theme'
+        meta:
+          settings: {}
+      themeSetting.save ->
     app.emailSetting = emailSetting
     app.updateEmailTransport()
+    app.themeSetting = themeSetting
     loadPlugins()
 
 connectToDb = ->
