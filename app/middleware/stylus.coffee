@@ -8,6 +8,6 @@ stylusCompile = (str, path) ->
     .set('compress', true)
     .use(nib())
 
-module.exports = -> stylus.middleware
-  src: path.join(__dirname, "..", "..", 'public')
+module.exports = (src = path.join(__dirname, "..", "..", 'public')) -> stylus.middleware
+  src: src
   compile: stylusCompile

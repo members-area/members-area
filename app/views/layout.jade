@@ -4,7 +4,7 @@ html
     title
       block title
         = title
-      |  | So Make It Members
+        |  | Members Area
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     link(rel='stylesheet', href='/css/bootstrap.min.css')
     link(rel='stylesheet', href='/css/bootstrap-responsive.min.css')
@@ -27,15 +27,11 @@ html
               span.icon-bar
               span.icon-bar
               span.icon-bar
-            a.brand(href='/') So Make It
+            a.brand(href='/') Members Area
             //- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse.
             .nav-collapse.collapse
               - var active
-              ul(class="nav members")
-                li
-                  a(href='http://www.somakeit.org.uk/') Website
-                li
-                  a(href='http://wiki.somakeit.org.uk/') Wiki
+              block headerNavLeft
               ul.nav.pull-right
                 if loggedInUser
                   li.active.dropdown
@@ -67,6 +63,4 @@ html
             p.backtotop
               a(href='#') Back to top
             p
-              | &copy; #{ new Date().getFullYear() } So Make It Ltd.
-            p.legal
-              | A not-for-profit company limited by guarantee, registered in England and Wales with company number: 08442741. Registered address: 6 Irving Road, SO16 4DZ.
+              | Powered by <a href="http://github.com/benjie/members-area">Members Area</a>.

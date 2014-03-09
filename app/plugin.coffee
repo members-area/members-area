@@ -40,6 +40,7 @@ class Plugin extends EventEmitter
 
   constructor: (@identifier, @app = require('../index.coffee')) ->
     @models = @app.models
+    @express = require 'express'
     resolved = resolve(@identifier, basedir: "#{process.cwd()}", extensions: Object.keys(require.extensions))
     @path = path.dirname resolved
     try

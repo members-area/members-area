@@ -40,19 +40,14 @@ app.locals.basedir = path.join __dirname, 'app', 'views'
 app.set 'views', app.locals.basedir
 app.set 'view engine', 'jade'
 
-app.use express.favicon(path.join(process.cwd(), 'public', 'img', 'favicon.png'))
 app.use express.static(path.join(process.cwd(), 'public'))
-app.use express.static(path.join(__dirname, 'public'))
 
 app.use (req, res, next) ->
   req.app = app
   res.locals.restartRequired = app.restartRequired ? false
   next()
 app.use require('./app/middleware/logging')(app)
-app.use require('./app/middleware/stylus')()
 app.use require('./app/middleware/http-error')()
-app.use express.bodyParser()
-app.use express.methodOverride()
 app.use express.cookieParser(process.env.SECRET)
 
 sessionStore = new FSStore
@@ -60,6 +55,22 @@ sessionStore = new FSStore
 app.use express.session
   secret: process.env.SECRET
   store: sessionStore
+
+app.use (req, res, next) -> # Custom themes
+  themePlugin = null
+  if themePlugin
+    res.locals.basedir = path.join themePlugin.path, 'views'
+    themePlugin.themeMiddleware(req, res, next)
+  else
+    res.locals.basedir = path.join __dirname, 'app', 'views'
+    next()
+  return
+
+app.use require('./app/middleware/stylus')()
+app.use express.static(path.join(__dirname, 'public'))
+
+app.use express.bodyParser()
+app.use express.methodOverride()
 
 app.configure 'development', ->
   app.use express.errorHandler()
