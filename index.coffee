@@ -135,7 +135,7 @@ loadPlugins = ->
       console.error "Could not load '#{moduleName}' plugin: #{e}"
   loadPlugin = (plugin, done) ->
     plugin.load(done)
-  async.map app.plugins, loadPlugin, (err) ->
+  async.mapSeries app.plugins, loadPlugin, (err) ->
     throw err if err
     checkRoles()
 
