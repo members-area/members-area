@@ -10,6 +10,7 @@ nodemailer = require 'nodemailer'
 FSStore = require('./app/lib/connect-fs')(express)
 Plugin = require './app/plugin'
 require './app/env' # Fix/load/check environmental variables
+require './app/lib/jade-exclamation'
 
 makeIntegerIfPossible = (str) ->
   return parseInt(str, 10) if str?.match?(/^[0-9]+$/)
@@ -33,6 +34,7 @@ app.updateEmailTransport = ->
     app.mailTransport = nodemailer.mail
 
 app.path = __dirname
+app.locals._appPath = app.path
 
 app.set 'trust proxy', true # Required for nginx/etc
 app.set 'port', makeIntegerIfPossible(process.env.PORT) ? 1337
