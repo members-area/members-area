@@ -1,0 +1,122 @@
+@import nib
+
+#main.container
+  min-height: 300px
+.gumph
+  font-size: 1.3em
+  line-height: (1.05 * @font-size)
+  margin-top: 50px
+  text-align: justify
+.register-form
+.login-form
+.message-container
+  padding:20px
+  margin-top: 30px
+  margin-bottom: @margin-top
+  background-color: #eee
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4)
+  border-radius: 20px
+  button
+    display: block
+    margin: auto
+  textarea
+    box-sizing: border-box
+    width: 100%
+  input.text
+    box-sizing: border-box
+    width: 100%
+    height: 2.2em
+.login-form
+  text-align: center
+
+.message-container
+  max-width: 600px
+  margin: 30px auto
+
+.nav-list
+  background-color: #f5f5f5;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  margin: 10px
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  .warning a
+    color: red
+    font-weight: bold
+
+.user-list
+  .overdue a
+    color: red
+  .neverpaid a
+    color: orange
+  .unapproved a
+    font-weight: bold
+    color: green
+  .unapproved.unverified a
+    font-weight: normal
+    color: rgb(180,180,180)
+  .unapproved.rejected a
+    text-decoration: line-through
+    color: rgb(220,220,220)
+  .pending a
+    color: darkblue
+
+.sdfsdfsdf
+  // Antispam!
+  display: none
+
+.registerOfMembers
+  font-size: 0.85em
+  line-height: 1.2em
+  .footer
+    position: fixed
+    bottom: 0
+    margin: 20px 20px 0 20px
+  p.legal
+    font-size: 0.9em
+  .main
+    thead
+      h3
+      p
+        text-align: center
+    .summary
+      margin: 20px 0
+    th.name
+      width: 160px
+  .letterhead
+    clearfix()
+    .logo
+      float: left
+      height: 180px
+      margin: 20px
+      width: auto
+    border-bottom: 1px solid black
+    .details
+      float: right
+      margin-right: 20px
+    .companyName
+    .address
+    .contact
+      margin: 20px 0
+      h4
+        margin: 0 0 5px 0
+      p
+        margin: 0
+        padding: 0
+
+form.approval .btn
+  margin-right: 20px
+
+footer {
+  margin-top: 20px;
+}
+footer p.backtotop {
+  text-align: right;
+}
+footer p {
+  font-size: 0.9em;
+  margin: 0;
+}
+footer p.legal {
+  font-size: 0.75em;
+  line-spacing: 100%;
+}
