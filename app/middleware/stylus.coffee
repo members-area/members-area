@@ -2,7 +2,7 @@ nib = require 'nib'
 stylus = require 'stylus'
 path = require 'path'
 
-cssDir = path.join(__dirname, "..", "..", 'public', 'css')
+cssDir = path.join(__dirname, "..", "..", 'public')
 
 stylusCompile = (str, path) ->
   return stylus(str)
