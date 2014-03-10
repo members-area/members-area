@@ -74,7 +74,10 @@ class Plugin extends EventEmitter
       @migrate.bind(this)
       @loadSettings.bind(this)
       @initialize.bind(this)
-    ], =>
+    ], (err) =>
+      if err
+        console.error "Loading '#{@identifier}' plugin wasn't completely successful"
+        console.error err
       @emit 'load'
 
   loadSettings: (callback) ->
