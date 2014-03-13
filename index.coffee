@@ -145,11 +145,9 @@ checkRoles = ->
     start()
 
 loadPlugins = ->
+  pluginsJson = {}
   try
     pluginsJson = require("#{process.cwd()}/config/plugins.json")
-  catch e
-    console.error "No plugins.json found! '#{process.cwd()}/config/plugins.json'"
-    process.exit 1
   for moduleName of pluginsJson ? {}
     try
       app.plugins.push Plugin.load moduleName, app
