@@ -8,3 +8,10 @@ block content
   p
     strong Username: 
     = user.username
+  h3 Active roles:
+  ul
+  each roleUser in user.activeRoleUsers
+    li
+      strong= roleUser.role.name
+      |  since 
+      em= roleUser.approved
