@@ -133,9 +133,9 @@ module.exports = (db, models, app) ->
       hasActiveRole: (roleId, callback) ->
         roleId = roleId.id if typeof roleId is 'object'
         @getRoleUsers()
-        .where("id = ? AND rejected IS NULL AND accepted IS NOT NULL", [roleId])
+        .where("role_id = ? AND rejected IS NULL AND approved IS NOT NULL", [roleId])
         .run (err, roles) ->
-          callback (err || roles?.length < 1)
+          callback (!err && roles?.length > 0)
 
       getActiveRoles: (callback) ->
         models.RoleUser.find()
