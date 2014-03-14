@@ -21,7 +21,7 @@ module.exports = class PersonController extends LoggedInController
         for user in @users
           classNames = []
           classNames.push "unverified" unless user.verified
-          classNames.push "unapproved" unless _.pluck(user.activeRoleUsers, 'role_id').indexOf(2) >= 0
+          classNames.push "unapproved" unless _.pluck(user.activeRoleUsers, 'role_id').indexOf(1) >= 0
           # XXX: if @req.user.can 'admin' then add payment classes
           user.classNames = classNames.join ' '
         done()
