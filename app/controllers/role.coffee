@@ -5,7 +5,7 @@ module.exports = class RoleController extends LoggedInController
   @before 'loadRoles', only: ['index', 'admin', 'edit']
   @before 'ensureAdminRoles', only: ['admin', 'edit']
   @before 'getRole', only: ['edit']
-  @before 'generateRequirementTypes', only: ['index', 'edit']
+  @before 'generateRequirementTypes', only: ['index', 'edit', 'application']
 
   index: (done) ->
     next = =>
@@ -47,7 +47,9 @@ module.exports = class RoleController extends LoggedInController
       @role = @roleUser.role
       @req.models.User.get @roleUser.user_id, (err, @user) =>
         return done err if err
-        done()
+        @roleUser.getRequirementsWithStatusForUser @req.user, (err, @requirements) =>
+          return done err if err
+          done()
 
   admin: (done) ->
     if @req.method is 'POST' and @data.name?.length

@@ -10,3 +10,16 @@ block content
     strong= user.fullname
     |  is applying for role: 
     strong= role.name
+  h3 Requirements
+  each requirement in requirements || []
+    - var requirementType = requirementTypes[requirement.type]
+    - var passed = requirement.passed
+    if requirementType && requirementType.getSentence
+      if passed
+        p.text-success= requirementType.getSentence(requirement)
+      else
+        p.text-warning= requirementType.getSentence(requirement)
+        if requirement.actionable
+          button.btn.btn-success Approve
+    else
+      p We've not yet coded the description of this requirement.
