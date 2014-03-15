@@ -20,6 +20,13 @@ describe 'RoleUser', ->
         ]
     @role.save done
 
+  before (done) ->
+    @trustee = new @_models.User
+      email:"roletrustee@example.com"
+      username: "roletrustee"
+    @trustee.password = "s3krit!!"
+    @trustee.save done
+
   describe 'requirements', ->
     it 'passes text', (done) ->
       roleUser = new @_models.RoleUser
@@ -96,6 +103,42 @@ describe 'RoleUser', ->
         roleUser.getUser.restore()
         expect(err).to.exist
         done()
+
+    it 'allows approval', (done) ->
+      roleUser = new @_models.RoleUser
+        user_id:@user.id
+        role_id:@role.id
+      roleUser.setMeta
+        approvals:
+          "2": [1,3]
+
+      stub roleUser, "getUser", (callback) =>
+        callback null, @user
+
+      roleUser.approve @trustee, 2, (err) =>
+        expect(err).to.not.exist
+        roleUser._checkRequirement {type: 'approval', roleId: 2, count: 3}, catchErrors done, (err) =>
+          roleUser.getUser.restore()
+          expect(err).to.not.exist
+          done()
+
+    it 'forbids double approval', (done) ->
+      roleUser = new @_models.RoleUser
+        user_id:@user.id
+        role_id:@role.id
+      roleUser.setMeta
+        approvals:
+          "2": [1, @trustee.id]
+
+      stub roleUser, "getUser", (callback) =>
+        callback null, @user
+
+      roleUser.approve @trustee, 2, (err) =>
+        expect(err).to.not.exist
+        roleUser._checkRequirement {type: 'approval', roleId: 2, count: 3}, catchErrors done, (err) =>
+          roleUser.getUser.restore()
+          expect(err).to.exist
+          done()
 
   describe 'autofetches', ->
     before (done) ->

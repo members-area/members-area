@@ -47,6 +47,17 @@ module.exports = (db, models) ->
             next()
 
     methods:
+      approve: (user, roleId, callback) ->
+        approvals = @meta.approvals
+        approvals ?= {}
+        approvals[roleId] ?= []
+        if approvals[roleId].indexOf(user.id) is -1
+          approvals[roleId].push user.id
+          @setMeta approvals:approvals
+          @save callback
+        else
+          callback()
+
       _shouldAutoApprove: (callback) ->
         @getRole (err, role) =>
           return callback false unless role
