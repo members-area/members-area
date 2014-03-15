@@ -85,8 +85,12 @@ module.exports = (db, models, app) ->
       afterAutoFetch: (done) ->
         # Find active roles
         return done() unless @isPersisted()
-        @getRoleUsers().where("approved IS NOT NULL AND rejected IS NULL", []).run (err, @activeRoleUsers) =>
-          @activeRoleIds = _.pluck @activeRoleUsers, 'role_id'
+        @getRoleUsers().where("approved IS NOT NULL AND rejected IS NULL", []).order("approved").run (err, roleUsers) =>
+          @activeRoleIds = []
+          @activeRoleUsers = []
+          for roleUser in roleUsers when roleUser.role_id not in @activeRoleIds
+            @activeRoleUsers.push roleUser
+            @activeRoleIds.push roleUser.role_id
           done(err)
 
     methods:
