@@ -10,7 +10,7 @@ stylusCompile = (str, path) ->
     .set('filename', path)
     .set('compress', true)
     .use(nib())
-    .use (style) -> style.include(cssDir)
+    .include(cssDir)
 
 module.exports = (src = publicDir) -> stylus.middleware
   src: src
