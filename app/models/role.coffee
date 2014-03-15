@@ -80,10 +80,14 @@ module.exports = (db, models, app) ->
         {
           type: 'approval'
           title: 'Approvals'
-          getSentence: (data) ->
+          getSentence: (data, roleUser = null) ->
             roleName = data.roleId
             roleName = role.name for role in roles when role.id is data.roleId
-            "Must be approved by #{data.count} #{roleName}s"
+            already = roleUser?.meta.approvals?[data.roleId]?.length ? 0
+            if already > 0
+              "Must be approved by #{data.count - already} more #{roleName}s (#{data.count} total)."
+            else
+              "Must be approved by #{data.count} #{roleName}s."
           inputs: [
             {
               label: "Role"

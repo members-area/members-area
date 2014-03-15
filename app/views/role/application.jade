@@ -21,9 +21,9 @@ block content
       - var passed = requirement.passed
       if requirementType && requirementType.getSentence
         if passed
-          p.text-success= requirementType.getSentence(requirement)
+          p.text-success= requirementType.getSentence(requirement, roleUser)
         else
-          p.text-warning= requirementType.getSentence(requirement)
+          p.text-warning= requirementType.getSentence(requirement, roleUser)
           if requirement.actionable
             if requirement.type == 'approval'
               button.btn.btn-success(type='submit', name='approve', value=requirement.roleId) Approve
