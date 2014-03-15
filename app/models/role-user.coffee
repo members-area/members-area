@@ -67,8 +67,9 @@ module.exports = (db, models) ->
             @_checkRequirement requirement, (err) =>
               passed = !err?
               actionable = false
-              if requirement.type is 'approval' and user.activeRoleIds.indexOf(requirement.roleId) isnt -1
-                actionable = true
+              if requirement.type is 'approval'
+                if requirement.roleId in (user.activeRoleIds ? []) and user.id not in (@meta.approvals?[requirement.roleId] ? [])
+                  actionable = true
               next null, _.extend requirement,
                 passed: passed
                 actionable: !passed and actionable

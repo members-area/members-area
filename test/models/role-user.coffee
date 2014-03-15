@@ -159,16 +159,18 @@ describe 'RoleUser', ->
         ]
       @role.save done
 
-    it 'works', (done) ->
-      roleUser = new @_models.RoleUser
+    before ->
+      @roleUser = new @_models.RoleUser
         user_id:@user.id
         role_id:@role.id
         meta:
           approvals:
-            "1": [1, 2, 3, 4, 5]
-            "2": [1, 2]
+            "1": [2, 3, 4, 5, 6]
+            "2": [2, 3]
 
-      roleUser.getRequirementsWithStatusForUser @trustee, (err, requirements) ->
+    it 'works', (done) ->
+
+      @roleUser.getRequirementsWithStatusForUser @trustee, (err, requirements) ->
         expect(err).to.not.exist
         expect(requirements.length).to.eql 3
         expect(requirements[0].passed).to.eql true
@@ -177,6 +179,20 @@ describe 'RoleUser', ->
         expect(requirements[0].actionable).to.eql false
         expect(requirements[1].actionable).to.eql false
         expect(requirements[2].actionable).to.eql true
+        done()
+
+    it 'doesn\'t mark as actionable twice', (done) ->
+      @roleUser.meta.approvals["2"][0] = 1
+
+      @roleUser.getRequirementsWithStatusForUser @trustee, (err, requirements) ->
+        expect(err).to.not.exist
+        expect(requirements.length).to.eql 3
+        expect(requirements[0].passed).to.eql true
+        expect(requirements[1].passed).to.eql true
+        expect(requirements[2].passed).to.eql false
+        expect(requirements[0].actionable).to.eql false
+        expect(requirements[1].actionable).to.eql false
+        expect(requirements[2].actionable).to.eql false
         done()
 
   describe 'autofetches', ->
