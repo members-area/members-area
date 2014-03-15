@@ -1,3 +1,5 @@
+async = require 'async'
+
 module.exports = (db, models, app) ->
   Role = db.define 'role', {
     id:
@@ -16,6 +18,20 @@ module.exports = (db, models, app) ->
   },
     timestamp: true
     hooks: db.applyCommonHooks {}
+    methods:
+      canApply: (user, callback) ->
+        requirements = @meta.requirements ? []
+
+        canApplyForRequirement = (requirement, next) ->
+          canApply = true
+          if requirement.type is 'role'
+            canApply = requirement.roleId in user.activeRoleIds
+          return next() if canApply
+          next new Error("Don't have required role")
+
+        async.map requirements, canApplyForRequirement, (err) ->
+          callback !err
+
     _validations:
       name:
         isAlphanumeric: true
