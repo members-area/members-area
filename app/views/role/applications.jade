@@ -5,7 +5,10 @@ block title
 
 block content
   h2 Role Applications
-  p The people below are applying for roles.
+  if roleUsers.length
+    p.lead The people below are applying for roles.
+  else
+    p.lead There are no pending applications at the moment.
   ul
     each roleUser in roleUsers
       p
