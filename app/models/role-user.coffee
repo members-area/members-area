@@ -68,9 +68,9 @@ module.exports = (db, models) ->
                 callback()
           when 'approval'
             {roleId, count} = requirement
-            approvals = @meta.approvals
+            approvals = @meta.approvals?[roleId]
             approvals ?= []
-            count-- for approval in approvals when approval.roleId is roleId
+            count -= approvals.length
             process.nextTick ->
               return callback "#{count} more approvals for role '#{roleId}' required" if count > 0
               callback()

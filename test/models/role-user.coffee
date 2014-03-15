@@ -63,6 +63,40 @@ describe 'RoleUser', ->
         expect(err).to.exist
         done()
 
+    it 'passes approval if user has enough approvals', (done) ->
+      roleUser = new @_models.RoleUser
+        user_id:@user.id
+        role_id:@role.id
+      roleUser.setMeta
+        approvals:
+          "1": [1,3,4,7,9]
+          "2": [1,3]
+
+      stub roleUser, "getUser", (callback) =>
+        callback null, @user
+
+      roleUser._checkRequirement {type: 'approval', roleId: 1, count: 5}, catchErrors done, (err) =>
+        roleUser.getUser.restore()
+        expect(err).to.not.exist
+        done()
+
+    it 'fails approval if user has insufficient approvals', (done) ->
+      roleUser = new @_models.RoleUser
+        user_id:@user.id
+        role_id:@role.id
+        meta:
+          approvals:
+            "1": [1,3,4,7,9]
+            "2": [1,3]
+
+      stub roleUser, "getUser", (callback) =>
+        callback null, @user
+
+      roleUser._checkRequirement {type: 'approval', roleId: 2, count: 3}, catchErrors done, (err) =>
+        roleUser.getUser.restore()
+        expect(err).to.exist
+        done()
+
   describe 'autofetches', ->
     before (done) ->
       @roleUser = new @_models.RoleUser
