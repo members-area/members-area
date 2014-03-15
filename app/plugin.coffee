@@ -122,6 +122,7 @@ class Plugin extends EventEmitter
       return _.clone @setting.meta.settings
 
   set: (values, callback) ->
+    throw new Error "Invalid call to plugin.set - first argument must be an object" unless typeof values is 'object'
     settings = @setting.meta.settings ? {}
     for k, v of values
       if v?
