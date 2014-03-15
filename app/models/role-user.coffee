@@ -1,4 +1,5 @@
 async = require 'async'
+_ = require 'underscore'
 
 module.exports = (db, models) ->
   RoleUser = db.define 'role_user', {
@@ -57,6 +58,16 @@ module.exports = (db, models) ->
           @save callback
         else
           callback()
+
+      getRequirementsWithStatus: (callback) ->
+        @getRole (err, role) =>
+          return callback err if err
+          requirements = role.meta.requirements
+          checkRequirement = (requirement, next) =>
+            @_checkRequirement requirement, (err) =>
+              next null, _.extend requirement,
+                passed: !err?
+          async.map requirements, checkRequirement, callback
 
       _shouldAutoApprove: (callback) ->
         @getRole (err, role) =>

@@ -140,6 +140,45 @@ describe 'RoleUser', ->
           expect(err).to.exist
           done()
 
+  describe 'getRequirementsWithStatus', ->
+
+    before (done) ->
+      @role.setMeta
+        requirements: [
+          {
+            type: 'text'
+            text: "Arbitrary"
+          }
+          {
+            type: 'approval'
+            roleId: 1
+            count: 5
+          }
+          {
+            type: 'approval'
+            roleId: 2
+            count: 3
+          }
+        ]
+      @role.save done
+
+    it 'works', (done) ->
+      roleUser = new @_models.RoleUser
+        user_id:@user.id
+        role_id:@role.id
+        meta:
+          approvals:
+            "1": [1, 2, 3, 4, 5]
+            "2": [1, 2]
+
+      roleUser.getRequirementsWithStatus (err, requirements) ->
+        expect(err).to.not.exist
+        expect(requirements.length).to.eql 3
+        expect(requirements[0].passed).to.eql true
+        expect(requirements[1].passed).to.eql true
+        expect(requirements[2].passed).to.eql false
+        done()
+
   describe 'autofetches', ->
     before (done) ->
       @roleUser = new @_models.RoleUser
