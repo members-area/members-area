@@ -44,6 +44,14 @@ applyCommonClassMethods = (klass) ->
     klass[k] = v
 
 validateAndGroup = (name, properties, opts) ->
+  # opts.cache is set false to protect against silly issues. For example if you
+  # manage to update an instance of a model that's not a singleton somehow (for
+  # example if it's autofetched?) then the code here never updates it's data,
+  # so it reverts to an old version - very frustrating.
+  #
+  # https://github.com/dresende/node-orm2/blob/ed6140f879d8eb78de15c108dd25266b569c3f29/lib/Model.js#L286
+  opts.cache = false
+
   opts.methods ?= {}
   opts.methods.groupErrors = groupErrors
   opts.methods.validateAndGroup = (callback) ->
