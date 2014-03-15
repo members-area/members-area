@@ -1,5 +1,6 @@
 LoggedInController = require './logged-in'
 _ = require 'underscore'
+async = require 'async'
 
 module.exports = class RoleController extends LoggedInController
   @before 'loadRoles', only: ['index', 'admin', 'edit']
@@ -42,14 +43,27 @@ module.exports = class RoleController extends LoggedInController
 
   application: (done) ->
     @activeNavigationId = "role-applications"
-    @req.models.RoleUser.get @req.params.id, (err, @roleUser) =>
-      return done err if err
-      @role = @roleUser.role
-      @req.models.User.get @roleUser.user_id, (err, @user) =>
-        return done err if err
+    async.series
+      getRoleUser: (next) =>
+        @req.models.RoleUser.get @req.params.id, (err, @roleUser) =>
+          @role = @roleUser?.role
+          next(err)
+
+      handlePOST: (next) =>
+        return next() unless @req.method is 'POST'
+        if @data['approve']
+          @roleUser.approve @req.user, parseInt(@data['approve'], 10), next
+        else
+          next()
+
+      getUser: (next) =>
+        @req.models.User.get @roleUser.user_id, (err, @user) =>
+          next(err)
+
+      getRequirements: (next) =>
         @roleUser.getRequirementsWithStatusForUser @req.user, (err, @requirements) =>
-          return done err if err
-          done()
+          next(err)
+    , done
 
   admin: (done) ->
     if @req.method is 'POST' and @data.name?.length

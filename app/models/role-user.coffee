@@ -47,15 +47,21 @@ module.exports = (db, models) ->
               @approved = new Date()
             next()
 
+      afterAutoFetch: (done) ->
+        @checkApproval done
+
     methods:
       approve: (user, roleId, callback) ->
+        return callback new Error "Permission denied" unless roleId in (user.activeRoleIds ? [])
+        return callback new Error "Invalid roleId" unless roleId > 0
         approvals = @meta.approvals
         approvals ?= {}
         approvals[roleId] ?= []
-        if approvals[roleId].indexOf(user.id) is -1
+        if user.id not in approvals[roleId]
           approvals[roleId].push user.id
           @setMeta approvals:approvals
-          @save callback
+          @checkApproval =>
+            @save callback
         else
           callback()
 
@@ -75,12 +81,21 @@ module.exports = (db, models) ->
                 actionable: !passed and actionable
           async.map requirements, checkRequirement, callback
 
+      checkApproval: (callback) ->
+        return callback() if @approved?
+        @_shouldAutoApprove (autoApprove) =>
+          if autoApprove
+            @approved = new Date()
+            @save callback
+          else
+            callback()
+
       _shouldAutoApprove: (callback) ->
-        @getRole (err, role) =>
-          return callback false unless role
-          requirements = role.meta.requirements ? []
-          async.map requirements, @_checkRequirement.bind(this), (err) ->
-            callback !err
+        role = @role
+        return callback false unless role
+        requirements = role.meta.requirements ? []
+        async.map requirements, @_checkRequirement.bind(this), (err) ->
+          callback !err
 
       _checkRequirement: (requirement, callback) ->
         models = require('./')

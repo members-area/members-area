@@ -4,22 +4,30 @@ block title
   | Role Application
 
 block content
-  h2 Role Application
-  p This is a single application. Perhaps you can vote on it?
+  if roleUser.approved
+    h2 Role Application - APPROVED
+    p This application was approved.
+  else
+    h2 Role Application
+    p This is a single application. Perhaps you can vote on it?
   p
     strong= user.fullname
     |  is applying for role: 
     strong= role.name
-  h3 Requirements
-  each requirement in requirements || []
-    - var requirementType = requirementTypes[requirement.type]
-    - var passed = requirement.passed
-    if requirementType && requirementType.getSentence
-      if passed
-        p.text-success= requirementType.getSentence(requirement)
+  form(method="POST", action="")
+    h3 Requirements
+    each requirement in requirements || []
+      - var requirementType = requirementTypes[requirement.type]
+      - var passed = requirement.passed
+      if requirementType && requirementType.getSentence
+        if passed
+          p.text-success= requirementType.getSentence(requirement)
+        else
+          p.text-warning= requirementType.getSentence(requirement)
+          if requirement.actionable
+            if requirement.type == 'approval'
+              button.btn.btn-success(type='submit', name='approve', value=requirement.roleId) Approve
+            else
+              p.text-error ERROR: actionable but no action?
       else
-        p.text-warning= requirementType.getSentence(requirement)
-        if requirement.actionable
-          button.btn.btn-success Approve
-    else
-      p We've not yet coded the description of this requirement.
+        p We've not yet coded the description of this requirement.
