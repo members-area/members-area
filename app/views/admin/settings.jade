@@ -7,8 +7,9 @@ mixin controlGroup(name, id, label, defaultValue)
       if block
         block
       else
-        //- XXX: defaultValue needs to make it clear it's not saved
         input(id=name+"-"+id, name=name+"["+id+"]", value=data[name][id] || defaultValue)
+        if !data[name][id] && defaultValue
+          | &nbsp; &lt; default unsaved value
 
 block title
   | Core Settings

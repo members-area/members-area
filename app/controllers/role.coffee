@@ -17,7 +17,7 @@ module.exports = class RoleController extends LoggedInController
         isEligible = (role, next) =>
           role.canApply @req.user, next
         async.filter @roles, isEligible, (@eligibleRoles) =>
-          @eligibleRoleIds = (role.id for role in @eligibleRoles) # XXX: improve this!
+          @eligibleRoleIds = (role.id for role in @eligibleRoles)
           done()
     if @req.method is 'POST' and @req.body.role_id?
       roleId = parseInt(@req.body.role_id, 10)
