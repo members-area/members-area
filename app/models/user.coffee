@@ -4,6 +4,7 @@ crypto = require 'crypto'
 juice = require 'juice'
 htmlToText = require 'html-to-text'
 orm = require 'orm'
+_ = require 'underscore'
 
 disallowedUsernameRegexps = [
   /master$/i
@@ -82,6 +83,7 @@ module.exports = (db, models, app) ->
         # Find active roles
         return done() unless @isPersisted()
         @getRoleUsers().where("approved IS NOT NULL AND rejected IS NULL", []).run (err, @activeRoleUsers) =>
+          @activeRoleIds = _.pluck @activeRoleUsers, 'role_id'
           done(err)
     methods:
       verify: (code, done) ->

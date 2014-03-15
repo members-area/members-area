@@ -137,7 +137,7 @@ describe 'RoleUser', ->
           expect(err).to.exist
           done()
 
-  describe 'getRequirementsWithStatus', ->
+  describe 'getRequirementsWithStatusForUser', ->
 
     before (done) ->
       @role.setMeta
@@ -168,12 +168,15 @@ describe 'RoleUser', ->
             "1": [1, 2, 3, 4, 5]
             "2": [1, 2]
 
-      roleUser.getRequirementsWithStatus (err, requirements) ->
+      roleUser.getRequirementsWithStatusForUser @trustee, (err, requirements) ->
         expect(err).to.not.exist
         expect(requirements.length).to.eql 3
         expect(requirements[0].passed).to.eql true
         expect(requirements[1].passed).to.eql true
         expect(requirements[2].passed).to.eql false
+        expect(requirements[0].actionable).to.eql false
+        expect(requirements[1].actionable).to.eql false
+        expect(requirements[2].actionable).to.eql true
         done()
 
   describe 'autofetches', ->

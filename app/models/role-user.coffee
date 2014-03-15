@@ -59,14 +59,19 @@ module.exports = (db, models) ->
         else
           callback()
 
-      getRequirementsWithStatus: (callback) ->
+      getRequirementsWithStatusForUser: (user, callback) ->
         @getRole (err, role) =>
           return callback err if err
           requirements = role.meta.requirements
           checkRequirement = (requirement, next) =>
             @_checkRequirement requirement, (err) =>
+              passed = !err?
+              actionable = false
+              if requirement.type is 'approval' and user.activeRoleIds.indexOf(requirement.roleId) isnt -1
+                actionable = true
               next null, _.extend requirement,
-                passed: !err?
+                passed: passed
+                actionable: !passed and actionable
           async.map requirements, checkRequirement, callback
 
       _shouldAutoApprove: (callback) ->
