@@ -89,6 +89,7 @@ app.configure 'development', ->
 app.use require('./app/models').middleware()
 app.use require('./app/lib/passport').initialize()
 app.use require('./app/lib/passport').session()
+app.use require('./app/middleware/template')(app)
 
 app.use app.router
 require('./app/router')(app)
