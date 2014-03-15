@@ -6,6 +6,7 @@ LOCAL
 README.md
 node_modules
 config
+config/*
 docs
 log
 sessions
