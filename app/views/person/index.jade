@@ -8,6 +8,6 @@ block content
   ul.user-list
     each user in users
       li(class=user.classNames)
-        a(href="/people/"+user.id)= user.fullname
+        a(href="/people/"+user.id)= user.fullname + " (" + user.username + ")"
         each activeRoleUser in user.activeRoleUsers
           span.user-role-tag= activeRoleUser.role.name
