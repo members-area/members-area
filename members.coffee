@@ -1,3 +1,10 @@
+defaultPlugins =
+  'members-area-passport': '*'
+  'members-area-register-of-members': '*'
+  'members-area-theme-somakeit': '*'
+
+#--------------------------------------------
+
 async = require 'async'
 crypto = require 'crypto'
 fs = require 'fs'
@@ -16,7 +23,7 @@ usage = ->
       setup      - migrate && seed && plugins
       migrate    - migrate the database
       seed       - seed the database
-      plugins    - npm install plugins
+      plugins    - npm install plugins from config/plugins.json
       run        - run the server (do this in the root folder)
     """
 
@@ -125,8 +132,8 @@ methods = new class
     fs.writeFileSync "config/db.json", JSON.stringify
       development: "sqlite:///members.sqlite"
       test: "sqlite:///members-test.sqlite"
-    fs.writeFileSync "config/plugins.json", JSON.stringify
-      'members-area-passport': '*'
+    , null, 2
+    fs.writeFileSync "config/plugins.json", JSON.stringify defaultPlugins, null, 2
     async.series
       npmInstall: (next) ->
         proc = spawn "npm", ["install"],
