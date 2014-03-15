@@ -2,7 +2,8 @@ nib = require 'nib'
 stylus = require 'stylus'
 path = require 'path'
 
-cssDir = path.join(__dirname, "..", "..", 'public')
+publicDir = path.join(__dirname, "..", "..", 'public')
+cssDir = path.join(publicDir, 'css')
 
 stylusCompile = (str, path) ->
   return stylus(str)
@@ -11,6 +12,6 @@ stylusCompile = (str, path) ->
     .use(nib())
     .use (style) -> style.include(cssDir)
 
-module.exports = (src = cssDir) -> stylus.middleware
+module.exports = (src = publicDir) -> stylus.middleware
   src: src
   compile: stylusCompile
