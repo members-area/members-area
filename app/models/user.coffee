@@ -61,6 +61,7 @@ module.exports = (db, models, app) ->
   },
     timestamp: true
     hooks: db.applyCommonHooks
+
       afterCreate: (created) ->
         done = ->
         return done() if !created and !@id
@@ -70,6 +71,7 @@ module.exports = (db, models, app) ->
         else
           @sendVerificationMail()
           done()
+
       beforeValidation: (done) ->
         if @password?
           bcrypt.hash @password, 10, (err, hash) =>
@@ -79,12 +81,14 @@ module.exports = (db, models, app) ->
             done()
         else
           done()
+
       afterAutoFetch: (done) ->
         # Find active roles
         return done() unless @isPersisted()
         @getRoleUsers().where("approved IS NOT NULL AND rejected IS NULL", []).run (err, @activeRoleUsers) =>
           @activeRoleIds = _.pluck @activeRoleUsers, 'role_id'
           done(err)
+
     methods:
       verify: (code, done) ->
         return done() if @verified
@@ -152,13 +156,27 @@ module.exports = (db, models, app) ->
 
       requestRoles: (roles, callback) ->
         user_id = @id
-        request = (role_id, done) ->
+        request = (role_id, done) =>
           # XXX: prevent requesting the same role twice
-          role_id = role_id.id if typeof role_id is 'object'
-          data =
-            user_id: user_id
-            role_id: role_id
-          models.RoleUser.create data, done
+          role = role_id if typeof role_id is 'object'
+
+          next = =>
+            role_id = role.id
+            role.canApply this, (canApply) =>
+              return done new Error "Cannot apply" unless canApply
+              data =
+                user_id: user_id
+                role_id: role_id
+              models.RoleUser.create data, done
+
+          unless role?
+            models.Role.get role_id, (err, _role) ->
+              role = _role
+              return done err if err
+              return done new Error "Role not found" unless role
+              next()
+          else
+            next()
 
         async.mapSeries roles, request, (err, result) ->
           return callback err if err

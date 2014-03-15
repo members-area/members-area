@@ -14,12 +14,15 @@ module.exports = class RoleController extends LoggedInController
         return done err if err
         @activeRoleIds = (roleUser.role_id for roleUser in roleUsers when roleUser.approved? and !roleUser.rejected?)
         @appliedRoleIds = (roleUser.role_id for roleUser in roleUsers when !roleUser.approved? and !roleUser.rejected?)
-        @eligibleRoleIds = (role.id for role in @roles) # XXX: improve this!
-        done()
+        isEligible = (role, next) =>
+          role.canApply @req.user, next
+        async.filter @roles, isEligible, (@eligibleRoles) =>
+          @eligibleRoleIds = (role.id for role in @eligibleRoles) # XXX: improve this!
+          done()
     if @req.method is 'POST' and @req.body.role_id?
       roleId = parseInt(@req.body.role_id, 10)
       @req.user.requestRoles [roleId], (err) ->
-        return done err if err
+        # Ignore error
         next()
     else
       next()

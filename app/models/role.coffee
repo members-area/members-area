@@ -25,7 +25,7 @@ module.exports = (db, models, app) ->
         canApplyForRequirement = (requirement, next) ->
           canApply = true
           if requirement.type is 'role'
-            canApply = requirement.roleId in user.activeRoleIds
+            canApply = requirement.roleId in (user.activeRoleIds ? [])
           return next() if canApply
           next new Error("Don't have required role")
 
