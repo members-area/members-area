@@ -3,3 +3,5 @@ sessions
 log
 *.sqlite
 app/views
+**/*.css
+**/*.styl
