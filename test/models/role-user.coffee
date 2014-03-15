@@ -21,11 +21,8 @@ describe 'RoleUser', ->
     @role.save done
 
   before (done) ->
-    @trustee = new @_models.User
-      email:"roletrustee@example.com"
-      username: "roletrustee"
-    @trustee.password = "s3krit!!"
-    @trustee.save done
+    @_models.User.get 1, (err, @trustee) =>
+      done(err)
 
   describe 'requirements', ->
     it 'passes text', (done) ->
@@ -110,7 +107,7 @@ describe 'RoleUser', ->
         role_id:@role.id
       roleUser.setMeta
         approvals:
-          "2": [1,3]
+          "2": [2,3]
 
       stub roleUser, "getUser", (callback) =>
         callback null, @user
