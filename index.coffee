@@ -42,7 +42,8 @@ app.locals.basedir = path.join __dirname, 'app', 'views'
 app.set 'views', app.locals.basedir
 app.set 'view engine', 'jade'
 
-app.use express.static(path.join(process.cwd(), 'public'))
+if __dirname isnt process.cwd()
+  app.use express.static(path.join(process.cwd(), 'public'))
 
 app.use (req, res, next) ->
   req.app = app
