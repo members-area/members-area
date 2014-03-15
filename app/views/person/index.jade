@@ -9,3 +9,5 @@ block content
     each user in users
       li(class=user.classNames)
         a(href="/people/"+user.id)= user.fullname
+        each activeRoleUser in user.activeRoleUsers
+          span.user-role-tag= activeRoleUser.role.name
