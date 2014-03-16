@@ -1,4 +1,5 @@
-{async, expect, catchErrors} = require '../test_helper'
+{async, expect, catchErrors, protect} = require '../test_helper'
+protect()
 
 describe "User", ->
   describe 'validations', ->

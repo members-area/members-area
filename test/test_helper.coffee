@@ -99,4 +99,41 @@ stub = (obj, method, worker) ->
   obj[method].restore = ->
     obj[method] = oldMethod
 
-module.exports = {app, async, catchErrors, chai, expect, getModelsForConnection, reqres, sinon, stub}
+safe = (fn) ->
+  return fn if fn.isSafe
+  if fn.length > 0
+    originalFn = fn
+    worker = (args..., cb) ->
+      callback = (err, args...) ->
+        process.removeListener 'uncaughtException', callback
+        cb err, args...
+      process.removeAllListeners 'uncaughtException'
+      process.on 'uncaughtException', callback
+      ret = originalFn.apply this, [args..., callback]
+      return ret
+    fn =
+      switch originalFn.length
+        when 1 then (a) -> worker.apply this, arguments
+        when 2 then (a, b) -> worker.apply this, arguments
+        when 3 then (a, b, c) -> worker.apply this, arguments
+        when 4 then (a, b, c, d) -> worker.apply this, arguments
+        else
+          throw new Error("Cannot handle function of arity #{originalFn.length}")
+    fn.isSafe = true
+  return fn
+
+makeSafe = (it) ->
+  return it if it.isSafe
+  originalIt = it
+  it = (args..., fn) ->
+    originalIt.apply this, [args..., safe fn]
+  it.isSafe = true
+  return it
+
+protect = ->
+  global.it = makeSafe global.it
+  global.before = makeSafe global.before
+  global.after = makeSafe global.after
+  return global
+
+module.exports = {app, async, catchErrors, chai, expect, getModelsForConnection, reqres, sinon, stub, protect}

@@ -1,4 +1,5 @@
-{expect, sinon, stub, catchErrors} = require '../test_helper'
+{expect, sinon, stub, catchErrors, protect} = require '../test_helper'
+protect()
 
 describe 'Role', ->
   before (done) ->
