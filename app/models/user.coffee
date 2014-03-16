@@ -158,7 +158,8 @@ module.exports = (db, models, app) ->
           else
             callback null, []
 
-      requestRoles: (roles, callback) ->
+      requestRoles: (roles, options..., callback) ->
+        options = _.extend {}, options...
         user_id = @id
         request = (role_id, done) =>
           # XXX: prevent requesting the same role twice
@@ -167,6 +168,7 @@ module.exports = (db, models, app) ->
           next = =>
             role_id = role.id
             role.canApply this, (canApply) =>
+              canApply = true if options.force
               return done new Error "User #{@id} cannot apply for role #{role_id}" unless canApply
               data =
                 user_id: user_id

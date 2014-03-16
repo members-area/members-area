@@ -43,9 +43,11 @@ module.exports = class RegistrationController extends Controller
         baseRoleId = 1
         ownerRoleId = 2
         roles = [baseRoleId]
+        force = false
         if user.id is 1
           roles.push ownerRoleId
-        user.requestRoles roles, (err) =>
+          force = true
+        user.requestRoles roles, {force: force}, (err) =>
           if err
             console.error err
             console.log err.stack
