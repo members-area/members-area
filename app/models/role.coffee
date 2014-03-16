@@ -22,10 +22,15 @@ module.exports = (db, models, app) ->
       canApply: (user, callback) ->
         requirements = @meta.requirements ? []
 
-        canApplyForRequirement = (requirement, next) ->
+        canApplyForRequirement = (requirement, next) =>
           canApply = true
           if requirement.type is 'role'
-            canApply = requirement.roleId in (user.activeRoleIds ? [])
+            baseRoleId = 1
+            ownerRoleId = 2
+            if user.id is 1 and @id in [baseRoleId, ownerRoleId]
+              canApply = true
+            else
+              canApply = requirement.roleId in (user.activeRoleIds ? [])
           return next() if canApply
           next new Error("Don't have required role")
 

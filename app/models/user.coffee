@@ -167,7 +167,7 @@ module.exports = (db, models, app) ->
           next = =>
             role_id = role.id
             role.canApply this, (canApply) =>
-              return done new Error "Cannot apply" unless canApply
+              return done new Error "User #{@id} cannot apply for role #{role_id}" unless canApply
               data =
                 user_id: user_id
                 role_id: role_id
