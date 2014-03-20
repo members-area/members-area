@@ -20,7 +20,7 @@ Getting started
 Install members-area software globally:
 
 ```
-npm install -g members-area
+npm install -g coffee-script members-area
 ```
 
 Then create a new folder and initialise a new members are inside it:
