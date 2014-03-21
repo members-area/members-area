@@ -1,7 +1,7 @@
 Members Area
 ============
 
-[![Build Status](https://travis-ci.org/benjie/members-area.png?branch=master)](https://travis-ci.org/benjie/members-area)
+[![Build Status](https://travis-ci.org/members-area/members-area.png?branch=master)](https://travis-ci.org/members-area/members-area)
 
 This is a free and open source Members Area specifically targeted at
 Makerspaces/Hackspaces/Hackerspaces though also suitable for other
