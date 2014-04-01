@@ -101,7 +101,17 @@ module.exports = (db, models) ->
         models = require('./')
         switch requirement.type
           when 'text'
-            process.nextTick callback
+            if requirement.roleId and requirement.id
+              approvals = @meta.approvals?[requirement.id]
+              approvals ?= []
+              count = requirement.count ? 1
+              count -= approvals.length
+              process.nextTick ->
+                return callback "Requires approval for '#{requirement.text}' by someone with role '#{requirement.roleId}'" if count > 0
+                callback()
+            else
+              # No role specified - approve
+              process.nextTick callback
           when 'role'
             @getUser (err, user) =>
               return callback err if err
