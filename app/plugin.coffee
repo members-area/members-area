@@ -55,7 +55,7 @@ class Plugin extends EventEmitter
     try
       _.extend @, require resolved
     catch e
-      console.error "Failed to load plugin: #{e?.message}"
+      console.error "Failed to load plugin: #{e?.stack ? e}"
 
   initialize: (done) ->
     done()
