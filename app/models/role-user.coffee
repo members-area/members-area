@@ -51,19 +51,28 @@ module.exports = (db, models) ->
         @checkApproval done
 
     methods:
-      approve: (user, roleId, callback) ->
-        return callback new Error "Permission denied" unless roleId in (user.activeRoleIds ? [])
-        return callback new Error "Invalid roleId" unless roleId > 0
-        approvals = @meta.approvals
-        approvals ?= {}
-        approvals[roleId] ?= []
-        if user.id not in approvals[roleId]
-          approvals[roleId].push user.id
-          @setMeta approvals:approvals
-          @checkApproval =>
-            @save callback
-        else
-          callback()
+      approve: (user, requirementId, callback) ->
+        requirementId = String(requirementId)
+        @getRole (err, role) =>
+          return callback err if err
+          requirements = role.meta.requirements
+          console.log requirements
+          for requirement in requirements when requirementId is String(requirement.id ? requirement.roleId)
+            roleId = requirement.roleId
+            return callback new Error "Permission denied" unless roleId in (user.activeRoleIds ? [])
+            return callback new Error "Invalid roleId" unless roleId > 0
+            approvals = @meta.approvals
+            approvals ?= {}
+            approvals[requirementId] ?= []
+            if user.id not in approvals[requirementId]
+              approvals[requirementId].push user.id
+              @setMeta approvals:approvals
+              @checkApproval =>
+                @save callback
+            else
+              callback()
+            return
+          callback new Error "Requirement '#{requirementId}' not found"
 
       getRequirementsWithStatusForUser: (user, callback) ->
         @getRole (err, role) =>
@@ -73,7 +82,7 @@ module.exports = (db, models) ->
             @_checkRequirement requirement, (err) =>
               passed = !err?
               actionable = false
-              if requirement.type is 'approval'
+              if requirement.type is 'approval' or (requirement.type is 'text' and requirement.roleId)
                 if requirement.roleId in (user.activeRoleIds ? []) and user.id not in (@meta.approvals?[requirement.roleId] ? [])
                   actionable = true
               next null, _.extend requirement,

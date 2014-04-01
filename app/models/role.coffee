@@ -56,24 +56,45 @@ module.exports = (db, models, app) ->
     Role.find (err, roles) ->
       return callback err if err
       roleOptions = ({value: role.id, label: role.name} for role in roles)
+      optionalRoleOptions = [{value: "", label: "Any"}].concat(roleOptions)
       roleValidator = (value) ->
         value = parseInt(value, 10)
         throw new Error("Invalid roleId") unless isFinite(value)
         for role in roles
           return role.id if role.id is value
         throw new Error("Non-existent roleId")
+        return
+      optionalRoleValidator = (value) ->
+        return if !value
+        return roleValidator value
 
       requirementTypes = [
         {
           type: 'text'
           title: "Text instruction"
-          getSentence: (data) ->
-            data.text
+          getSentence: (data, roleUser = null) ->
+            if data.roleId
+              roleName = role.name for role in roles when role.id is data.roleId
+              already = roleUser?.meta.approvals?[data.id]?.length ? 0
+              count = data.count ? 1
+              if count - already > 0
+                "#{data.text} (#{roleName} approval required.)"
+              else
+                data.text
+            else
+              data.text
           inputs: [
             {
               label: "Instruction"
               type: "text"
               name: "text"
+            }
+            {
+              label: "Role"
+              type: "select"
+              name: "roleId"
+              options: optionalRoleOptions
+              validator: optionalRoleValidator
             }
           ]
         }
@@ -84,7 +105,9 @@ module.exports = (db, models, app) ->
             roleName = data.roleId
             roleName = role.name for role in roles when role.id is data.roleId
             already = roleUser?.meta.approvals?[data.roleId]?.length ? 0
-            if already > 0
+            if already >= data.count
+              "Must be approved by #{data.count} #{roleName}s."
+            else if already > 0
               "Must be approved by #{data.count - already} more #{roleName}s (#{data.count} total)."
             else
               "Must be approved by #{data.count} #{roleName}s."

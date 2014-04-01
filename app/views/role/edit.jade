@@ -13,6 +13,7 @@ mixin formFor(mode, type, data, index)
     input(type='hidden', name='action', value=mode + "_requirement")
     if mode === 'edit'
       input(type='hidden', name='index', value=index)
+      input(type='hidden', name='id', value=data.id)
     input(type='hidden', name='type', value=requirementType.type)
     each input in requirementType.inputs
       .control-group

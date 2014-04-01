@@ -55,7 +55,7 @@ module.exports = class RoleController extends LoggedInController
       handlePOST: (next) =>
         return next() unless @req.method is 'POST'
         if @data['approve']
-          @roleUser.approve @req.user, parseInt(@data['approve'], 10), next
+          @roleUser.approve @req.user, @data['approve'], next
         else
           next()
 
@@ -89,7 +89,14 @@ module.exports = class RoleController extends LoggedInController
       getRequirement = =>
         requirementType = @requirementTypes[@data.type]
         throw new Error "Couldn't find requirement type '#{@data.type}'" unless requirementType
+        id = @data.id
+        unless id?.length
+          if @data.type is 'approval'
+            id = @data.roleId
+          else
+            id = "#{@data.type}-#{Date.now()}"
         requirement =
+          id: id
           type: @data.type
         for input in requirementType.inputs
           value = @data[input.name]

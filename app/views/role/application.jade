@@ -25,8 +25,8 @@ block content
         else
           p.text-warning= requirementType.getSentence(requirement, roleUser)
           if requirement.actionable
-            if requirement.type == 'approval'
-              button.btn.btn-success(type='submit', name='approve', value=requirement.roleId) Approve
+            if requirement.type == 'approval' || requirement.type == 'text'
+              button.btn.btn-success(type='submit', name='approve', value=requirement.id||requirement.roleId) Approve
             else
               p.text-error ERROR: actionable but no action?
       else
