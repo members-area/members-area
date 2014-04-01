@@ -5,6 +5,7 @@ module.exports = ({get, post, all}) ->
   all '/register', 'registration#register'
   all '/verify', 'registration#verify'
   all '/dashboard', 'user#dashboard'
+  all '/account', 'user#account'
   all '/people', 'person#index'
   all '/people/:id', 'person#view'
   all '/roles', 'role#index'

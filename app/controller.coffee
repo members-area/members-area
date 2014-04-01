@@ -114,6 +114,12 @@ class Controller
             priority: 10
           }
           {
+            title: 'Account'
+            href: '/account'
+            id: 'user-account'
+            priority: 50
+          }
+          {
             title: 'People'
             href: '/people'
             id: 'person-index'
