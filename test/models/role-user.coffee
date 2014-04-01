@@ -28,7 +28,7 @@ describe 'RoleUser', ->
   describe 'requirements', ->
     it 'passes text without role', (done) ->
       roleUser = new @_models.RoleUser
-      roleUser._checkRequirement {type: 'text', text: 'Arbitrary'}, (err) ->
+      roleUser._checkRequirement {id: "text-1", type: 'text', text: 'Arbitrary', roleId: ""}, (err) ->
         expect(err).to.not.exist
         done()
 
