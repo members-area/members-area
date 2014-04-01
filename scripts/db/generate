@@ -1,4 +1,5 @@
-#!/usr/bin/env coffee
+#!/usr/bin/env node
+require('coffee-script/register');
 
-migrator = require '../../app/lib/migrator'
-migrator.runMigration 'generate', process.argv[2]
+var migrator = require('../../app/lib/migrator');
+migrator.runMigration('generate', process.argv[2]);

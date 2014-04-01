@@ -1,2 +1,4 @@
-#!/usr/bin/env coffee
-require "#{__dirname}/../../app/seed.coffee"
+#!/usr/bin/env node
+require('coffee-script/register');
+
+require("../../app/seed");
