@@ -7,3 +7,30 @@ block content
   h2 Account settings
   p.lead.
     Hello #{loggedInUser.fullname}! Here you can change your personal details.
+
+  if error
+    p.text-error= error
+
+  if success
+    p.text-success Your data has been updated
+
+  form.form-horizontal(method="POST")
+    .control-group
+      label.control-label Full Name
+      .controls
+        input(name='fullname', value=data.fullname)
+    .control-group
+      label.control-label Address
+      .controls
+        textarea(name='address')= data.address
+    .control-group
+      label.control-label Password
+      .controls
+        input(name='password')
+    .control-group
+      label.control-label Password (again)
+      .controls
+        input(name='password2')
+    .control-group
+      .controls
+        button.btn-success(type="submit") Update
