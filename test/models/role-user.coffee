@@ -22,6 +22,19 @@ describe 'RoleUser', ->
     @role.save done
 
   before (done) ->
+    @roleRequiringApproval = new @_models.Role
+      name: 'Approval'
+      meta:
+        requirements: [
+          {
+            type: 'approval'
+            roleId: 2
+            count: 3
+          }
+        ]
+    @roleRequiringApproval.save done
+
+  before (done) ->
     @_models.User.get 1, (err, @trustee) =>
       done(err)
 
@@ -120,7 +133,7 @@ describe 'RoleUser', ->
     it 'allows approval', (done) ->
       roleUser = new @_models.RoleUser
         user_id:@user.id
-        role_id:@role.id
+        role_id:@roleRequiringApproval.id
       roleUser.setMeta
         approvals:
           "2": [2,3]
@@ -138,7 +151,7 @@ describe 'RoleUser', ->
     it 'forbids double approval', (done) ->
       roleUser = new @_models.RoleUser
         user_id:@user.id
-        role_id:@role.id
+        role_id:@roleRequiringApproval.id
       roleUser.setMeta
         approvals:
           "2": [1, @trustee.id]
