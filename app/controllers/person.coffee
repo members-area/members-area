@@ -3,6 +3,8 @@ _ = require 'underscore'
 async = require 'async'
 
 module.exports = class PersonController extends LoggedInController
+  @before 'setAdmin'
+
   activeNavigationId: "person-index"
   index: (done) ->
     async.series
@@ -32,3 +34,6 @@ module.exports = class PersonController extends LoggedInController
   view: (done) ->
     @req.models.User.get @req.params.id, (err, @user) =>
       done(err)
+
+  setAdmin: ->
+    @admin = @loggedInUser.can 'admin'

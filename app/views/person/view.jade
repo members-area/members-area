@@ -15,3 +15,9 @@ block content
       strong= roleUser.role.name
       |  since 
       em= roleUser.approved
+  if admin
+    h3 Admin stuff
+    p Email: #{user.email}
+    p Address:
+    pre= user.address
+    <!--ADMIN-->
