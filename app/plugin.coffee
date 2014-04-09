@@ -98,7 +98,6 @@ class Plugin extends EventEmitter
     .where(name:settingName)
     .first (err, @setting) =>
       throw err if err
-      console.log "GOT SETTING" if @setting
       return next() if @setting
       data =
         name: settingName
