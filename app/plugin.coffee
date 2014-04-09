@@ -75,11 +75,16 @@ class Plugin extends EventEmitter
 
   load: (callback) ->
     @once 'load', callback if callback?
+    fail = =>
+      callback new Error "Plugin #{@identifier} failed to load correctly."
+      callback = ->
+    watchdog = setTimeout fail, 5000
     async.series [
       @migrate.bind(this)
       @loadSettings.bind(this)
       @initialize.bind(this)
     ], (err) =>
+      clearTimeout watchdog
       if err
         console.error "Loading '#{@identifier}' plugin wasn't completely successful"
         console.error err
