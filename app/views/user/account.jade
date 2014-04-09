@@ -9,7 +9,10 @@ block content
     Hello #{loggedInUser.fullname}! Here you can change your personal details.
 
   if error
-    p.text-error= error
+    p.text-error
+      if error.property
+        | There was an error with '#{error.property}': 
+      = error.message
 
   if success
     p.text-success Your data has been updated
@@ -22,7 +25,7 @@ block content
     .control-group
       label.control-label Address
       .controls
-        textarea(name='address')= data.address
+        textarea(name='address', rows=5)= data.address
     .control-group
       label.control-label Password
       .controls

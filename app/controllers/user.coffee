@@ -17,8 +17,7 @@ module.exports = class UserController extends LoggedInController
       @loggedInUser.fullname = String @req.body.fullname
       @loggedInUser.save (e) =>
         if e
-          console.dir e
-          @error = e.message
+          @error = e
         else
           @success = true
         done()
