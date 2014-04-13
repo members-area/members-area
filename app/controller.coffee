@@ -49,7 +49,8 @@ class Controller
           entry = method: entry, options: {}
         return done() if entry.options.only and action not in entry.options.only
         return done() if entry.options.except and action in entry.options.except
-        fn = instance[entry.method]
+        fn = entry.method
+        fn = instance[fn] if typeof fn is 'string'
         unless fn
           throw new Error "#{params.controller} has no method #{entry.method}"
         if fn.length > 0
