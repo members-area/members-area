@@ -107,7 +107,8 @@ getModelsForConnection = (app, db, done) ->
 
       models.RoleUser.hasOne 'user', models.User, reverse: 'roleUsers'
       models.RoleUser.hasOne 'role', models.Role, reverse: 'roleUsers', autoFetch: true
-      done null, models
+      app.pluginHook 'models:initialize', {models}, ->
+        done null, models
 
 
 module.exports = getModelsForConnection
