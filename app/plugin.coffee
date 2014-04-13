@@ -27,7 +27,10 @@ class Plugin extends EventEmitter
           done = -> # Prevent calling twice
           clearTimeout timer
           next()
-        timer = setTimeout done, 3000 # Give hook just 3 seconds to do its thang
+        watchdog = ->
+          console.warn "WARNING: '#{hookName}' hook required watchdog call."
+          done()
+        timer = setTimeout watchdog, 3000 # Give hook just 3 seconds to do its thang
         hook options, done
       handlePriority = (priority, next) ->
         async.each prioritisedHooks[priority], handleHook, next
