@@ -11,7 +11,9 @@ module.exports = class SessionController extends Controller
     return done() unless @req.method is 'POST'
     handle = (err, user, info) =>
       return done err if err
-      return done() unless user
+      unless user
+        @errorText = 'Incorrect username or password.'
+        return done()
       unless user.verified
         user.sendVerificationMail()
         @template = 'unverified'

@@ -4,6 +4,12 @@ block body
   .row
     .span4.offset4.login-form
       h2 Login
+      if errorText
+        p.text-error
+          strong= errorText
+        p.text-error Note that usernames and passwords are case sensitive.
+      else
+        p Usernames and passwords are case sensitive.
       form(action='', method='POST')
         fieldset
           - var controlGroupClass = (!!err ? "error" : "")
