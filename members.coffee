@@ -90,6 +90,7 @@ methods = new class
       main: "index.coffee"
       scripts: {}
       author: ""
+      private: true
 
     pkg.scripts ?= {}
     pkg.scripts.start ?= "./node_modules/.bin/coffee index.coffee"
