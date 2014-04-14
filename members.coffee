@@ -1,6 +1,9 @@
 defaultPlugins =
+  'members-area-banking': '*'
   'members-area-passport': '*'
+  'members-area-payments': '*'
   'members-area-register-of-members': '*'
+  'members-area-remote-auth': '*'
   'members-area-theme-somakeit': '*'
 
 #--------------------------------------------

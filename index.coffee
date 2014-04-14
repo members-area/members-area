@@ -7,6 +7,7 @@ path = require 'path'
 fs = require 'fs'
 net = require 'net'
 nodemailer = require 'nodemailer'
+_ = require 'underscore'
 FSStore = require('./app/lib/connect-fs')(express)
 Plugin = require './app/plugin'
 require './app/env' # Fix/load/check environmental variables
