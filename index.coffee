@@ -147,10 +147,11 @@ checkRoles = ->
     start()
 
 loadPlugins = ->
-  pluginsJson = {}
+  dependencies = {}
   try
-    pluginsJson = require("#{process.cwd()}/config/plugins.json")
-  for moduleName of pluginsJson ? {}
+    packageJson = require("#{process.cwd()}/package.json")
+    dependencies = _.extend packageJson.optionalDependencies ? {}, packageJson.dependencies
+  for moduleName of dependencies when moduleName.match /^members-area-/
     try
       app.plugins.push Plugin.load moduleName, app
     catch e

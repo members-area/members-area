@@ -18,12 +18,11 @@ usage = ->
     Usage:
 
       version    - what version are you running?
-      quickstart - init && migrate && seed && plugins && run
+      quickstart - init && migrate && seed && run
       init       - set up a members are in the current folder
-      setup      - migrate && seed && plugins
+      setup      - migrate && seed
       migrate    - migrate the database
       seed       - seed the database
-      plugins    - npm install plugins from config/plugins.json
       run        - run the server (do this in the root folder)
     """
 
@@ -47,15 +46,6 @@ methods = new class
     process.on 'SIGTERM', ->
       proc.kill 'SIGTERM'
 
-  plugins: (done = ->) =>
-    pluginsJson = require "#{cwd}/config/plugins.json"
-    install = ([name, version], next) ->
-      proc = spawn "npm", ["install", "--save", "#{name}@#{version}"],
-        cwd: process.cwd()
-        stdio: 'inherit'
-      proc.on 'close', -> next()
-    async.eachSeries _.pairs(pluginsJson), install, done
-
   migrate: (done = ->) =>
     console.log "Migrating"
     proc = spawn "#{__dirname}/scripts/db/migrate", [],
@@ -75,7 +65,6 @@ methods = new class
       @init
       @migrate
       @seed
-      @plugins
       @run
     ], done
 
@@ -83,7 +72,6 @@ methods = new class
     async.series [
       @migrate
       @seed
-      @plugins
     ], done
 
   init: (done = ->) =>
@@ -109,6 +97,7 @@ methods = new class
     pkg.dependencies["sqlite3"] ?= "~2.2.0"
     pkg.dependencies["coffee-script"] ?= ">1.6"
     pkg.dependencies["members-area"] ?= "*"
+    pkg.dependencies[k] ?= v for k, v of defaultPlugins
     fs.writeFileSync "package.json", JSON.stringify pkg, null, 2
     fs.writeFileSync ".gitignore", """
       *.sqlite
@@ -133,7 +122,6 @@ methods = new class
       development: "sqlite:///members.sqlite"
       test: "sqlite:///members-test.sqlite"
     , null, 2
-    fs.writeFileSync "config/plugins.json", JSON.stringify defaultPlugins, null, 2
     async.series
       npmInstall: (next) ->
         proc = spawn "npm", ["install"],
