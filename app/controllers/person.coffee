@@ -4,6 +4,7 @@ async = require 'async'
 
 module.exports = class PersonController extends LoggedInController
   @before 'setAdmin'
+  @before 'getUser', only: ['view']
 
   activeNavigationId: "person-index"
   index: (done) ->
@@ -31,7 +32,9 @@ module.exports = class PersonController extends LoggedInController
       return done err if err
       done()
 
-  view: (done) ->
+  view: ->
+
+  getUser: (done) ->
     @req.models.User.get @req.params.id, (err, @user) =>
       done(err)
 
