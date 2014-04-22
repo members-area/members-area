@@ -28,7 +28,7 @@ set -e
 set -u
 
 # Make sure we're doing this in a blank folder
-mkdir MembersArea
+mkdir -p MembersArea
 cd MembersArea
 
 # Clone members-area into ./members-area/ and then install the dependencies and link it
@@ -42,8 +42,8 @@ cd ..
 # Clone each plugin in turn, install dependencies, `npm link` it and link the `members-area` checkout above for ease of development
 for PLUGIN in $PLUGINS; do
   git clone git@github.com:$PLUGIN.git
-  DIR=$(basename $PLUGIN)
-  cd $DIR
+  NAME=$(basename $PLUGIN)
+  cd $NAME
   mkdir -p node_modules
   npm install
   npm link
@@ -53,16 +53,23 @@ for PLUGIN in $PLUGINS; do
 done
 
 # Create a new instance for us, bootstrap it
-mkdir instance
+mkdir -p instance
 cd instance
 members init
 members migrate
 members seed
 
 # Replace the members-area module and each plugin module with links to the checked out plugins above
-npm link --save members-area
+npm link members-area
 for PLUGIN in $PLUGINS; do
-  npm link --save $(basename $PLUGIN)
+  NAME=$(basename $PLUGIN)
+  npm link $NAME
+  node <<SCRIPT
+var fs = require('fs');
+var pkg = require('./package.json');
+pkg.dependencies["$NAME"] = "*";
+fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
+SCRIPT
 done
 
 # The ./watch.sh script will monitor all the modules (plugins) for changes and restart as necessary
