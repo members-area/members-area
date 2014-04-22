@@ -50,10 +50,18 @@ register without them ending up in spam. Then in Core Settings, set:
 Contributing
 ------------
 
-You can develop the members area by cloning it, then running `npm link`
-inside it. Then in your `myarea` folder you can do `npm link
-members-area` and you'll be using the code from your git clone. Just be
-sure to restart the server every time you make a change to the clone!
+For a really fast way to get up and running with developing for the
+members area, check out the [bootstrap.sh](bootstrap.sh) file - simply
+download it somewhere and then run it. It runs under bash -
+contributions of a Windows equivalent welcome...
+
+Once the script finishes running you'll have a folder `MembersArea`
+containing a checkout of the members-area itself and a number of
+plugins. There'll also be a folder called `instance` that contains a
+members-area instance since the members-area itself is just a node
+module and is not intended to run on it's own. You'll want to run
+`./watch.sh` inside instance to monitor all the various modules for
+changes.
 
 I've designed the members area to have a plugin architecture allowing
 for easy expansion. In fact many of the features that could have been
