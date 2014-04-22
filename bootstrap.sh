@@ -34,6 +34,7 @@ cd MembersArea
 # Clone members-area into ./members-area/ and then install the dependencies and link it
 git clone git@github.com:members-area/members-area.git
 cd members-area
+mkdir -p node_modules
 npm install
 npm link
 cd ..
@@ -43,9 +44,9 @@ for PLUGIN in $PLUGINS; do
   git clone git@github.com:$PLUGIN.git
   DIR=$(basename $PLUGIN)
   cd $DIR
+  mkdir -p node_modules
   npm install
   npm link
-  mkdir -p node_modules
   cd node_modules
   ln -s ../../members-area members-area
   cd ../..
@@ -64,5 +65,17 @@ for PLUGIN in $PLUGINS; do
   npm link --save $(basename $PLUGIN)
 done
 
+# The ./watch.sh script will monitor all the modules (plugins) for changes and restart as necessary
+npm install nodemon
+cat > watch.sh <<EOF
+#!/bin/sh
+ARGS="--watch ../members-area"
+for I in ../members-area-*; do
+  ARGS="\$ARGS --watch \$I";
+done
+./node_modules/.bin/nodemon --ignore node_modules/ --ignore public/ --ignore db/ --ignore views/ \$ARGS --watch . index.coffee
+EOF
+chmod +x watch.sh
+
 # Run it!
-members run
+./watch.sh
