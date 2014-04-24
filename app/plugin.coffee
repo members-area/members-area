@@ -43,6 +43,7 @@ class Plugin extends EventEmitter
       async.each hookNames, handleHookName, callback
 
   constructor: (@identifier, @app = require('../index.coffee')) ->
+    @shortName = @identifier.replace /^members-area-/, ""
     @models = @app.models
 
     # Useful dependencies
