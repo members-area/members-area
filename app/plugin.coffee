@@ -36,6 +36,7 @@ class Plugin extends EventEmitter
         async.each prioritisedHooks[priority], handleHook, next
       async.eachSeries priorities, handlePriority, callback
     return (hookNamesString, options, callback) ->
+      console.log "TRIGGERING HOOKS: '#{hookNamesString}' (keys: #{Object.keys(options).join(", ")})" if process.env.DEBUG?
       hookNames = hookNamesString.split(" ")
       handleHookName = (hookName, next) ->
         processHook hookName, options, next
