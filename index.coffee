@@ -171,6 +171,7 @@ loadSettings = ->
     for setting in settings
       emailSetting = setting if setting.name is 'email'
       themeSetting = setting if setting.name is 'theme'
+      siteSetting = setting if setting.name is 'site'
     throw new Error "No email setting, try seeding the database" unless emailSetting
     unless themeSetting
       themeSetting = new app.models.Setting
@@ -178,9 +179,16 @@ loadSettings = ->
         meta:
           settings: {}
       themeSetting.save ->
+    unless siteSetting
+      siteSetting = new app.models.Setting
+        name: 'site'
+        meta:
+          settings: {}
+      siteSetting.save ->
     app.emailSetting = emailSetting
     app.updateEmailTransport()
     app.themeSetting = themeSetting
+    app.siteSetting = siteSetting
     loadPlugins()
 
 connectToDb = ->
