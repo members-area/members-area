@@ -242,4 +242,7 @@ class Controller
 
       done()
 
+  baseURL: ->
+    "#{@req.protocol}://#{@req.header('host')}"
+
 module.exports = Controller
