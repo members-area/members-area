@@ -82,7 +82,8 @@ class Controller
     @res.render "#{@templateParent}/#{@template}", vars, (err, html) =>
       return done err if err
       options = {controller: this, html: html}
-      @req.app.pluginHook "render render-#{@plugin.shortName}-#{@params.controller}-#{@template}", options, =>
+      psn = "-#{@plugin.shortName}" if @plugin
+      @req.app.pluginHook "render render#{psn ? ""}-#{@params.controller}-#{@template}", options, =>
         @rendered = true
         @res.send options.html
         done()
