@@ -58,7 +58,8 @@
     "juice": "~0.4.0",
     "html-to-text": "0.0.8",
     "resolve": "~0.6.1",
-    "cheerio": "^0.15.0"
+    "cheerio": "^0.15.0",
+    "entities": "^1.1.1"
   },
   "optionalDependencies": {
     "pg": "~2.11.1"
