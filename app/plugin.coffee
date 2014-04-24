@@ -31,7 +31,11 @@ class Plugin extends EventEmitter
           console.warn "WARNING: '#{hookName}' hook required watchdog call."
           done()
         timer = setTimeout watchdog, 3000 # Give hook just 3 seconds to do its thang
-        hook options, done
+        try
+          hook options, done
+        catch e
+          console.error "ERROR: hook '#{hookName}' triggered an error (probably from a plugin): \n#{e.stack}"
+          done(e)
       handlePriority = (priority, next) ->
         async.each prioritisedHooks[priority], handleHook, next
       async.eachSeries priorities, handlePriority, callback
