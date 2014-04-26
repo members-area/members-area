@@ -81,11 +81,17 @@ class Controller
     vars[k] = v for own k, v of @ when typeof k isnt 'function'
     @res.render "#{@templateParent}/#{@template}", vars, (err, html) =>
       return done err if err
-      options = {controller: this, html: html}
+      options = {controller: this}
+      Object.defineProperty options, "html",
+        get: -> throw new Error("Sorry, Benjie disabled this due to the asynchronicity of this, please use $html")
+      $html = null
+      Object.defineProperty options, "$",
+        get: -> $html ?= cheerio.load(html)
       psn = "-#{@plugin.shortName}" if @plugin
       @req.app.pluginHook "render render#{psn ? ""}-#{@params.controller}-#{@template}", options, =>
+        html = $html.html() if $html
         @rendered = true
-        @res.send options.html
+        @res.send html
         done()
 
   redirectTo: (url, {status} = {}) ->
