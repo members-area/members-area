@@ -132,8 +132,8 @@ module.exports = (db, models) ->
                 return callback new Error "Nope" unless hasRole
                 callback()
           when 'approval'
-            {roleId, count} = requirement
-            approvals = @meta.approvals?[roleId]
+            {id, roleId, count} = requirement
+            approvals = @meta.approvals?[id]
             approvals ?= []
             count -= approvals.length
             process.nextTick ->
