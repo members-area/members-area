@@ -8,6 +8,7 @@ cloneCallbacks = (oldCallbacks = {}) ->
   return result
 
 class Controller
+  @callbackTimeout: 30000
   @makeCallbacksLocal: ->
     clonedCallbacksProperty = "#{@name}_callbacks_cloned"
     unless @hasOwnProperty(clonedCallbacksProperty)
@@ -42,11 +43,12 @@ class Controller
     array = array.concat('render')
     #array = array.concat @callbacks('after')
 
-    run = (entry, done) ->
+    run = (entry, done) =>
       try
         return done() if instance.rendered
         if typeof entry is 'string'
-          entry = method: entry, options: {}
+          entry = method: entry, options: {}, name: entry
+        entry.name ?= entry.method.name
         return done() if entry.options.only and action not in entry.options.only
         return done() if entry.options.except and action in entry.options.except
         fn = entry.method
@@ -54,7 +56,15 @@ class Controller
         unless fn
           throw new Error "#{params.controller} has no method #{entry.method}"
         if fn.length > 0
-          fn.call instance, done
+          cb = (err) ->
+            clearTimeout timer
+            cb = ->
+            done(err)
+          watchdog = =>
+            console.error "ERROR: timeout (after #{@callbackTimeout}ms)! #{JSON.stringify params}"
+            cb new Error("A timeout occurred :-( [method: #{entry.name}]")
+          timer = setTimeout watchdog, @callbackTimeout
+          fn.call instance, cb
         else
           fn.call instance
           process.nextTick done
