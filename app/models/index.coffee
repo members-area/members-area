@@ -42,6 +42,8 @@ applyCommonClassMethods = (klass) ->
 
   for k, v of methods
     klass[k] = v
+  klass.instanceMethods = {}
+  klass.instanceProperties = {}
 
 validateAndGroup = (name, properties, opts) ->
   # opts.cache is set false to protect against silly issues. For example if you
@@ -83,6 +85,15 @@ getModelsForConnection = (app, db, done) ->
   db.use (db, opts) -> {beforeDefine: validateAndGroup}
 
   db.applyCommonHooks = (hooks = {}) ->
+    hooks.afterLoad ?= (cb) ->
+      model = @model()
+      for name, method of model.instanceMethods ? {}
+        Object.defineProperty this, name,
+          value: method
+          enumerable: false
+      for name, obj of model.instanceProperties ? {}
+        Object.defineProperty this, name, obj
+      cb()
     return hooks
 
   fs.readdir __dirname, (err, files) ->
