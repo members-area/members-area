@@ -57,7 +57,7 @@ module.exports = (db, models) ->
           return callback err if err
           requirements = role.meta.requirements
           console.log requirements
-          for requirement in requirements when requirementId is String(requirement.id ? requirement.roleId)
+          for requirement in requirements when requirementId is String(requirement.id)
             roleId = requirement.roleId
             return callback new Error "Permission denied" unless roleId in (user.activeRoleIds ? [])
             return callback new Error "Invalid roleId" unless roleId > 0
@@ -83,7 +83,7 @@ module.exports = (db, models) ->
               passed = !err?
               actionable = false
               if requirement.type is 'approval' or (requirement.type is 'text' and requirement.roleId)
-                if requirement.roleId in (user.activeRoleIds ? []) and user.id not in (@meta.approvals?[requirement.roleId] ? [])
+                if requirement.roleId in (user.activeRoleIds ? []) and user.id not in (@meta.approvals?[requirement.id] ? [])
                   actionable = true
               next null, _.extend requirement,
                 passed: passed
