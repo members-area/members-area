@@ -36,11 +36,6 @@ module.exports = (db, models, app) ->
       type: 'text'
       required: true
 
-    paidUntil:
-      type: 'date'
-      required: false
-      time: false
-
     fullname:
       type: 'text'
       required: false
