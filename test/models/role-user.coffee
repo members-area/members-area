@@ -27,6 +27,7 @@ describe 'RoleUser', ->
       meta:
         requirements: [
           {
+            id: "12"
             type: 'approval'
             roleId: 2
             count: 3
@@ -102,13 +103,13 @@ describe 'RoleUser', ->
         role_id:@role.id
       roleUser.setMeta
         approvals:
-          "1": [1,3,4,7,9]
-          "2": [1,3]
+          "11": [1,3,4,7,9]
+          "12": [1,3]
 
       stub roleUser, "getUser", (callback) =>
         callback null, @user
 
-      roleUser._checkRequirement {type: 'approval', roleId: 1, count: 5}, catchErrors done, (err) =>
+      roleUser._checkRequirement {id: "11", type: 'approval', roleId: 1, count: 5}, catchErrors done, (err) =>
         roleUser.getUser.restore()
         expect(err).to.not.exist
         done()
@@ -119,13 +120,13 @@ describe 'RoleUser', ->
         role_id:@role.id
         meta:
           approvals:
-            "1": [1,3,4,7,9]
-            "2": [1,3]
+            "11": [1,3,4,7,9]
+            "12": [1,3]
 
       stub roleUser, "getUser", (callback) =>
         callback null, @user
 
-      roleUser._checkRequirement {type: 'approval', roleId: 2, count: 3}, catchErrors done, (err) =>
+      roleUser._checkRequirement {id: "12", type: 'approval', roleId: 2, count: 3}, catchErrors done, (err) =>
         roleUser.getUser.restore()
         expect(err).to.exist
         done()
@@ -136,14 +137,14 @@ describe 'RoleUser', ->
         role_id:@roleRequiringApproval.id
       roleUser.setMeta
         approvals:
-          "2": [2,3]
+          "12": [2,3]
 
       stub roleUser, "getUser", (callback) =>
         callback null, @user
 
-      roleUser.approve @trustee, 2, (err) =>
+      roleUser.approve @trustee, "12", (err) =>
         expect(err).to.not.exist
-        roleUser._checkRequirement {type: 'approval', roleId: 2, count: 3}, catchErrors done, (err) =>
+        roleUser._checkRequirement {id: "12", type: 'approval', roleId: 2, count: 3}, catchErrors done, (err) =>
           roleUser.getUser.restore()
           expect(err).to.not.exist
           done()
@@ -154,14 +155,14 @@ describe 'RoleUser', ->
         role_id:@roleRequiringApproval.id
       roleUser.setMeta
         approvals:
-          "2": [1, @trustee.id]
+          "12": [1, @trustee.id]
 
       stub roleUser, "getUser", (callback) =>
         callback null, @user
 
-      roleUser.approve @trustee, 2, (err) =>
+      roleUser.approve @trustee, "12", (err) =>
         expect(err).to.not.exist
-        roleUser._checkRequirement {type: 'approval', roleId: 2, count: 3}, catchErrors done, (err) =>
+        roleUser._checkRequirement {id: "12", type: 'approval', roleId: 2, count: 3}, catchErrors done, (err) =>
           roleUser.getUser.restore()
           expect(err).to.exist
           done()
@@ -176,11 +177,13 @@ describe 'RoleUser', ->
             text: "Arbitrary"
           }
           {
+            id: "11"
             type: 'approval'
             roleId: 1
             count: 5
           }
           {
+            id: "12"
             type: 'approval'
             roleId: 2
             count: 3
@@ -194,8 +197,8 @@ describe 'RoleUser', ->
         role_id:@role.id
         meta:
           approvals:
-            "1": [2, 3, 4, 5, 6]
-            "2": [2, 3]
+            "11": [2, 3, 4, 5, 6]
+            "12": [2, 3]
 
     it 'works', (done) ->
 
@@ -211,7 +214,7 @@ describe 'RoleUser', ->
         done()
 
     it 'doesn\'t mark as actionable twice', (done) ->
-      @roleUser.meta.approvals["2"][0] = 1
+      @roleUser.meta.approvals["12"][0] = 1
 
       @roleUser.getRequirementsWithStatusForUser @trustee, (err, requirements) ->
         expect(err).to.not.exist
