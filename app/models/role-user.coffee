@@ -51,7 +51,10 @@ module.exports = (db, models) ->
         @checkApproval done
 
     methods:
-      approve: (user, requirementId, callback) ->
+      approve: (user, requirementId, cb) ->
+        callback = (err) ->
+          console.warn "Approve #{@user_id} for #{@role_id} by #{user.id} error: #{err.message}" if err
+          cb err
         requirementId = String(requirementId)
         @getRole (err, role) =>
           return callback err if err
