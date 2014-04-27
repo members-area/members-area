@@ -196,23 +196,26 @@ module.exports = (db, models, app) ->
         return true
 
     validations:
-      email: [
-        orm.enforce.patterns.email()
-      ]
-      username: [
-        orm.enforce.ranges.length(3, 14, "Must be between 3 and 14 characters")
-        orm.enforce.patterns.match(/^[a-z]/i, null, "Must start with a letter")
-        orm.enforce.patterns.match(/^[a-z0-9]*$/i, null, "Must be alphanumeric")
-        orm.enforce.lists.outside(disallowedUsernameRegexps, "Disallowed username")
-      ]
-      fullname: [
-        orm.enforce.patterns.match(/.+ .+$/, null, "Invalid full name")
-      ]
-      address: [
-        orm.enforce.ranges.length(8, undefined, "Too short")
-        orm.enforce.patterns.match(/(\n|,)/, null, "Must have multiple lines")
-        orm.enforce.patterns.match(/(GIR 0AA)|((([A-Z][0-9][0-9]?)|(([A-Z][A-Z][0-9][0-9]?)|(([A-Z][0-9][A-HJKSTUW])|([A-Z][A-Z][0-9][ABEHMNPRVWXY])))) ?[0-9][A-Z]{2})/i, null, "Must have a valid postcode")
-      ]
+      unless process.env['DISABLE_VALIDATIONS']
+        email: [
+          orm.enforce.patterns.email()
+        ]
+        username: [
+          orm.enforce.ranges.length(3, 14, "Must be between 3 and 14 characters")
+          orm.enforce.patterns.match(/^[a-z]/i, null, "Must start with a letter")
+          orm.enforce.patterns.match(/^[a-z0-9]*$/i, null, "Must be alphanumeric")
+          orm.enforce.lists.outside(disallowedUsernameRegexps, "Disallowed username")
+        ]
+        fullname: [
+          orm.enforce.patterns.match(/.+ .+$/, null, "Invalid full name")
+        ]
+        address: [
+          orm.enforce.ranges.length(8, undefined, "Too short")
+          orm.enforce.patterns.match(/(\n|,)/, null, "Must have multiple lines")
+          orm.enforce.patterns.match(/(GIR 0AA)|((([A-Z][0-9][0-9]?)|(([A-Z][A-Z][0-9][0-9]?)|(([A-Z][0-9][A-HJKSTUW])|([A-Z][A-Z][0-9][ABEHMNPRVWXY])))) ?[0-9][A-Z]{2})/i, null, "Must have a valid postcode")
+        ]
+      else
+        {}
 
   User.modelName = 'User'
   return User
