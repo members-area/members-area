@@ -1,5 +1,6 @@
 _ = require 'underscore'
 async = require 'async'
+cheerio = require 'cheerio'
 
 cloneCallbacks = (oldCallbacks = {}) ->
   result = {}
