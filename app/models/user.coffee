@@ -104,6 +104,7 @@ module.exports = (db, models, app) ->
       sendVerificationMail: (done) ->
         done ?= (err) ->
           console.error err if err?
+        return done() if process.env.NO_EMAIL
         next = =>
           code = @meta.emailVerificationCode
           verifyURL = "#{process.env.SERVER_ADDRESS}/verify?id=#{@id}&code=#{encodeURIComponent code}"
