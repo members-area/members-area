@@ -10,4 +10,5 @@ block content
       li(class=user.classNames)
         a(href="/people/"+user.id)= user.fullname + " (" + user.username + ")"
         each activeRoleUser in user.activeRoleUsers
-          span.user-role-tag= activeRoleUser.role.name
+          if activeRoleUser.role_id != 1
+            span.user-role-tag= activeRoleUser.role.name
