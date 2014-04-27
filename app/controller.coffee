@@ -57,7 +57,7 @@ class Controller
         unless fn
           throw new Error "#{params.controller} has no method #{entry.method}"
         if fn.length > 0
-          res.on 'end', ->
+          res.on 'finish', ->
             clearTimeout timer
           cb = (err) ->
             clearTimeout timer
