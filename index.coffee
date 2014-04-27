@@ -138,7 +138,7 @@ start = ->
     # TCP socket
     listen port
 
-checkRoles = ->
+checkRoles = (start) ->
   app.models.Role.find (err, roles) ->
     throw err if err
     for role in roles ? []
@@ -147,7 +147,7 @@ checkRoles = ->
     throw new Error("Required role is missing, try 'npm run setup'") unless hasBase and hasOwner
     start()
 
-loadPlugins = ->
+loadPlugins = (start) ->
   dependencies = {}
   try
     packageJson = require("#{process.cwd()}/package.json")
@@ -161,9 +161,9 @@ loadPlugins = ->
     plugin.load(done)
   async.mapSeries app.plugins, loadPlugin, (err) ->
     throw err if err
-    checkRoles()
+    checkRoles(start)
 
-loadSettings = ->
+loadSettings = (start) ->
   app.models.Setting.find()
   .where(name:['email', 'theme'])
   .run (err, settings) ->
@@ -189,18 +189,18 @@ loadSettings = ->
     app.updateEmailTransport()
     app.themeSetting = themeSetting
     app.siteSetting = siteSetting
-    loadPlugins()
+    loadPlugins(start)
 
-connectToDb = ->
+connectToDb = (start) ->
   require('orm').connect process.env.DATABASE_URL, (err, db) ->
     throw err if err
     require('./app/models') app, db, (err, models) ->
       throw err if err
       app.globalDb = db
       app.models = models
-      loadSettings()
+      loadSettings(start)
 
-app.start = ->
+app.start = (_start = start) ->
   # XXX: merge these two together.
   unless process.env.SERVER_ADDRESS
     console.error "ERROR: You must set the 'SERVER_ADDRESS' environmental variable."
@@ -211,7 +211,7 @@ app.start = ->
       console.error "    SECRET=\"#{bytes.toString('base64') ? "SecretStringHere"}\""
       process.exit 1
     return
-  connectToDb()
+  connectToDb(_start)
 
 if require.main is module
   app.start()
