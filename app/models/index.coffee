@@ -123,6 +123,7 @@ getModelsForConnection = (app, db, done) ->
 
 
 module.exports = getModelsForConnection
+module.exports.orm = orm
 module.exports.middleware = -> (req, res, next) ->
   orm.connect process.env.DATABASE_URL, (err, db) ->
     return next err if err
