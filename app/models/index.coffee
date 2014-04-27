@@ -127,6 +127,8 @@ module.exports.middleware = -> (req, res, next) ->
   orm.connect process.env.DATABASE_URL, (err, db) ->
     return next err if err
     req.db = db
+    req.on 'end', ->
+      db.close()
     getModelsForConnection req.app, db, (err, _models) ->
       req.models = _models
       next()
