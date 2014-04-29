@@ -57,9 +57,10 @@ class Controller
         unless fn
           throw new Error "#{params.controller} has no method #{entry.method}"
         if fn.length > 0
-          res.on 'finish', ->
+          fail = ->
             clearTimeout timer
           cb = (err) ->
+            res.removeListener 'finish', fail
             clearTimeout timer
             cb = ->
             done(err)
@@ -67,6 +68,7 @@ class Controller
             console.error "ERROR: timeout (after #{@callbackTimeout}ms)! #{JSON.stringify params}"
             cb new Error("A timeout occurred :-( [method: #{entry.name}]")
           timer = setTimeout watchdog, @callbackTimeout
+          res.on 'finish', fail
           fn.call instance, cb
         else
           fn.call instance
