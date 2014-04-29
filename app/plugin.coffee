@@ -128,6 +128,9 @@ class Plugin extends EventEmitter
     @app.pluginHooks[hookName][priority] ?= []
     @app.pluginHooks[hookName][priority].push callback
 
+  addCSS: (path) ->
+    require('./middleware/stylus').imports.push path
+
   get: (setting) ->
     if setting?
       return @setting.meta.settings[setting]
