@@ -7,7 +7,7 @@ block content
   h2 People
   ul.user-list
     each user in users
-      li(class=user.classNames)
+      li(class=user.classNames, data-id=user.id)
         a(href="/people/"+user.id)= user.fullname + " (" + user.username + ")"
         each activeRoleUser in user.activeRoleUsers
           if activeRoleUser.role_id != 1
