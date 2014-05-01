@@ -106,7 +106,8 @@ module.exports = (db, models) ->
         role = @role
         return callback false unless role
         requirements = role.meta.requirements ? []
-        async.map requirements, @_checkRequirement.bind(this), (err) ->
+        # I have no idea why, but using mapSeries instead of map here stops a segfault.
+        async.mapSeries requirements, @_checkRequirement.bind(this), (err) ->
           callback !err
 
       _checkRequirement: (requirement, callback) ->
