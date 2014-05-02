@@ -1,5 +1,6 @@
 defaultPlugins =
   'members-area-banking': '*'
+  'members-area-gocardless': '*'
   'members-area-passport': '*'
   'members-area-payments': '*'
   'members-area-register-of-members': '*'
