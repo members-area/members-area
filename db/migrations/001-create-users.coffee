@@ -7,6 +7,7 @@ module.exports =
         type: 'number'
         serial: true
         required: true
+        primary: true
 
       email:
         type: 'text'
