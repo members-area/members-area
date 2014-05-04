@@ -38,10 +38,11 @@ module.exports = class RoleController extends LoggedInController
       .where(id:userIds)
       .run (err, users) =>
         return done err if err
+        usersById = {}
+        usersById[user.id] = user for user in users
+        result = []
         for roleUser in @roleUsers
-          for user in users when user.id is roleUser.user_id
-            roleUser.user = user
-            break
+          roleUser.user = usersById[roleUser.user_id]
         done()
 
   application: (done) ->
