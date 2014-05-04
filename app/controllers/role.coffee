@@ -36,6 +36,7 @@ module.exports = class RoleController extends LoggedInController
       return done() if userIds.length is 0
       @req.models.User.find()
       .where(id:userIds)
+      .where("verified IS NOT NULL")
       .run (err, users) =>
         return done err if err
         usersById = {}
@@ -43,6 +44,7 @@ module.exports = class RoleController extends LoggedInController
         result = []
         for roleUser in @roleUsers
           roleUser.user = usersById[roleUser.user_id]
+        @roleUsers = @roleUsers.filter (rU) -> !!rU.user
         done()
 
   application: (done) ->
