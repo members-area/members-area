@@ -104,7 +104,7 @@ module.exports = (db, models, app) ->
           getSentence: (data, roleUser = null) ->
             roleName = data.roleId
             roleName = role.name for role in roles when role.id is data.roleId
-            already = roleUser?.meta.approvals?[data.roleId]?.length ? 0
+            already = roleUser?.meta.approvals?[data.id]?.length ? 0
             if already >= data.count
               "Must be approved by #{data.count} #{roleName}s."
             else if already > 0
