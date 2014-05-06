@@ -2,7 +2,10 @@ LoggedInController = require './logged-in'
 passport = require '../lib/passport'
 
 module.exports = class UserController extends LoggedInController
+  @before 'getPendingRoles', only: 'dashboard'
+
   dashboard: ->
+
   account: (done) ->
     if @req.method is 'POST'
       # XXX: Add old password verification
@@ -24,3 +27,10 @@ module.exports = class UserController extends LoggedInController
     else
       @data = @req.user
       done()
+
+  getPendingRoles: (done) ->
+    @req.models.RoleUser.find(user_id:@loggedInUser.id)
+      .where("approved IS NULL and rejected IS NULL")
+      .all (err, @pendingRoleUsers = []) =>
+        return done err if err
+        done()

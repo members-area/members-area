@@ -13,8 +13,15 @@ block content
     the wiki and blog.
   h4 Roles
   p.
-    Here are the roles that you have been granted. You can apply for further
-    roles <a href="/roles">here</a>.
+    Here are the roles that you have been granted:
   ul
     each roleUser in loggedInUser.activeRoleUsers
       li <strong>#{roleUser.role.name}</strong> granted on <em>#{roleUser.approved}</em>
+  if pendingRoleUsers.length
+    p.
+      You've requested the following roles but they've not been approved yet:
+    ul
+      each roleUser in pendingRoleUsers
+        li <strong>#{roleUser.role.name}</strong> <a href="/roles/applications/#{roleUser.id}">requested</a> on <em>#{roleUser.createdAt}</em>
+  p.
+    You can apply for further roles <a href="/roles">here</a>.
