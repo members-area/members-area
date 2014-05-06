@@ -9,7 +9,9 @@ block content
     h3= role.name
     if role.meta.description
       p.lead= role.meta.description
-    h4= Requirements
+    if role.meta.subscriptionRequired
+      p.text-info This role requires a monthly subscription.
+    h5 Requirements
     each requirement in role.meta.requirements || []
       - var requirementType = requirementTypes[requirement.type]
       if requirementType && requirementType.getSentence
