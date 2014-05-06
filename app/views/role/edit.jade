@@ -43,6 +43,10 @@ block content
       .controls
         input(type="text", name="name", value=data.name)
     .control-group
+      label.control-label(for="description") Description
+      .controls
+        textarea(name="description", style="width: 100%; height: 5em")= data.meta.description
+    .control-group
       .controls
         button.btn-success(type="submit") Update Role
 

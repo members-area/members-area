@@ -6,18 +6,20 @@ block title
 block content
   h2 Roles
   each role in roles
+    hr
     h3= role.name
     if role.meta.description
       p.lead= role.meta.description
     if role.meta.subscriptionRequired
       p.text-info This role requires a monthly subscription.
-    h5 Requirements
+    h4 Requirements
     each requirement in role.meta.requirements || []
       - var requirementType = requirementTypes[requirement.type]
       if requirementType && requirementType.getSentence
         p= requirementType.getSentence(requirement)
       else
         p We've not yet coded the description of this requirement.
+    br
     if activeRoleIds.indexOf(role.id) >= 0
       p.text-success You have this role
     else if appliedRoleIds.indexOf(role.id) >= 0
