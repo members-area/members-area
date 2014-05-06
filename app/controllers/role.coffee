@@ -129,6 +129,7 @@ module.exports = class RoleController extends LoggedInController
 
       else if @data.name?.length
         @role.name = @data.name
+      @data = @role
       @role.save done
 
     else
