@@ -71,6 +71,10 @@ reqres = (callback) ->
       meta:
         settings:
           from_address: "example@example.com"
+    app.siteSetting =
+      meta:
+        settings:
+          name: "Members Area"
     app.mailTransport =
       sendMail: -> # XXX: make emails testable
     callback req, res
