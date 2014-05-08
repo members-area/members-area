@@ -1,4 +1,5 @@
 Controller = require '../controller'
+encode = require('entities').encodeXML
 
 module.exports = class RegistrationController extends Controller
   @before 'requireNotLoggedIn'
@@ -8,6 +9,13 @@ module.exports = class RegistrationController extends Controller
     @data[k] = null for k, v of @data when v is ""
 
   register: (done) ->
+    @title = @app.siteSetting.meta.settings.registrationTitle
+    @leadText = @app.siteSetting.meta.settings.registrationLead
+    text = @app.siteSetting.meta.settings.registrationText
+    if text
+      text = encode(text)
+      text = text.replace(/\n/g, "<br>")
+    @registrationText = text
     return done() unless @req.method is 'POST'
     # Process data
     @errors = null

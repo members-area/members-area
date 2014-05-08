@@ -25,20 +25,9 @@ block body
   - var tabIndex = 1
   .row
     .span4.offset1.gumph
-      h2 Registration
-      p.lead Use this for to register to become a {{friend of So Make It}}. 
-      p Many of the services provided by So Make It require a username and
-        | password, so you will need to choose a unique username.
-      p This copy should be editable within the members area.
-      p.
-        If you choose to enter your full name, please use your real name. If
-        you do not wish to use your real name, please leave <strong>full
-        name</strong> blank. Your name will be visible to all within the
-        members area.
-      p.
-        If you choose to enter your address, please use your real address -
-        otherwise leave address blank. Your address will only be visible to
-        {{Admins}}.
+      h2= title || "Registration"
+      p.lead= leadText || "Configure this text in Core Settings"
+      != registrationText || "The first user is automatically verified and an admin."
 
     .span4.offset1.register-form
       h2 Registration form

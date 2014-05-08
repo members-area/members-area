@@ -178,7 +178,7 @@ loadPlugins = (start) ->
 
 loadSettings = (start) ->
   app.models.Setting.find()
-  .where(name:['email', 'theme'])
+  .where(name:['email', 'theme', 'site'])
   .run (err, settings) ->
     throw err if err
     for setting in settings

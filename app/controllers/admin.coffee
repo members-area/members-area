@@ -14,6 +14,8 @@ module.exports = class AdminController extends Controller
       return done err if err
       @data.email = @app.emailSetting.meta.settings
       @data.theme = @app.themeSetting?.meta.settings ? {}
+      @data.site = @app.siteSetting.meta.settings
+      @_baseURL = @baseURL()
       done()
     if @req.method is 'GET'
       next()
@@ -31,6 +33,12 @@ module.exports = class AdminController extends Controller
           if typeof @data.theme is 'object'
             @app.themeSetting.setMeta {settings: @data.theme}
             @app.themeSetting.save next
+          else
+            next()
+        site: (next) =>
+          if typeof @data.site is 'object'
+            @app.siteSetting.setMeta {settings: @data.site}
+            @app.siteSetting.save next
           else
             next()
       , (err) =>
