@@ -89,6 +89,7 @@ class Controller
     @data = @req.body ? {}
     @title = "Members Area"
     @loggedInUser = @req.user
+    @siteSettings = @app.siteSetting.meta.settings
 
   render: (done) ->
     return if @rendered
