@@ -18,6 +18,19 @@ makeIntegerIfPossible = (str) ->
   str
 
 app = express()
+if global.gc
+  console.log "MEMORY DEBUG MODE ENABLED"
+  app.use (req, res, next) ->
+    property = 'heapUsed'
+    global.gc()
+    startMB = process.memoryUsage()[property]/(1024*1024)
+    res.once 'finish', ->
+      endMB = process.memoryUsage()[property]/(1024*1024)
+      #console.log "#{req.method} #{req.path} used #{(endMB-startMB).toFixed(3)}MB (#{endMB.toFixed(3)}MB - #{startMB.toFixed(3)}MB)"
+      console.log "\t #{(endMB-startMB).toFixed(3)}MB \t- #{req.method}\t#{req.path}\t\t(#{endMB.toFixed(3)}MB - #{startMB.toFixed(3)}MB)"
+      global.gc()
+      console.log "#{endMB.toFixed(3)}MB / #{(process.memoryUsage().heapTotal/(1024*1024)).toFixed(3)}MB"
+    next()
 app.plugins = []
 app.getPlugin = (id) ->
   return plugin for plugin in app.plugins when plugin.identifier is id
