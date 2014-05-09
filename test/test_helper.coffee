@@ -41,7 +41,10 @@ before (done) ->
         roleFixtures.member
       ], (err, roles) =>
         app.roles = roles
-        next()
+        if @_db.driver.dialect is 'postgresql'
+          @_db.driver.execSimpleQuery "SELECT setval('role_id_seq', #{roles.length});", next
+        else
+          next()
   , done
 
 after ->
