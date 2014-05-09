@@ -45,6 +45,12 @@ applyCommonClassMethods = (klass) ->
   klass.instanceMethods = {}
   klass.instanceProperties = {}
 
+serial2Serial = (name, properties, opts) ->
+  for name, property of properties
+    if property.serial
+      property.type = 'serial'
+  return
+
 validateAndGroup = (name, properties, opts) ->
   # opts.cache is set false to protect against silly issues. For example if you
   # manage to update an instance of a model that's not a singleton somehow (for
@@ -81,6 +87,8 @@ getModelsForConnection = (app, db, done) ->
     persist: true
 
   db.use orm_transaction
+
+  db.use (db, opts) -> {beforeDefine: serial2Serial}
 
   db.use (db, opts) -> {beforeDefine: validateAndGroup}
 
