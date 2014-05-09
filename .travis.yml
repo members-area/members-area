@@ -11,8 +11,3 @@ env:
   - DATABASE_URL=
   - DATABASE_URL=mysql://travis@localhost/members
   - DATABASE_URL=postgresql://postgres@localhost/members
-
-matrix:
-  fast_finish: true
-  allow_failures:
-    - env: DATABASE_URL=postgresql://postgres@localhost/members
