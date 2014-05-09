@@ -19,7 +19,6 @@ module.exports = (db, models) ->
 
   Setting.seedData = [
     {
-      id: 1
       name: "email"
       meta:
         settings: {}
