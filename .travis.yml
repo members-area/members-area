@@ -1,3 +1,19 @@
 language: node_js
+
 node_js:
   - "0.10"
+
+before_script:
+  - mysql -e 'CREATE DATABASE members;'
+  - psql -c 'CREATE DATABASE members;' -U postgres
+
+env:
+  - DATABASE_URL=
+  - DATABASE_URL=mysql://travis@localhost/members
+  - DATABASE_URL=postgresql://postgres@localhost/members
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - env: DATABASE_URL=mysql://travis@localhost/members
+    - env: DATABASE_URL=postgresql://postgres@localhost/members
