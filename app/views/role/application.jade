@@ -11,7 +11,8 @@ block content
     h2 Role Application
     p This is a single application. Perhaps you can vote on it?
   p
-    strong= user.fullname
+    strong
+      a(href="/people/#{user.id}")= user.fullname
     |  is applying for role: 
     strong= role.name
   form(method="POST", action="")
