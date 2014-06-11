@@ -47,6 +47,14 @@ module.exports = (db, models, app) ->
       name: "Owner"
       meta:
         owner: true
+        requirements: [
+          {
+            id: 2
+            type: 'approval'
+            roleId: 2
+            count: 1
+          }
+        ]
     }
   ]
 
