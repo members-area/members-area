@@ -44,9 +44,23 @@ module.exports = class RegistrationController extends Controller
           if Array.isArray(err) or err.property?
             @errors = @req.models.User.groupErrors err
           else
-            console.error err
-            addError 'base', 'Errors occurred during validation'
-          return t.rollback done
+            # Email or username already in use?
+            @req.models.User.find()
+            .where("email = ? OR username = ?", [@data.email, @data.username])
+            .one (err2, usr) =>
+              return done(err2) if err2
+              if usr
+                if @data.username.toLowerCase() is usr.username.toLowerCase()
+                  @errors =
+                    username: ['username already registered']
+                else
+                  @errors =
+                    email: ['email address already registered']
+              else
+                console.error err
+                addError 'base', 'Errors occurred during validation'
+              return t.rollback done
+          return
         # Request base role.
         baseRoleId = 1
         ownerRoleId = 2
