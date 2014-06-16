@@ -46,7 +46,7 @@ app.updateEmailTransport = ->
         user: app.emailSetting.meta.settings.username
         pass: app.emailSetting.meta.settings.password
   else
-    app.mailTransport = nodemailer.mail
+    app.mailTransport = nodemailer.createTransport("Direct", {debug: true})
 
 app.path = __dirname
 app.locals._appPath = app.path
