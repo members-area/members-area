@@ -57,12 +57,11 @@ chai.Assertion.includeStack = true
 class NullTransport
   constructor: (@options) ->
   sendMail: (emailMessage, callback) ->
-    console.log "Envelope: #{emailMessage.getEnvelope()}"
-    emailMessage.pipe process.stdout
+    emailMessage.streamMessage()
+    emailMessage.on 'data', ->
     emailMessage.on "error", callback
     emailMessage.on "end", ->
       callback(null, {messageId: emailMessage._messageId})
-    emailMessage.streamMessage()
 nullTransport = nodemailer.createTransport NullTransport, {}
 
 app.__defineGetter__ 'roles', ->
