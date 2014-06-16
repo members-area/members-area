@@ -47,6 +47,10 @@ block content
       .controls
         textarea(name="description", style="width: 100%; height: 5em")= data.meta.description
     .control-group
+      label.control-label(for="emailText") Email text
+      .controls
+        textarea(name="emailText", style="width: 100%; height: 5em")= data.meta.emailText
+    .control-group
       .controls
         button.btn-success(type="submit") Update Role
 

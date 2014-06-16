@@ -129,7 +129,7 @@ module.exports = class RoleController extends LoggedInController
 
       else if @data.name?.length
         @role.name = @data.name
-        @role.setMeta description: @data.description
+        @role.setMeta description: @data.description, emailText: @data.emailText
       @data = @role
       @role.save done
 

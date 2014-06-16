@@ -1,7 +1,7 @@
 async = require 'async'
 _ = require 'underscore'
 
-module.exports = (db, models) ->
+module.exports = (db, models, app) ->
   RoleUser = db.define 'role_user', {
     id:
       type: 'number'
@@ -98,7 +98,18 @@ module.exports = (db, models) ->
         @_shouldAutoApprove (autoApprove) =>
           if autoApprove
             @approved = new Date()
-            @save callback
+            @save (err) =>
+              return callback err if err
+              @getUser (err, user) =>
+                return callback err if err
+                locals =
+                  to: "#{user.fullname} <#{user.email}>"
+                  subject: "Role Granted: #{@role.name}"
+                  user: user
+                  role: @role
+                app.sendEmail "role-granted", locals, (err) =>
+                  console.error err if err
+                  callback()
           else
             callback()
 
