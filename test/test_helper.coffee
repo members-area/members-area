@@ -13,6 +13,7 @@ expect = chai.expect
 sinon = require 'sinon'
 require '../app/env'
 orm = require 'orm'
+nodemailer = require 'nodemailer'
 getModelsForConnection = require('../app/models')
 roleFixtures = require './fixtures/role'
 
@@ -53,8 +54,21 @@ after ->
 # Why would you not want this?!
 chai.Assertion.includeStack = true
 
+class NullTransport
+  constructor: (@options) ->
+  sendMail: (emailMessage, callback) ->
+    console.log "Envelope: #{emailMessage.getEnvelope()}"
+    emailMessage.pipe process.stdout
+    emailMessage.on "error", callback
+    emailMessage.on "end", ->
+      callback(null, {messageId: emailMessage._messageId})
+    emailMessage.streamMessage()
+nullTransport = nodemailer.createTransport NullTransport, {}
+
 app.__defineGetter__ 'roles', ->
   return app._roles if app._roles
+app.__defineGetter__ 'mailTransport', ->
+  return nullTransport
 middlewares = [
   require('../app/middleware/logging')(app)
   require('../app/middleware/http-error')()
