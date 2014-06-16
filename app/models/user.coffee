@@ -1,8 +1,6 @@
 async = require 'async'
 bcrypt = require 'bcrypt'
 crypto = require 'crypto'
-juice = require 'juice'
-htmlToText = require 'html-to-text'
 orm = require 'orm'
 _ = require 'underscore'
 
@@ -109,23 +107,13 @@ module.exports = (db, models, app) ->
           code = @meta.emailVerificationCode
           verifyURL = "#{process.env.SERVER_ADDRESS}/verify?id=#{@id}&code=#{encodeURIComponent code}"
           locals =
+            to: "#{@fullname} <#{@email}>"
+            subject: "Email Verification"
             user: @
             email: @email
             code: code
             verifyURL: verifyURL
-          app.render "emails/verification", locals, (err, html) =>
-            return done err if err
-            options =
-              url: process.env.SERVER_ADDRESS
-            juice.juiceContent html, options, (err, html) =>
-              return done err if err
-              mailOptions =
-                from: app.emailSetting.meta.settings.from_address ? "members-area@example.com"
-                to: "#{@fullname} <#{@email}>"
-                subject: "Email Verification"
-                html: html
-                text: htmlToText.fromString(html, tables: true)
-              app.mailTransport.sendMail mailOptions, done
+          app.sendEmail "verification", locals, done
         unless @meta.emailVerificationCode
           crypto.randomBytes 8, (err, bytes) =>
             @setMeta emailVerificationCode: bytes.toString('hex')

@@ -18,6 +18,7 @@ makeIntegerIfPossible = (str) ->
   str
 
 app = express()
+require('./app/lib/email')(app)
 if global.gc
   console.log "MEMORY DEBUG MODE ENABLED"
   app.use (req, res, next) ->
