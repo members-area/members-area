@@ -64,10 +64,16 @@ class NullTransport
       callback(null, {messageId: emailMessage._messageId})
 nullTransport = nodemailer.createTransport NullTransport, {}
 
-app.__defineGetter__ 'roles', ->
-  return app._roles if app._roles
-app.__defineGetter__ 'mailTransport', ->
-  return nullTransport
+Object.defineProperty app, 'roles',
+  configurable: false
+  get: ->
+    return app._roles if app._roles
+
+Object.defineProperty app, 'mailTransport',
+  configurable: false
+  writable: false
+  value: nullTransport
+
 middlewares = [
   require('../app/middleware/logging')(app)
   require('../app/middleware/http-error')()
