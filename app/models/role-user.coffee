@@ -78,7 +78,7 @@ module.exports = (db, models, app) ->
           callback new Error "Requirement '#{requirementId}' not found"
 
       getRequirementsWithStatusForUser: (user, callback) ->
-        @getRole (err, role) =>
+        next = (err, role) =>
           return callback err if err
           requirements = role.meta.requirements
           checkRequirement = (requirement, next) =>
@@ -92,6 +92,8 @@ module.exports = (db, models, app) ->
                 passed: passed
                 actionable: !passed and actionable
           async.map requirements, checkRequirement, callback
+        return next(null, @role) if @role
+        @getRole next
 
       checkApproval: (callback) ->
         return callback() if @approved?
