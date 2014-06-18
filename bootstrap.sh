@@ -5,6 +5,11 @@
 # as possible.  It's very simple - it just installs the members area and a
 # bunch of plugins and links then up in a way that makes development very easy.
 #
+# It runs `npm link` a lot, so you need to be able to `npm install -g` without 
+# needing `sudo`. A simple way to do this is to change your npm prefix to a
+# folder in your home directory, add the bin directory to your $PATH and you're
+# good to go. See: https://www.npmjs.org/doc/files/npmrc.html
+#
 # Improvements to this file are very welcome! Initial setup is quite slow as it
 # uses the quickstart method of the members area and then undoes a lot of it
 # and redoes it using local dependences :/
