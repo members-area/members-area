@@ -45,7 +45,11 @@ module.exports = class RoleController extends LoggedInController
         for roleUser in @roleUsers
           roleUser.user = usersById[roleUser.user_id]
         @roleUsers = @roleUsers.filter (rU) -> !!rU.user
-        done()
+        getActionable = (roleUser, next) =>
+          roleUser.getRequirementsWithStatusForUser @req.user, (err, requirements) =>
+            roleUser.actionable = true for requirement in requirements when requirement.actionable
+            next(err)
+        async.map @roleUsers, getActionable, done
 
   application: (done) ->
     @activeNavigationId = "role-applications"

@@ -16,3 +16,5 @@ block content
           strong= roleUser.user.fullname
           |  is applying for role: 
           strong= roleUser.role.name
+          if roleUser.actionable
+            span.actionable-tag Review
