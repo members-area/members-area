@@ -6,6 +6,7 @@ module.exports = class PersonController extends LoggedInController
   @before 'setAdmin'
   @before 'getUsers', only: ['index']
   @before 'getClassNames', only: ['index']
+  @before 'getStats', only: ['index']
   @before 'getUser', only: ['view']
 
   activeNavigationId: "person-index"
@@ -34,6 +35,22 @@ module.exports = class PersonController extends LoggedInController
         classNames.push "unverified" unless user.verified
         classNames.push "unapproved" unless _.pluck(user.activeRoleUsers, 'role_id').indexOf(1) >= 0
       user.classNames = classNames.join ' '
+    done()
+
+  getStats: (done) ->
+    roles = {}
+    counts = {}
+    for user in @users
+      for roleUser in user.activeRoleUsers
+        roles[roleUser.role.id] ?= roleUser.role
+        counts[roleUser.role.id] ?= 0
+        counts[roleUser.role.id]++
+    @roleStats = []
+    roleIds = Object.keys(roles).sort()
+    for roleId in roleIds
+      @roleStats.push
+        role: roles[roleId]
+        count: counts[roleId]
     done()
 
   getUser: (done) ->

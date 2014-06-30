@@ -12,3 +12,13 @@ block content
         each activeRoleUser in user.activeRoleUsers
           if activeRoleUser.role_id != 1
             span.user-role-tag(style="background-color: " + activeRoleUser.role.meta.color + "; color: " + activeRoleUser.role.meta.textColor)= activeRoleUser.role.name
+  h3 Summary
+  table.table(style="width: 30%")
+    tr
+      th Role
+      th Count
+    each stat in roleStats
+      tr
+        td
+          span.user-role-tag(style="background-color: " + stat.role.meta.color + "; color: " + stat.role.meta.textColor)= stat.role.name
+        td= stat.count
