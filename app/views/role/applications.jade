@@ -15,6 +15,6 @@ block content
         a(href="/roles/applications/"+roleUser.id)
           strong= roleUser.user.fullname
           |  is applying for role: 
-          strong= roleUser.role.name
+          strong(class="user-role-tag", style="font-size: 1em; background-color: " + roleUser.role.meta.color + "; color: " + roleUser.role.meta.textColor)= roleUser.role.name
           if roleUser.actionable
             span.actionable-tag Review
