@@ -11,4 +11,4 @@ block content
         a(href="/people/"+user.id)= user.fullname + " (" + user.username + ")"
         each activeRoleUser in user.activeRoleUsers
           if activeRoleUser.role_id != 1
-            span.user-role-tag= activeRoleUser.role.name
+            span.user-role-tag(style="background-color: " + activeRoleUser.role.meta.color + "; color: " + activeRoleUser.role.meta.textColor)= activeRoleUser.role.name

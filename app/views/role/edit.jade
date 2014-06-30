@@ -51,6 +51,14 @@ block content
       .controls
         textarea(name="emailText", style="width: 100%; height: 5em")= data.meta.emailText
     .control-group
+      label.control-label(for="color") Colour
+      .controls
+        div(id="colorPreview", style="float: left; width:1.7em; height:1.7em; border: 1px solid black; background-color: "+data.meta.color)
+        input(id="colorInput", name="color", value=data.meta.color, style="float: left")
+        for color in ["#e11d21", "#e05a16", "#fbca04", "#009800", "#006b75", "#207de5", "#0052cc", "#5319e7"]
+          div(class="colorPickerOption", style="float: left; width:1.7em; height:1.7em; background-color: "+color, data-color=color)
+        div(style="clear:both")
+    .control-group
       .controls
         button.btn-success(type="submit") Update Role
 
@@ -63,3 +71,25 @@ block content
   h3 Add a requirement
   each requirementType in requirementTypes
     +formFor('add', requirementType.type)
+
+  script.
+    (function(){
+      var colorPreviewEl = document.getElementById("colorPreview");
+      var colorInputEl = document.getElementById("colorInput");
+      function previewColor() {
+        setTimeout(function(){
+        colorPreviewEl.style.backgroundColor = colorInputEl.value;
+        }, 0);
+      }
+      colorInputEl.onchange = colorInputEl.onkeypress = previewColor;
+      var colorPickerEls = document.getElementsByClassName("colorPickerOption");
+      for (var i = 0; i < colorPickerEls.length; i++) {
+        (function(i) {
+          var colorPickerEl = colorPickerEls[i];
+          colorPickerEl.onclick = function() {
+            colorInputEl.value = colorPickerEl.getAttribute("data-color");
+            previewColor();
+          }
+        })(i);
+      }
+    })();

@@ -12,7 +12,7 @@ block content
   ul
   each roleUser in user.activeRoleUsers
     li
-      strong= roleUser.role.name
+      strong(class="user-role-tag", style="font-size: 1em; background-color: " + roleUser.role.meta.color + "; color: " + roleUser.role.meta.textColor)= roleUser.role.name
       |  since 
       em= roleUser.approved
   if admin

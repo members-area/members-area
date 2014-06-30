@@ -133,7 +133,23 @@ module.exports = class RoleController extends LoggedInController
 
       else if @data.name?.length
         @role.name = @data.name
-        @role.setMeta description: @data.description, emailText: @data.emailText
+        unless @data.color?[0..0] == "#"
+          @data.color = "##{@data.color}"
+        unless @data.color?.match /^#[0-9a-fA-F]{3,6}$/
+          @data.color = "#aaa"
+        @data.color = @data.color.toLowerCase()
+        if @data.color.length is 7
+          r = parseInt(@data.color[1..2], 16)/255
+          g = parseInt(@data.color[3..4], 16)/255
+          b = parseInt(@data.color[5..6], 16)/255
+        else
+          r = parseInt(@data.color[1..1], 16)/255
+          g = parseInt(@data.color[2..2], 16)/255
+          b = parseInt(@data.color[3..3], 16)/255
+        Y = 0.3 * r + 0.59 * g + 0.11 * b
+        light = Y >= 0.5
+        textColor = if light then "black" else "white"
+        @role.setMeta description: @data.description, emailText: @data.emailText, color: @data.color, textColor: textColor
       @data = @role
       @role.save done
 
