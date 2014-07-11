@@ -44,6 +44,53 @@
     font-weight: bold
 
 .user-list
+  overflow: hidden
+  list-style-type: none
+  margin-left: 0
+
+  li
+    float: left
+    margin-right: 1em
+    margin-bottom: 1em
+
+    a
+      display: block
+      background: #F5F5F5
+      padding: .75em
+      width: 120px
+      border-radius: 4px
+      text-decoration: none
+      
+    a:hover
+    a:focus
+      background: #EEE
+      text-decoration: none
+      
+      .name
+        text-decoration: underline
+
+    img, .name, .roles
+      display: block
+
+    img
+      margin-bottom: 1em
+
+    .name
+      margin-bottom: .5em
+      
+    .roles
+      margin-bottom: 0
+
+    .user-role-tag
+      display: block
+      margin-left: 0
+      margin-bottom: .25em
+      padding: 2px
+      text-align: center
+      line-height: 1.2
+      text-shadow: 1px 1px 0 rgba(0,0,0, .2)
+      border-radius: 3px
+
   .overdue a
     color: red
   .neverpaid a
