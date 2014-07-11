@@ -9,12 +9,15 @@ block content
     p.lead The people below are applying for roles.
   else
     p.lead There are no pending applications at the moment.
-  ul
+  ul.applications
     each roleUser in roleUsers
-      p
+      li
         a(href="/roles/applications/"+roleUser.id)
-          strong= roleUser.user.fullname
-          |  is applying for role: 
-          strong(class="user-role-tag", style="font-size: 1em; background-color: " + roleUser.role.meta.color + "; color: " + roleUser.role.meta.textColor)= roleUser.role.name
+          img(src=roleUser.user.getGravatar(120),alt="avatar")
+          span.name= roleUser.user.fullname + " (" + roleUser.user.username + ")"
+          span.request="wants to be" 
+          span.roles
+            span(class="user-role-tag", style="font-size: 1em; background-color: " + roleUser.role.meta.color + "; color: " + roleUser.role.meta.textColor)= roleUser.role.name
+
           if roleUser.actionable
             span.actionable-tag Review
