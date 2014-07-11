@@ -99,6 +99,12 @@ module.exports = (db, models, app) ->
           err = new Error "Incorrect verification code"
           done err
 
+      getGravatar: (size) ->
+        md5sum = crypto.createHash 'md5'
+        emailHash = md5sum.update(@email).digest 'hex'
+        sizeStr = if size? then "?s=#{size}" else ""
+        "//www.gravatar.com/avatar/#{emailHash}#{sizeStr}"
+
       sendVerificationMail: (done) ->
         done ?= (err) ->
           console.error err if err?
