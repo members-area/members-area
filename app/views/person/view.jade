@@ -5,6 +5,7 @@ block title
 
 block content
   h2= user.fullname
+  img.gravatar(src=user.getGravatar(150),alt="avatar")
   p
     strong Username: 
     = user.username
