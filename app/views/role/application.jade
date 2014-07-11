@@ -10,9 +10,10 @@ block content
   else
     h2 Role Application
     p This is a single application. Perhaps you can vote on it?
+  img.gravatar(src=user.getGravatar(150),alt="avatar")
   p
     strong
-      a(href="/people/#{user.id}")= user.fullname
+      a(href="/people/#{user.id}")= user.fullname + " (" + user.username + ")" 
     |  is applying for role: 
     strong(class="user-role-tag", style="font-size: 1em; background-color: " + role.meta.color + "; color: " + role.meta.textColor)= role.name
   form(method="POST", action="")
