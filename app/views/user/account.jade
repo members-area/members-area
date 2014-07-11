@@ -37,3 +37,13 @@ block content
     .control-group
       .controls
         button.btn-success(type="submit") Update
+    .control-group
+      label.control-label Picture
+      .controls
+        img(src=data.getGravatar(200),alt="avatar")
+        p
+          ="You can change your avatar on "
+          a(href="http://www.gravatar.com")="Gravatar.com"
+          =". It is based on your email address (" + data.email + ")."
+        p
+          ="A picture of your face is preferable, so your fellow members can easily recognise you."
