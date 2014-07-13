@@ -49,7 +49,15 @@
   margin-left: 0
 
   li
-    float: left
+    // Inline block method from http://css-tricks.com/snippets/css/cross-browser-inline-block/
+    min-height: 220px
+    display: -moz-inline-stack
+    display: inline-block
+    vertical-align: top
+    zoom: 1
+    *display: inline
+    _height: 220px
+
     margin-right: 1em
     margin-bottom: 1em
 
@@ -60,12 +68,12 @@
       width: 120px
       border-radius: 4px
       text-decoration: none
-      
+
     a:hover
     a:focus
       background: #EEE
       text-decoration: none
-      
+
       .name
         text-decoration: underline
 
