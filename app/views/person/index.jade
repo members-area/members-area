@@ -5,13 +5,18 @@ block title
 
 block content
   h2 People
+
   ul.user-list
     each user in users
       li(class=user.classNames, data-id=user.id)
-        a(href="/people/"+user.id)= user.fullname + " (" + user.username + ")"
-        each activeRoleUser in user.activeRoleUsers
-          if activeRoleUser.role_id != 1
-            span.user-role-tag(style="background-color: " + activeRoleUser.role.meta.color + "; color: " + activeRoleUser.role.meta.textColor)= activeRoleUser.role.name
+        a(href="/people/"+user.id)
+          img(src=user.getGravatar(120), alt=user.username+" avatar")
+          span.name= user.fullname + " (" + user.username + ")"
+          span.roles
+            each activeRoleUser in user.activeRoleUsers
+              if activeRoleUser.role_id != 1
+                span.user-role-tag(style="background-color: " + activeRoleUser.role.meta.color + "; color: " + activeRoleUser.role.meta.textColor)= activeRoleUser.role.name 
+
   h3 Summary
   table.table(style="width: 30%")
     tr
