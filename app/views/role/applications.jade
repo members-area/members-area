@@ -15,7 +15,7 @@ block content
         a(href="/roles/applications/"+roleUser.id)
           img(src=roleUser.user.getGravatar(120),alt="avatar")
           span.name= roleUser.user.fullname + " (" + roleUser.user.username + ")"
-          span.request="wants to be"
+          span.request  wants to be 
           span.roles
             span(class="user-role-tag", style="font-size: 1em; background-color: " + roleUser.role.meta.color + "; color: " + roleUser.role.meta.textColor)= roleUser.role.name
 

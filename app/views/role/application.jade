@@ -14,7 +14,7 @@ block content
   p
     strong
       a(href="/people/#{user.id}")= user.fullname + " (" + user.username + ")" 
-    |  is applying for role:
+    |  is applying for role: 
     strong(class="user-role-tag", style="font-size: 1em; background-color: " + role.meta.color + "; color: " + role.meta.textColor)= role.name
   form(method="POST", action="")
     h3 Requirements
