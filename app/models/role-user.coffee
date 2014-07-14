@@ -1,7 +1,7 @@
 async = require 'async'
 _ = require 'underscore'
 
-module.exports = (db, models, app) ->
+module.exports = (db, AllModels, app) ->
   RoleUser = db.define 'role_user', {
     id:
       type: 'number'
@@ -48,7 +48,9 @@ module.exports = (db, models, app) ->
             next()
 
       afterAutoFetch: (done) ->
-        @checkApproval done
+        AllModels.Role.getCached @role_id, (err, @role) =>
+          return done err if err
+          @checkApproval done
 
     methods:
       approve: (user, requirementId, cb) ->
@@ -124,7 +126,6 @@ module.exports = (db, models, app) ->
           callback !err
 
       _checkRequirement: (requirement, callback) ->
-        models = require('./')
         switch requirement.type
           when 'text'
             if requirement.roleId and requirement.id

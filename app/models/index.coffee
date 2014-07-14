@@ -125,7 +125,7 @@ getModelsForConnection = (app, db, done) ->
         models[model.modelName] = model
 
       models.RoleUser.hasOne 'user', models.User, reverse: 'roleUsers'
-      models.RoleUser.hasOne 'role', models.Role, reverse: 'roleUsers', autoFetch: true
+      models.RoleUser.hasOne 'role', models.Role, reverse: 'roleUsers', autoFetch: false
       app.pluginHook 'models:initialize', {models}, ->
         done null, models
 

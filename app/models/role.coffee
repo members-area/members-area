@@ -17,7 +17,10 @@ module.exports = (db, models, app) ->
       defaultValue: {}
   },
     timestamp: true
-    hooks: db.applyCommonHooks {}
+    hooks: db.applyCommonHooks
+      afterSave: (success) ->
+        if success
+          Role._cachedModels[@id] ?= model
     methods:
       canApply: (user, callback) ->
         requirements = @meta.requirements ? []
@@ -160,6 +163,17 @@ module.exports = (db, models, app) ->
         object = {}
         object[requirementType.type] = requirementType for requirementType in requirementTypes
         callback(null, object)
+
+  Role._cachedModels = {}
+  Role.getCached = (id, callback) ->
+    model = Role._cachedModels[id]
+    if model?
+      process.nextTick -> callback(null, model)
+    else
+      Role.get id, (err, model) ->
+        return callback err if err
+        Role._cachedModels[id] ?= model
+        callback(null, Role._cachedModels[id])
 
   Role.modelName = 'Role'
   return Role
