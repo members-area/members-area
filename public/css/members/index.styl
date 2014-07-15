@@ -44,74 +44,78 @@
     font-weight: bold
 
 .user-list, .applications
-  overflow: hidden
-  list-style-type: none
-  margin-left: 0
+  img
+    display: none
 
-  li
-    // Inline block method from http://css-tricks.com/snippets/css/cross-browser-inline-block/
-    min-height: 220px
-    display: -moz-inline-stack
-    display: inline-block
-    vertical-align: top
-    zoom: 1
-    *display: inline
-    _height: 220px
+  &.grid
+    overflow: hidden
+    list-style-type: none
+    margin-left: 0
 
-    margin-right: 1em
-    margin-bottom: 1em
+    li
+      // Inline block method from http://css-tricks.com/snippets/css/cross-browser-inline-block/
+      min-height: 220px
+      display: -moz-inline-stack
+      display: inline-block
+      vertical-align: top
+      zoom: 1
+      *display: inline
+      _height: 220px
 
-    a
-      display: block
-      background: #F5F5F5
-      padding: .75em
-      width: 120px
-      border-radius: 4px
-      text-decoration: none
-
-    a:hover
-    a:focus
-      background: #EEE
-      text-decoration: none
-
-      .name
-        text-decoration: underline
-
-    img, .name, .roles
-      display: block
-
-    img
+      margin-right: 1em
       margin-bottom: 1em
 
-    .name
-      margin-bottom: .5em
+      a
+        display: block
+        background: #F5F5F5
+        padding: .5em
+        width: 110px
+        border-radius: 4px
+        text-decoration: none
 
-    .request
-      color: #222
-      font-size: .9em
-      margin-bottom: .5em
+      a:hover
+      a:focus
+        background: #EEE
+        text-decoration: none
 
-    .roles
-      margin-bottom: 0
+        .name
+          text-decoration: underline
 
-    .user-role-tag
-      display: block
-      margin-left: 0
-      margin-bottom: .25em
-      padding: 2px
-      text-align: center
-      line-height: 1.2
-      text-shadow: 1px 1px 0 rgba(0, 0, 0, .2)
-      border-radius: 3px
+      img, .name, .roles
+        display: block
 
-    .actionable-tag
-      display: block
-      text-align: center
-      margin: 1em -1em -1em -1em
-      border-radius: 0 0 4px 4px
-      font-size: .85em
-      text-shadow: 1px 1px 0 rgba(0, 0, 0, .2)
-      font-weight: bold
+      img
+        margin-bottom: 1em
+
+      .name
+        margin-bottom: .5em
+
+      .request
+        color: #222
+        font-size: .9em
+        margin-bottom: .5em
+
+      .roles
+        margin-bottom: 0
+
+      .user-role-tag
+        display: block
+        margin-left: 0
+        margin-bottom: .25em
+        padding: 2px
+        text-align: center
+        line-height: 1.2
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, .2)
+        border-radius: 3px
+
+      .actionable-tag
+        display: block
+        text-align: center
+        margin: 1em -1em -1em -1em
+        border-radius: 0 0 4px 4px
+        font-size: .85em
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, .2)
+        font-weight: bold
 
   .overdue a
     color: red
@@ -128,6 +132,20 @@
     color: rgb(220,220,220)
   .pending a
     color: darkblue
+
+#list-type-selector
+  margin-bottom: 2em
+
+  label
+    display: inline
+    margin-left: 1em
+
+    &:first-child
+      margin-left: 0
+
+    input
+      margin-right: .25em
+      margin-top: 0
 
 .user-role-tag
 .actionable-tag
