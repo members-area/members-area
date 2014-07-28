@@ -9,11 +9,21 @@ block content
     p.lead The people below are applying for roles.
   else
     p.lead There are no pending applications at the moment.
-  ul.applications
+
+  div#list-type-selector(data-list="applications-list")
+    label="View as:"
+    label
+      input(type="radio", name="list-type", value="grid" checked)
+      ="Grid"
+    label
+      input(type="radio", name="list-type", value="list")
+      ="List"
+  
+  ul.applications.grid#applications
     each roleUser in roleUsers
       li
         a(href="/roles/applications/"+roleUser.id)
-          img(src=roleUser.user.getGravatar(120),alt="avatar")
+          img(src=roleUser.user.getGravatar(110), data-retina-src=roleUser.user.getGravatar(220), width="110" height="110" alt="avatar")
           span.name= roleUser.user.fullname + " (" + roleUser.user.username + ")"
           span.request  wants to be 
           span.roles
@@ -21,3 +31,5 @@ block content
 
           if roleUser.actionable
             span.actionable-tag Review
+  block scripts
+    script(src="/js/members.js")

@@ -5,12 +5,19 @@ block title
 
 block content
   h2 People
-
-  ul.user-list
+  div#list-type-selector(data-list="people-list")
+    label="View as:"
+    label
+      input(type="radio", name="list-type", value="grid" checked)
+      ="Grid"
+    label
+      input(type="radio", name="list-type", value="list")
+      ="List"
+  ul.user-list.grid#people-list
     each user in users
       li(class=user.classNames, data-id=user.id)
         a(href="/people/"+user.id)
-          img(src=user.getGravatar(120), alt=user.username+" avatar")
+          img(src=user.getGravatar(110), data-retina-src=user.getGravatar(220), width="110", height="110"  alt=user.username+" avatar")
           span.name= user.fullname + " (" + user.username + ")"
           span.roles
             each activeRoleUser in user.activeRoleUsers
@@ -27,3 +34,6 @@ block content
         td
           span.user-role-tag(style="background-color: " + stat.role.meta.color + "; color: " + stat.role.meta.textColor)= stat.role.name
         td= stat.count
+
+block scripts
+  script(src='/js/members.js')
