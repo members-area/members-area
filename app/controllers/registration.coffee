@@ -26,6 +26,8 @@ module.exports = class RegistrationController extends Controller
 
     if @data.url?.length
       addError 'base', 'You appear to be a spammer'
+    unless @data.email?.match /^[^@]+@[^@]+\.[^@]+$/
+      addError 'email', 'You must provide your email address'
     unless @data.terms is 'on'
       addError 'terms', 'You must accept the terms'
     unless @data.password is @data.password2
@@ -43,6 +45,7 @@ module.exports = class RegistrationController extends Controller
         if err
           if Array.isArray(err) or err.property?
             @errors = @req.models.User.groupErrors err
+            done()
           else
             # Email or username already in use?
             @req.models.User.find()
