@@ -34,6 +34,7 @@ block content
     h4 Email
     +controlGroup("email", "from_address", "From Address")
     +controlGroup("email", "service", "Service", (process.env.MAILGUN_SMTP_LOGIN ? "mailgun" : ""))
+    +controlGroup("email", "host", "Host", "")
     +controlGroup("email", "username", "Username", process.env.MAILGUN_SMTP_LOGIN)
     +controlGroup("email", "password", "Password", process.env.MAILGUN_SMTP_PASSWORD)
 

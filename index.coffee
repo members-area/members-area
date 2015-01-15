@@ -42,6 +42,7 @@ app.updateEmailTransport = ->
   if app.emailSetting.meta.settings?.service?.length
     app.mailTransport = nodemailer.createTransport "SMTP",
       service: app.emailSetting.meta.settings.service
+      host: app.emailSetting.meta.settings.host
       auth:
         user: app.emailSetting.meta.settings.username
         pass: app.emailSetting.meta.settings.password
