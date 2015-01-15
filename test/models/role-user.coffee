@@ -42,18 +42,24 @@ describe 'RoleUser', ->
   describe 'requirements', ->
     it 'passes text without role', (done) ->
       roleUser = new @_models.RoleUser
+        user_id:@user.id
+        role_id:@role.id
       roleUser._checkRequirement {id: "text-1", type: 'text', text: 'Arbitrary', roleId: ""}, (err) ->
         expect(err).to.not.exist
         done()
 
     it 'fails text with role if not approved', (done) ->
       roleUser = new @_models.RoleUser
+        user_id:@user.id
+        role_id:@role.id
       roleUser._checkRequirement {id: "text-1", type: 'text', text: 'Arbitrary', roleId: @role.id}, (err) ->
         expect(err).to.exist
         done()
 
     it 'passes text with role if approved', (done) ->
       roleUser = new @_models.RoleUser
+        user_id:@user.id
+        role_id:@role.id
       roleUser.setMeta
         approvals:
           "text-1": [1]
