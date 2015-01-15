@@ -3,6 +3,7 @@ _ = require 'underscore'
 async = require 'async'
 
 module.exports = class RoleController extends LoggedInController
+  @before 'setAdmin'
   @before 'loadRoles', only: ['index', 'admin', 'edit']
   @before 'ensureAdminRoles', only: ['admin', 'edit']
   @before 'getRole', only: ['edit']
@@ -175,3 +176,6 @@ module.exports = class RoleController extends LoggedInController
   generateRequirementTypes: (done) ->
     @req.models.Role.generateRequirementTypes (err, @requirementTypes) =>
       done()
+
+  setAdmin: ->
+    @admin = @loggedInUser.can 'admin'

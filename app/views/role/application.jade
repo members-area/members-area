@@ -45,3 +45,19 @@ block content
                 p.text-error ERROR: actionable but no action?
         else
           p We've not yet coded the description of this requirement.
+
+  if admin
+    h3 Admin stuff
+    if !roleUser.rejected
+      form(method="POST", action="")
+        h4 Reject
+        table.table
+          tr
+            th Rejection date
+            td
+              input(type='date', name='date', value=new Date().toISOString().substring(0,10))
+          tr
+            th Reason
+            td
+              textarea(name='reason')
+        button.btn.btn-danger(type="submit", name='reject', value='1', onclick="return confirm('Are you sure you want to reject this?');") Reject application
