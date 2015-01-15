@@ -14,22 +14,34 @@ block content
   p
     strong
       a(href="/people/#{user.id}")= user.fullname + " (" + user.username + ")" 
-    |  is applying for role: 
+    if roleUser.approved || roleUser.rejected
+      |  applied for role: 
+    else
+      |  is applying for role: 
     strong(class="user-role-tag", style="font-size: 1em; background-color: " + role.meta.color + "; color: " + role.meta.textColor)= role.name
-  form(method="POST", action="")
-    h3 Requirements
-    each requirement in requirements || []
-      - var requirementType = requirementTypes[requirement.type]
-      - var passed = requirement.passed
-      if requirementType && requirementType.getSentence
-        if passed
-          p.text-success= requirementType.getSentence(requirement, roleUser)
+  if roleUser.approved
+    p Approved #{roleUser.approved}
+
+  if roleUser.rejected && roleUser.approved
+    p Removed #{roleUser.rejected}
+  else if roleUser.rejected
+    p Rejected #{roleUser.rejected}
+
+  if !roleUser.approved && !roleUser.rejected
+    form(method="POST", action="")
+      h3 Requirements
+      each requirement in requirements || []
+        - var requirementType = requirementTypes[requirement.type]
+        - var passed = requirement.passed
+        if requirementType && requirementType.getSentence
+          if passed
+            p.text-success= requirementType.getSentence(requirement, roleUser)
+          else
+            p.text-warning= requirementType.getSentence(requirement, roleUser)
+            if requirement.actionable
+              if requirement.type == 'approval' || requirement.type == 'text'
+                button.btn.btn-success(type='submit', name='approve', value=requirement.id) Approve
+              else
+                p.text-error ERROR: actionable but no action?
         else
-          p.text-warning= requirementType.getSentence(requirement, roleUser)
-          if requirement.actionable
-            if requirement.type == 'approval' || requirement.type == 'text'
-              button.btn.btn-success(type='submit', name='approve', value=requirement.id) Approve
-            else
-              p.text-error ERROR: actionable but no action?
-      else
-        p We've not yet coded the description of this requirement.
+          p We've not yet coded the description of this requirement.
