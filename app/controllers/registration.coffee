@@ -41,7 +41,7 @@ module.exports = class RegistrationController extends Controller
     user.password = password
     @req.db.transaction (err, t) =>
       return done err if err
-      user.save (err, user) =>
+      user.save (err, newUser) =>
         if err
           if Array.isArray(err) or err.property?
             @errors = @req.models.User.groupErrors err
@@ -60,11 +60,13 @@ module.exports = class RegistrationController extends Controller
                   @errors =
                     email: ['email address already registered']
               else
+                console.error JSON.stringify user, null, 2
                 console.error err
                 addError 'base', 'Errors occurred during validation'
               return t.rollback done
           return
         # Request base role.
+        user = newUser
         baseRoleId = 1
         ownerRoleId = 2
         roles = [baseRoleId]
