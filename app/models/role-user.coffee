@@ -111,6 +111,7 @@ module.exports = (db, AllModels, app) ->
                   subject: "Role Granted: #{@role.name}"
                   user: user
                   role: @role
+                  site: app.siteSetting.meta.settings
                 app.sendEmail "role-granted", locals, (err) =>
                   console.error err if err
                   callback()

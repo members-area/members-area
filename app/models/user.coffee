@@ -119,6 +119,7 @@ module.exports = (db, models, app) ->
             email: @email
             code: code
             verifyURL: verifyURL
+            site: app.siteSetting.meta.settings
           app.sendEmail "verification", locals, done
         unless @meta.emailVerificationCode
           crypto.randomBytes 8, (err, bytes) =>
