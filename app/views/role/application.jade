@@ -4,9 +4,19 @@ block title
   | Role Application
 
 block content
-  if roleUser.approved
+  if roleUser.approved && roleUser.rejected
+    h2 Role Application - REVOKED
+    p This application was approved #{roleUser.approved} and later revoked #{roleUser.rejected}.
+    p The reason for revokation was:
+    blockquote= roleUser.meta.rejectionReason
+  else if roleUser.rejected
+    h2 Role Application - REJECTED
+    p This application was rejected #{roleUser.rejected}.
+    p The reason for rejection was:
+    blockquote= roleUser.meta.rejectionReason
+  else if roleUser.approved
     h2 Role Application - APPROVED
-    p This application was approved.
+    p This application was approved #{roleUser.approved}
   else
     h2 Role Application
     p This is a single application. Perhaps you can vote on it?
@@ -19,13 +29,6 @@ block content
     else
       |  is applying for role: 
     strong(class="user-role-tag", style="font-size: 1em; background-color: " + role.meta.color + "; color: " + role.meta.textColor)= role.name
-  if roleUser.approved
-    p Approved #{roleUser.approved}
-
-  if roleUser.rejected && roleUser.approved
-    p Removed #{roleUser.rejected}
-  else if roleUser.rejected
-    p Rejected #{roleUser.rejected}
 
   if !roleUser.approved && !roleUser.rejected
     form(method="POST", action="")
@@ -47,7 +50,6 @@ block content
           p We've not yet coded the description of this requirement.
 
   if admin
-    h3 Admin stuff
     if !roleUser.rejected
       form(method="POST", action="")
         h4 Reject
