@@ -20,7 +20,7 @@ module.exports = (db, models, app) ->
     hooks: db.applyCommonHooks
       afterSave: (success) ->
         if success
-          Role._cachedModels[@id] ?= model
+          Role._cachedModels[@id] ?= this
     methods:
       canApply: (user, callback) ->
         requirements = @meta.requirements ? []
