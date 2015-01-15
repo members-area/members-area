@@ -64,6 +64,14 @@ module.exports = class RoleController extends LoggedInController
         return next() unless @req.method is 'POST'
         if @data['approve']
           @roleUser.approve @req.user, @data['approve'], next
+        else if @data['reject'] is '1'
+          return next() unless @loggedInUser.can('admin')
+          options =
+            userId: @loggedInUser.id
+            reason: @data['reason']
+            date: new Date Date.parse @data['date']
+          return next() if options.date > +new Date() # XXX: should convert former to midnight
+          @roleUser.reject options, next
         else
           next()
 

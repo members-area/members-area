@@ -1,0 +1,17 @@
+extends ./base
+
+block content
+  p Hey there #{user.fullname},
+  if roleUser.approved
+    p Sorry to inform you that you no longer have the following role:
+  else
+    p Sorry to inform you that your application for the following role was rejected:
+  h2= role.name
+  h4= role.meta.description
+  p The reason for this was:
+  if roleUser.meta.rejectionReason && roleUser.meta.rejectionReason.length
+    p= roleUser.meta.rejectionReason
+  else
+    p No reason given. (If you don't know why this was, please get in touch!)
+  p Thanks,
+  p The #{site.name} team

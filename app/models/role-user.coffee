@@ -118,6 +118,28 @@ module.exports = (db, AllModels, app) ->
           else
             callback()
 
+      reject: (options, callback) ->
+        return callback() if @rejected?
+        return callback new Error "Who rejected?" unless options.userId
+        @rejected = options.date ? new Date()
+        @setMeta rejectedBy: options.userId
+        if options.reason
+          @setMeta rejectionReason: options.reason
+        @save (err) =>
+          return callback err if err
+          @getUser (err, user) =>
+            return callback err if err
+            locals =
+              to: "#{user.fullname} <#{user.email}>"
+              subject: "#{if @approved then "Role Revoked" else "Application Rejected"}: #{@role.name}"
+              user: user
+              role: @role
+              roleUser: @
+              site: app.siteSetting.meta.settings
+            app.sendEmail "role-revoked", locals, (err) =>
+              console.error err if err
+              callback()
+
       _shouldAutoApprove: (callback) ->
         role = @role
         return callback false unless role
