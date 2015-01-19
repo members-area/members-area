@@ -5,5 +5,6 @@ module.exports = -> (req, res, next) ->
       n = new Array(l - n.length + 1).join(p) + n
     return n
   formatDate = res.locals.formatDate = (d) ->
+    return "-" unless d
     return (d.getFullYear())+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())
   next()
