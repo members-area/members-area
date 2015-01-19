@@ -1,5 +1,6 @@
 async = require 'async'
 _ = require 'underscore'
+encode = require('entities').encodeXML
 
 module.exports = (db, AllModels, app) ->
   RoleUser = db.define 'role_user', {
@@ -135,6 +136,7 @@ module.exports = (db, AllModels, app) ->
               user: user
               role: @role
               roleUser: @
+              rejectionText: encode(@meta.rejectionReason ? "").replace(/\n/g, "<br>")
               site: app.siteSetting.meta.settings
             app.sendEmail "role-revoked", locals, (err) =>
               console.error err if err

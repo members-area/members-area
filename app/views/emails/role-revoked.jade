@@ -9,9 +9,9 @@ block content
   h2= role.name
   h4= role.meta.description
   p The reason for this was:
-  if roleUser.meta.rejectionReason && roleUser.meta.rejectionReason.length
-    p= roleUser.meta.rejectionReason
+  if rejectionText.length
+    blockquote!= rejectionText
   else
-    p No reason given. (If you don't know why this was, please get in touch!)
+    blockquote No reason given. (If you don't know why this was, please get in touch!)
   p Thanks,
   p The #{site.name} team
