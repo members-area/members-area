@@ -1,6 +1,7 @@
 LoggedInController = require './logged-in'
 _ = require 'underscore'
 async = require 'async'
+encode = require('entities').encodeXML
 
 module.exports = class RoleController extends LoggedInController
   @before 'setAdmin'
@@ -82,6 +83,11 @@ module.exports = class RoleController extends LoggedInController
       getRequirements: (next) =>
         @roleUser.getRequirementsWithStatusForUser @req.user, (err, @requirements) =>
           next(err)
+
+      encodeText: (next) =>
+        @rejectionText = encode(@roleUser.meta.rejectionReason ? "").replace(/\n/g, "<br>")
+        next()
+
     , done
 
   admin: (done) ->

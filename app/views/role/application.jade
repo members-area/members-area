@@ -8,12 +8,12 @@ block content
     h2 Role Application - REVOKED
     p This application was approved #{roleUser.approved} and later revoked #{roleUser.rejected}.
     p The reason for revokation was:
-    blockquote= roleUser.meta.rejectionReason
+    blockquote!= rejectionText
   else if roleUser.rejected
     h2 Role Application - REJECTED
     p This application was rejected #{roleUser.rejected}.
     p The reason for rejection was:
-    blockquote= roleUser.meta.rejectionReason
+    blockquote!= rejectionText
   else if roleUser.approved
     h2 Role Application - APPROVED
     p This application was approved #{roleUser.approved}
