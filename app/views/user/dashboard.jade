@@ -6,11 +6,16 @@ block title
 block content
   h2 Dashboard
   p.lead.
-    Hello #{loggedInUser.fullname}! Welcome to the So Make It members site.
+    Hello #{loggedInUser.fullname}! Welcome to the #{siteSettings.name}.
+  p.
     From here you can manage your subscription, view other member profiles, and
     find your way into our various other services. Your Member's area username
     and password can be used to log in to the other services we offer, such as
     the wiki and blog.
+
+  p
+    a.btn.btn-primary.btn-large(href="/people/" + loggedInUser.id) Click here to visit your user profile.
+
   h4 Roles
   p.
     Here are the roles that you have been granted:
