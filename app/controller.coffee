@@ -74,6 +74,8 @@ class Controller
           fn.call instance
           process.nextTick done
       catch e
+        console.error "ERROR OCCURRED WITH ENTRY:"
+        console.dir entry
         next e
 
     async.eachSeries array, run, (err) =>
