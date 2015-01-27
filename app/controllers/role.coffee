@@ -192,4 +192,4 @@ module.exports = class RoleController extends LoggedInController
       done()
 
   setAdmin: ->
-    @admin = @loggedInUser.can 'admin'
+    @isAdmin = @loggedInUser.can 'admin'

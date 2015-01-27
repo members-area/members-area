@@ -49,7 +49,7 @@ block content
         else
           p We've not yet coded the description of this requirement.
 
-  if admin
+  if isAdmin
     if !roleUser.rejected
       form(method="POST", action="")
         h4 Reject
