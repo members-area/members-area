@@ -102,8 +102,8 @@ module.exports = (db, models, app) ->
       getGravatar: (size) ->
         md5sum = crypto.createHash 'md5'
         emailHash = md5sum.update(@email.toLowerCase()).digest 'hex'
-        sizeStr = if size? then "?s=#{size}" else ""
-        "//www.gravatar.com/avatar/#{emailHash}#{sizeStr}"
+        sizeStr = if size? then "&s=#{size}" else ""
+        "//www.gravatar.com/avatar/#{emailHash}?r=pg#{sizeStr}"
 
       sendVerificationMail: (done) ->
         done ?= (err) ->
