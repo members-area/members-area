@@ -61,13 +61,13 @@
     "entities": "^1.1.1"
   },
   "optionalDependencies": {
-    "pg": "~2.11.1",
-    "sqlite3": "~2.2.0"
+    "pg": "~2.11.1"
   },
   "devDependencies": {
     "nodemon": "~1.0.14",
     "mocha": "~1.17.1",
     "chai": "~1.9.0",
-    "sinon": "~1.8.1"
+    "sinon": "~1.8.1",
+    "sqlite3": "~2.2.0"
   }
 }
