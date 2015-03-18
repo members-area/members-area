@@ -37,7 +37,7 @@
     "jade": "~1.1.5",
     "stylus": "~0.42.2",
     "nodemailer": "~0.6.1",
-    "bcrypt": "~0.7.7",
+    "bcrypt": "^0.8.1",
     "nib": "~1.0.2",
     "source-map-support": "~0.2.5",
     "winston": "~0.7.2",
@@ -49,7 +49,7 @@
     "mysql": "~2.0.1",
     "passport": "~0.2.0",
     "passport-local": "~0.1.6",
-    "coffee-script": "~1.7.1",
+    "coffee-script": "^1.9.1",
     "orm-transaction": "0.0.2",
     "orm": "git://github.com/dresende/node-orm2.git",
     "migrate-orm2": "git://github.com/benjie/node-migrate-orm2.git",
@@ -58,6 +58,7 @@
     "html-to-text": "0.0.8",
     "resolve": "~0.6.1",
     "cheerio": "^0.15.0",
+    "sqlite3": "^3.0.5",
     "entities": "^1.1.1"
   },
   "optionalDependencies": {
@@ -67,7 +68,6 @@
     "nodemon": "~1.0.14",
     "mocha": "~1.17.1",
     "chai": "~1.9.0",
-    "sinon": "~1.8.1",
-    "sqlite3": "~2.2.0"
+    "sinon": "~1.8.1"
   }
 }
