@@ -47,7 +47,7 @@
     "migrate-orm2": "git://github.com/benjie/node-migrate-orm2.git",
     "mysql": "~2.0.1",
     "nib": "~1.0.2",
-    "nodemailer": "~0.6.1",
+    "nodemailer": "^0.7.1",
     "ofx": "~0.2.0",
     "orm": "git://github.com/dresende/node-orm2.git",
     "orm-timestamps": "~0.2.1",
