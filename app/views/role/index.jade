@@ -9,7 +9,7 @@ block content
     hr
     h3= role.name
     if role.meta.description
-      p.lead= role.meta.description
+      p.lead!= role.meta.description
     if role.meta.subscriptionRequired
       p.text-info This role requires a monthly subscription.
     h4 Requirements
