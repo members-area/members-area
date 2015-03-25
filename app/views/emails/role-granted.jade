@@ -4,7 +4,7 @@ block content
   p Hey there #{user.fullname},
   p You've just been granted the following Role:
   h2= role.name
-  h4= role.meta.description
+  h4!= role.meta.description
   p= role.meta.emailText
   p Thanks,
   p The #{site.name} team

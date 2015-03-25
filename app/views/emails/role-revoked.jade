@@ -7,7 +7,7 @@ block content
   else
     p Sorry to inform you that your application for the following role was rejected:
   h2= role.name
-  h4= role.meta.description
+  h4!= role.meta.description
   p The reason for this was:
   if rejectionText.length
     blockquote!= rejectionText
