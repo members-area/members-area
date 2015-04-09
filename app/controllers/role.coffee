@@ -146,6 +146,7 @@ module.exports = class RoleController extends LoggedInController
         catch e
           console.error "Could not edit requirement because exception occurred:"
           console.error e.stack
+          @error = "Could not edit requirement, does it clash?"
 
       else if @data.action is 'add_requirement'
         try
@@ -155,6 +156,7 @@ module.exports = class RoleController extends LoggedInController
         catch e
           console.error "Could not add requirement because exception occurred:"
           console.error e.stack
+          @error = "Could not add requirement, does it clash?"
 
       else if @data.name?.length
         @role.name = @data.name

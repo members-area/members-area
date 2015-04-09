@@ -37,6 +37,9 @@ mixin formFor(mode, type, data, index)
 block content
   h2 Edit Role: #{role.name}
 
+  if error
+    p.lead.text-error= error
+
   form.form-horizontal(method="POST")
     .control-group
       label.control-label(for="name") Role Name
