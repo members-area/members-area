@@ -79,6 +79,7 @@ module.exports = (db, models, app) ->
         # Find active roles
         return done() unless @isPersisted()
         @getRoleUsers().where("approved IS NOT NULL AND rejected IS NULL", []).order("approved").run (err, roleUsers) =>
+          return done err if err
           @activeRoleIds = []
           @activeRoleUsers = []
           for roleUser in roleUsers when roleUser.role_id not in @activeRoleIds
