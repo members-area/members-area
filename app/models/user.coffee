@@ -113,7 +113,7 @@ module.exports = (db, models, app) ->
           code = @meta.emailVerificationCode
           verifyURL = "#{process.env.SERVER_ADDRESS}/verify?id=#{@id}&code=#{encodeURIComponent code}"
           locals =
-            to: "#{@fullname} <#{@email}>"
+            to: "#{@safename} <#{@email}>"
             subject: "Email Verification"
             user: @
             email: @email
@@ -216,6 +216,11 @@ module.exports = (db, models, app) ->
         ]
       else
         {}
+
+  User.instanceProperties =
+    safename:
+      get: ->
+        @fullname ? "Anonymous"
 
   User.modelName = 'User'
   return User

@@ -129,7 +129,7 @@ class Controller
 
     sections = [
       {
-        title: @req.user.fullname
+        title: @req.user.safename
         id: 'user'
         priority: 10
         items: [

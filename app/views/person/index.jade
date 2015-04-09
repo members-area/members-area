@@ -18,7 +18,7 @@ block content
       li(class=user.classNames, data-id=user.id)
         a(href="/people/"+user.id)
           img(src=user.getGravatar(110), data-retina-src=user.getGravatar(220), width="110", height="110"  alt=user.username+" avatar")
-          span.name= user.fullname + " (" + user.username + ")"
+          span.name= user.safename + " (" + user.username + ")"
           span.roles
             each activeRoleUser in user.activeRoleUsers
               if activeRoleUser.role_id != 1

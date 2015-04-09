@@ -1,7 +1,7 @@
 extends ./base
 
 block content
-  p Hey there #{user.fullname},
+  p Hey there #{user.safename},
   if roleUser.approved
     p Sorry to inform you that you no longer have the following role:
   else

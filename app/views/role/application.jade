@@ -23,7 +23,7 @@ block content
   img.gravatar(src=user.getGravatar(150),alt="avatar")
   p
     strong
-      a(href="/people/#{user.id}")= user.fullname + " (" + user.username + ")" 
+      a(href="/people/#{user.id}")= user.safename + " (" + user.username + ")" 
     if roleUser.approved || roleUser.rejected
       |  applied for role: 
     else

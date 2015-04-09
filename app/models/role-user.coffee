@@ -108,7 +108,7 @@ module.exports = (db, AllModels, app) ->
               @getUser (err, user) =>
                 return callback err if err
                 locals =
-                  to: "#{user.fullname} <#{user.email}>"
+                  to: "#{user.safename} <#{user.email}>"
                   subject: "Role Granted: #{@role.name}"
                   user: user
                   role: @role
@@ -131,7 +131,7 @@ module.exports = (db, AllModels, app) ->
           @getUser (err, user) =>
             return callback err if err
             locals =
-              to: "#{user.fullname} <#{user.email}>"
+              to: "#{user.safename} <#{user.email}>"
               subject: "#{if @approved then "Role Revoked" else "Application Rejected"}: #{@role.name}"
               user: user
               role: @role

@@ -1,7 +1,7 @@
 extends ./base
 
 block content
-  p Hey there #{user.fullname},
+  p Hey there #{user.safename},
   p You've just been granted the following Role:
   h2= role.name
   h4!= role.meta.description

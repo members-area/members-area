@@ -24,7 +24,7 @@ block content
       li
         a(href="/roles/applications/"+roleUser.id)
           img(src=roleUser.user.getGravatar(110), data-retina-src=roleUser.user.getGravatar(220), width="110" height="110" alt="avatar")
-          span.name= roleUser.user.fullname + " (" + roleUser.user.username + ")"
+          span.name= roleUser.user.safename + " (" + roleUser.user.username + ")"
           span.request  wants to be 
           span.roles
             span(class="user-role-tag", style="font-size: 1em; background-color: " + roleUser.role.meta.color + "; color: " + roleUser.role.meta.textColor)= roleUser.role.name

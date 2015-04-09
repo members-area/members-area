@@ -1,10 +1,10 @@
 extends /sidebar
 
 block title
-  = user.fullname
+  = user.safename
 
 block content
-  h2= user.fullname
+  h2= user.safename
   img.gravatar(src=user.getGravatar(150),alt="avatar")
   p
     strong Username: 

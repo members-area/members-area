@@ -32,7 +32,7 @@ html
               ul.nav.pull-right
                 if loggedInUser
                   li.active.dropdown
-                    a.dropdown-toggle(data-toggle="dropdown", data-target="#", href="/") #{loggedInUser.fullname}
+                    a.dropdown-toggle(data-toggle="dropdown", data-target="#", href="/") #{loggedInUser.safename}
                       b.caret
                     ul.dropdown-menu
                       li
