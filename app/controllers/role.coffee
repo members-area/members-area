@@ -126,6 +126,14 @@ module.exports = class RoleController extends LoggedInController
           requirement[input.name] = value
         return requirement
 
+      checkRequirements = (requirements) ->
+        ids = []
+        for requirement in requirements
+          if ids.indexOf(requirement.id) isnt -1
+            throw new Error("Duplicate requirement ID!")
+          ids.push requirement.id
+        return
+
       if @data.action is 'edit_requirement' and @data.delete is "delete"
         requirements.splice(index, 1) if 0 <= index < requirements.length
         @role.setMeta requirements: requirements
@@ -133,6 +141,7 @@ module.exports = class RoleController extends LoggedInController
       else if @data.action is 'edit_requirement'
         try
           requirements.splice(index, 1, getRequirement()) if 0 <= index < requirements.length
+          checkRequirements(requirements)
           @role.setMeta requirements: requirements
         catch e
           console.error "Could not edit requirement because exception occurred:"
@@ -141,6 +150,7 @@ module.exports = class RoleController extends LoggedInController
       else if @data.action is 'add_requirement'
         try
           requirements.push getRequirement()
+          checkRequirements(requirements)
           @role.setMeta requirements: requirements
         catch e
           console.error "Could not add requirement because exception occurred:"
