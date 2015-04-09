@@ -55,8 +55,8 @@ module.exports = (db, AllModels, app) ->
 
     methods:
       approve: (user, requirementId, cb) ->
-        callback = (err) ->
-          console.warn "Approve #{@user_id} for #{@role_id} by #{user.id} error: #{err.message}" if err
+        callback = (err) =>
+          console.warn "Approve #{@user_id} for #{@role_id} by #{user.id}[#{user.activeRoleIds.join(", ")}] error: #{err.message}" if err
           cb err
         requirementId = String(requirementId)
         @getRole (err, role) =>
