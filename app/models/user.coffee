@@ -153,7 +153,6 @@ module.exports = (db, models, app) ->
         options = _.extend {}, options...
         user_id = @id
         request = (role_id, done) =>
-          # XXX: prevent requesting the same role twice
           role = role_id if typeof role_id is 'object'
 
           next = =>
@@ -161,10 +160,16 @@ module.exports = (db, models, app) ->
             role.canApply this, (canApply) =>
               canApply = true if options.force
               return done new Error "User #{@id} cannot apply for role #{role_id}" unless canApply
-              data =
-                user_id: user_id
-                role_id: role_id
-              models.RoleUser.create data, done
+              # Check they've not already got/applied for this role
+              models.RoleUser.find()
+              .where("rejected IS NULL AND role_id = ? AND user_id = ?", [role_id, @id])
+              .count (err, count) =>
+                return done err if err
+                return done new Error "User #{@id} has already applied for role #{role_id}" if count > 0
+                data =
+                  user_id: user_id
+                  role_id: role_id
+                models.RoleUser.create data, done
 
           unless role?
             models.Role.get role_id, (err, _role) ->
