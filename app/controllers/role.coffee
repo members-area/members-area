@@ -111,11 +111,11 @@ module.exports = class RoleController extends LoggedInController
       getRequirement = =>
         requirementType = @requirementTypes[@data.type]
         throw new Error "Couldn't find requirement type '#{@data.type}'" unless requirementType
-        id = @data.id
-        unless id?.length
-          if @data.type is 'approval'
-            id = @data.roleId
-          else
+        if @data.type is 'approval'
+          id = @data.roleId
+        else
+          id = @data.id
+          unless id?.length
             id = "#{@data.type}-#{Date.now()}"
         requirement =
           id: id
