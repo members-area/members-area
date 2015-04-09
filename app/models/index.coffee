@@ -42,8 +42,8 @@ applyCommonClassMethods = (klass) ->
 
   for k, v of methods
     klass[k] = v
-  klass.instanceMethods = {}
-  klass.instanceProperties = {}
+  klass.instanceMethods ?= {}
+  klass.instanceProperties ?= {}
 
 serial2Serial = (name, properties, opts) ->
   for name, property of properties
