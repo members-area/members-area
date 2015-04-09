@@ -16,6 +16,8 @@ module.exports = class RegistrationController extends Controller
       text = encode(text)
       text = text.replace(/\n/g, "<br>")
     @registrationText = text
+    @registrationRulesUrl = @app.siteSetting.meta.settings.registrationRulesUrl
+    @registrationRulesLabel = @app.siteSetting.meta.settings.registrationRulesLabel
     return done() unless @req.method is 'POST'
     # Process data
     @errors = null

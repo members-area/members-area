@@ -30,6 +30,8 @@ block content
       textarea(name="site[registrationText]", style="width: 300px;height: 12em")= data.site.registrationText || "Many of the services provided by So Make It require a username and password, so please pick a unique username.\n\nIf you choose to enter your full name, please use your real name, otherwise leave it blank. Your name will be visible to all within the members area."
       if !data.site.registrationText
         | &nbsp; &lt; default unsaved value
+    +controlGroup("site", "registrationRulesUrl", "Rules URL", "https://wiki.somakeit.org.uk/wiki/Rules")
+    +controlGroup("site", "registrationRulesLabel", "Rules Label", "rules")
 
     h4 Email
     +controlGroup("email", "from_address", "From Address")
