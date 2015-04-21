@@ -22,7 +22,7 @@ module.exports = class PersonController extends LoggedInController
         null
       else
         "verified IS NOT NULL"
-    @req.models.User.find()
+    @req.models.User.find({}, autoFetch: false)
     .where(clause)
     .run (err, @users) =>
       done(err)
