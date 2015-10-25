@@ -20,7 +20,7 @@ parsed = url.parse process.env.DATABASE_URL
 if parsed.protocol is 'sqlite:'
   orm.settings.set 'connection.reconnect', false
   path = "#{process.cwd()}/#{parsed.pathname.substr(1)}"
-  process.env.DATABASE_URL = "sqlite://#{path}"
+  process.env.DATABASE_URL = "sqlite://#{path}?#{parsed.query}"
 
 # Fix postgres protocol
 if parsed.protocol in ['postgres:', 'pg:', 'psql:', 'pgsql:']
