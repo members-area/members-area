@@ -1,4 +1,4 @@
-encode = require('members-area/node_modules/entities').encodeXML
+encode = require('entities').encodeXML
 getModelsForConnection = require('members-area/app/models')
 orm = getModelsForConnection.orm
 Reprocessor = require './reprocessor'

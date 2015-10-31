@@ -9,9 +9,10 @@ resolve = require('resolve').sync
 class Plugin extends EventEmitter
   @plugins = {}
 
-  @load: (identifier, app) ->
+  @load: (moduleName, app) ->
+    identifier = path.basename(moduleName)
     return @plugins[identifier] if @plugins[identifier]?
-    @plugins[identifier] = new Plugin(identifier, app)
+    @plugins[identifier] = new Plugin(identifier, app, moduleName)
 
   @hook: (app) ->
     app.pluginHooks = {}
@@ -46,7 +47,7 @@ class Plugin extends EventEmitter
         processHook hookName, options, next
       async.each hookNames, handleHookName, callback
 
-  constructor: (@identifier, @app = require('../index.coffee')) ->
+  constructor: (@identifier, @app = require('../index.coffee'), @moduleName = @identifier) ->
     @shortName = @identifier.replace /^members-area-/, ""
     @models = @app.models
 
@@ -55,14 +56,17 @@ class Plugin extends EventEmitter
     @async = async
     @_ = _
 
-    resolved = resolve(@identifier, basedir: "#{process.cwd()}", extensions: Object.keys(require.extensions))
-    @path = path.dirname resolved
+    if @moduleName.match(/^[./]/)
+      @path = @moduleName
+    else
+      resolved = resolve(@identifier, basedir: "#{process.cwd()}", extensions: Object.keys(require.extensions))
+      @path = path.dirname resolved
     try
       @meta = require "#{@path}/package.json"
-      {@name, @version} = @meta
+      {@name, @version, main} = @meta
     @name ?= @identifier
     try
-      _.extend @, require resolved
+      _.extend @, require "#{@path}/#{main}"
     catch e
       console.error "Failed to load plugin: #{e?.stack ? e}"
 

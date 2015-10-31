@@ -1,5 +1,5 @@
-async = require 'members-area/node_modules/async'
-_ = require 'members-area/node_modules/underscore'
+async = require 'async'
+_ = require 'underscore'
 
 reconciliationInProgress = false
 

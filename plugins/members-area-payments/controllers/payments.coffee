@@ -1,5 +1,5 @@
 LoggedInController = require 'members-area/app/controllers/logged-in'
-async = require 'members-area/node_modules/async'
+async = require 'async'
 
 class PaymentsController extends LoggedInController
   @before 'setActiveNagivationId'

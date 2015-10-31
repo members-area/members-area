@@ -1,6 +1,6 @@
 RoleController = require 'members-area/app/controllers/role'
 PersonController = require 'members-area/app/controllers/person'
-encode = require('members-area/node_modules/entities').encodeXML
+encode = require('entities').encodeXML
 
 module.exports =
   customPaymentMethods:

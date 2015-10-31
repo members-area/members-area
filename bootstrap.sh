@@ -20,7 +20,7 @@
 
 
 # You can edit this list of plugins (we only support github repos):
-PLUGINS="members-area/members-area-passport members-area/members-area-register-of-members members-area/members-area-payments members-area/members-area-banking members-area/members-area-remote-auth members-area/members-area-gocardless benjie/members-area-theme-somakeit LeoAdamek/members-area-theme-shh"
+PLUGINS="benjie/members-area-theme-somakeit LeoAdamek/members-area-theme-shh"
 
 
 ################################################

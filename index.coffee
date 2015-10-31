@@ -164,9 +164,17 @@ checkRoles = (start) ->
 
 loadPlugins = (start) ->
   dependencies = {}
+  files = fs.readdirSync("#{__dirname}/plugins")
+  for moduleName in files when moduleName.match /^members-area-/
+    try
+      app.plugins.push Plugin.load "#{__dirname}/plugins/#{moduleName}", app
+    catch e
+      console.error "Could not load local '#{moduleName}' plugin: #{e}"
   try
     packageJson = require("#{process.cwd()}/package.json")
-    dependencies = _.extend packageJson.optionalDependencies ? {}, packageJson.dependencies
+    dependencies = _.extend {},
+      (packageJson.optionalDependencies ? {})
+      packageJson.dependencies
   for moduleName of dependencies when moduleName.match /^members-area-/
     try
       app.plugins.push Plugin.load moduleName, app

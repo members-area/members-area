@@ -1,6 +1,6 @@
 LoggedInController = require 'members-area/app/controllers/logged-in'
-async = require 'members-area/node_modules/async'
-_ = require 'members-area/node_modules/underscore'
+async = require 'async'
+_ = require 'underscore'
 Reprocessor = require '../reprocessor'
 
 class GoCardlessController extends LoggedInController

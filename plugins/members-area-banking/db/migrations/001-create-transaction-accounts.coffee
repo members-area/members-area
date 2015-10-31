@@ -1,4 +1,4 @@
-async = require 'members-area/node_modules/async'
+async = require 'async'
 
 module.exports =
   up: (done) ->

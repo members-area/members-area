@@ -1,12 +1,3 @@
-defaultPlugins =
-  'members-area-banking': '*'
-  'members-area-gocardless': '*'
-  'members-area-passport': '*'
-  'members-area-payments': '*'
-  'members-area-register-of-members': '*'
-  'members-area-remote-auth': '*'
-  'members-area-theme-somakeit': '*'
-
 #--------------------------------------------
 
 async = require 'async'
@@ -102,7 +93,6 @@ methods = new class
     pkg.dependencies["sqlite3"] ?= "~2.2.0"
     pkg.dependencies["coffee-script"] ?= ">1.6"
     pkg.dependencies["members-area"] ?= "*"
-    pkg.dependencies[k] ?= v for k, v of defaultPlugins
     fs.writeFileSync "package.json", JSON.stringify pkg, null, 2
     fs.writeFileSync ".gitignore", """
       *.sqlite
