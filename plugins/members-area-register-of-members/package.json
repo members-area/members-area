@@ -1,0 +1,25 @@
+{
+  "name": "members-area-register-of-members",
+  "version": "0.1.0",
+  "description": "Register of Members plugin for members-area",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/benjie/members-area-register-of-members.git"
+  },
+  "keywords": [
+    "members-area",
+    "register",
+    "members"
+  ],
+  "author": "Benjie Gillam <code@benjiegillam.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benjie/members-area-register-of-members/issues"
+  },
+  "homepage": "https://github.com/benjie/members-area-register-of-members",
+  "dependencies": {}
+}

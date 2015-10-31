@@ -1,0 +1,22 @@
+extends /sidebar
+
+block title
+  | GoCardless Bills
+
+block content
+  h2 GoCardless Bills
+  - var fields = ['id', 'created_at', 'source_type', 'source_id', 'amount_minus_fees', 'status']
+  table.table
+    tr
+      each field in fields
+        th= field
+      th Name
+    each bill in billList
+      tr
+        each field in fields
+          td= bill[field].toString().replace(/T[0-9:]+Z$/, "")
+        td= (bill.subscription || bill.preauth || bill).name
+
+  h3 Maintenance
+  form(method="post")
+    button.btn(type="submit", name="reprocess", value="1") Re-process all records

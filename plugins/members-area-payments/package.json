@@ -1,0 +1,27 @@
+{
+  "name": "members-area-payments",
+  "version": "0.2.2",
+  "description": "Payment support for the Members Area",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/members-area/members-area-payments.git"
+  },
+  "keywords": [
+    "members-area",
+    "members",
+    "payments"
+  ],
+  "author": "Benjie Gillam <code@benjiegillam.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/members-area/members-area-payments/issues"
+  },
+  "homepage": "https://github.com/members-area/members-area-payments",
+  "dependencies": {
+    "async": "^0.7.0"
+  }
+}

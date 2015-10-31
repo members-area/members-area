@@ -1,0 +1,29 @@
+{
+  "name": "members-area-remote-auth",
+  "version": "0.1.0",
+  "description": "Remote authentication to the members area, e.g. for Wordpress/MediaWiki.",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/members-area/members-area-remote-auth.git"
+  },
+  "keywords": [
+    "members-area",
+    "members",
+    "remote",
+    "auth",
+    "mediawiki",
+    "wiki",
+    "wordpress"
+  ],
+  "author": "Benjie Gillam <code@benjiegillam.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/members-area/members-area-remote-auth/issues"
+  },
+  "homepage": "https://github.com/members-area/members-area-remote-auth",
+  "dependencies": {}
+}

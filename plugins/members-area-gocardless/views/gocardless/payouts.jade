@@ -1,0 +1,16 @@
+extends /sidebar
+
+block title
+  | GoCardless Payouts
+
+block content
+  h2 GoCardless Payouts
+  - var fields = ['created_at', 'paid_at', 'amount', 'transaction_fees', 'bank_reference']
+  table.table
+    tr
+      each field in fields
+        th= field
+    each payout in payoutList
+      tr
+        each field in fields
+          td= payout[field]

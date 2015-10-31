@@ -1,0 +1,20 @@
+extends /sidebar
+
+block title
+  | Banking - #{transactionAccount.name}
+
+block content
+  h2 Banking - #{transactionAccount.name}
+  h3 All transactions:
+  table.table.table-striped
+    tr
+      th Date
+      th Type
+      th Description
+      th Amount
+    for entry in transactions
+      tr
+        td= entry.when.toISOString().substr(0,10)
+        td= entry.type
+        td= entry.description
+        td £#{(entry.amount/100).toFixed(2)}

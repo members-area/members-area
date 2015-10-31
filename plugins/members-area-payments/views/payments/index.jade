@@ -1,0 +1,62 @@
+extends /sidebar
+
+mixin formatInput(name, label, placeholder)
+  .control-group
+    label.control-label(for=name)= label
+    .controls
+      input(id=name, name=name, value=data[name], placeholder=placeholder)
+
+mixin nav()
+  form(method='GET', action='')
+    if hasPrev
+      button.btn.btn-success(type='submit', name='page', value=(page - 1)) <-- Prev
+    else
+      button.btn.btn-inverse(readonly='readonly', disabled='disabled') <-- Prev
+    if hasNext
+      button.btn.btn-success(type='submit', name='page', value=(page + 1)) Next -->
+    else
+      button.btn.btn-inverse(readonly='readonly', disabled='disabled') Next -->
+
+block title
+  | Payments
+
+block content
+  h2 Payments
+
+  +nav()
+
+  table.table.table-striped
+    tr
+      th User
+      th Date
+      th Type
+      th Amount
+      th Subscription From
+      th Duration (months)
+      th Include?
+    each payment in payments
+      tr(class=(payment.include ? "" : "text-error"))
+        td
+          a(href="/people/#{payment.user.id}")= payment.user.username
+        td
+          a(href="/admin/payments/#{payment.id}")= payment.when.toISOString().substr(0,10)
+        td= payment.type
+        td £#{(payment.amount/100).toFixed(2)}
+        td= payment.period_from.toISOString().substr(0,10)
+        td= payment.period_count
+        td= (payment.include ? "✔" : "✘")
+    else
+      tr
+        td(colspan=6) No payments yet.
+
+  +nav()
+
+  h3 Settings
+  form.form-horizontal(method="POST")
+    +formatInput("payee", "Payee", "So Make It Ltd.")
+    +formatInput("sortCode", "Sort Code", "00-00-00")
+    +formatInput("accountNumber", "Account Number", "0000 0000")
+
+    .control-group
+      .controls
+        button.btn-success(type="Submit") Save

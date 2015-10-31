@@ -1,0 +1,29 @@
+extends /sidebar
+
+mixin provider(name)
+  if supportedProviders[name.toLowerCase()]
+    tr
+      td= name
+      td
+        if accounts[name.toLowerCase()]
+          a.btn.btn-small.btn-success(href="/auth/#{name.toLowerCase()}") Connected
+        else
+          a.btn.btn-small.btn-primary(href="/auth/#{name.toLowerCase()}") Connect
+
+block title
+  | Social Accounts
+
+block content
+  h2 Account
+
+  h4 Social Authentication
+
+  table.table
+    thead
+      tr
+        th Service
+        th Connected
+    tbody
+      +provider("Facebook")
+      +provider("GitHub")
+      +provider("Twitter")

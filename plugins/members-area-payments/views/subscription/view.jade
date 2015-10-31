@@ -1,0 +1,64 @@
+extends /sidebar
+
+block title
+  | Subscription
+
+block content
+  h2 Subscription
+
+  if loggedInUser.requiresSubscription
+    if loggedInUser.paidUntil
+      - var duration = Math.floor((new Date() - loggedInUser.paidUntil)/(24*60*60*1000));
+      - durationText = duration + (duration == 1 ? " day" : " days")
+      if duration > 14
+        p.text-error Your subscription is #{durationText} overdue. Please set up or check your standing order to the details at the bottom of the page.
+      else if duration > 0
+        p.text-warning Your subscription is #{durationText} overdue.
+      else
+        p.text-success Your subscription is up to date - thanks very much!
+        p Your next payment is due: 
+          strong= loggedInUser.paidUntil.toISOString().substr(0, 10)
+    else
+      p.text-error We have received no subscription payments from you yet (payments may take
+        |  a couple of days to show up). Please set up a standing order to the details at the bottom of the page.
+  else
+    p.text-info Your role does not require a subscription, but we really appreciate any contributions!
+
+  h3 Payments received
+  table.table.table-striped
+    tr
+      th Date
+      th Type
+      th Amount
+      th From
+      th Duration (months)
+      th Worked?
+    each payment in payments
+      tr(class=(payment.include ? "" : "text-error"))
+        td= payment.when.toISOString().substr(0,10)
+        td= payment.type
+        td £#{(payment.amount/100).toFixed(2)}
+        td= payment.period_from.toISOString().substr(0, 10)
+        td= payment.period_count
+        td= (payment.include ? "✔" : "✘")
+    else
+      tr
+        td(colspan=7) No payments yet.
+
+  block standingorder
+    h3 Standing order instructions
+    p Please make standing orders out to the following:
+    table.table.table-bordered(style='width: auto')
+      tr
+        th Payee name
+        td #{plugin.get('payee') || 'UNCONFIGURED'}
+      tr
+        th Sort code
+        td #{plugin.get('sortCode') || 'UNCONFIGURED'}
+      tr
+        th Account number
+        td #{plugin.get('accountNumber') || 'UNCONFIGURED'}
+      tr
+        th Payment reference
+        td M#{pad(loggedInUser.id, 6)}
+    p.muted Note: the payment reference is specific to your account - please make sure it's exactly right.

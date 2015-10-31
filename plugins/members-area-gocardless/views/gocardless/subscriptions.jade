@@ -1,0 +1,24 @@
+extends /sidebar
+
+block title
+  | GoCardless Subscriptions
+
+block content
+  h2 GoCardless Subscriptions
+  - var fields = ['created_at', 'name', 'amount', 'interval_length', 'interval_unit', 'setup_fee', 'status']
+  table.table
+    tr
+      each field in fields
+        th= field
+      if update
+        th User?
+    each subscription in subscriptionList
+      tr
+        each field in fields
+          td= subscription[field]
+        if update
+          td= subscription.user && subscription.user.fullname || "-"
+
+  h3 Maintenance
+  form(method="post")
+    button.btn(type="submit", name="update", value="update") Update users with subscriptions

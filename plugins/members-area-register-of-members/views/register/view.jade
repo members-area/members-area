@@ -1,0 +1,46 @@
+extends /layout
+// Note: to simulate print to PDF in Chrome, a window width of 708px is desired
+
+block everything
+  - var index = {}
+  .registerOfMembers
+    .letterhead
+      img.logo(src="/img/logo.png")
+      .details
+        != detailsHtml
+    .main
+      table.table
+        thead
+          tr
+            td(colspan=4)
+              h3 Register of Members
+              -var now = new Date()
+              p #{roleUsers.length} members total (#{formatDate(now)} #{pad(now.getHours())}:#{pad(now.getMinutes())})
+        tr
+          th.number #
+          th.name(style="width: 130px;") Name
+          th.approved(style="width:68px;") Joined
+          th.rejected(style="width:68px;") Left
+          th.address Address
+        each roleUser, i in roleUsers
+          - index[roleUser.user.fullname] = index[roleUser.user.fullname] || []
+          - index[roleUser.user.fullname].push(i+1)
+          tr(style="font-size: 0.9em")
+            td(style="text-align:right;")= i+1
+            td= roleUser.user.fullname
+            td= formatDate(roleUser.approved)
+            td= formatDate(roleUser.rejected)
+            td= roleUser.user.address
+      .summary Total: #{roleUsers.length} members
+    hr
+    h3 Index
+    - var names = Object.keys(index).sort(function(a, b){return a.toLowerCase().localeCompare(b.toLowerCase())});
+    table.table
+      tr
+        th Name
+        th Index
+      each name in names
+        tr
+          td= name
+          td= index[name].join(", ")
+  script window.print()

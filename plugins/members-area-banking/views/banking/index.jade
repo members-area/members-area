@@ -1,0 +1,55 @@
+extends /sidebar
+
+mixin showResults(results)
+  if results
+    if results.dryRun
+      h3 DRY RUN results
+    else
+      h3 Results of import
+    h4 Imported records
+    table.table.table-striped
+      tr
+        th Account
+        th Date
+        th Type
+        th Description
+        th Amount
+      for entry in results
+        tr
+          td= entry.accountId.replace(/^([0-9]{2})([0-9]{2})([0-9]{2})(.*)$/, "$1-$2-$3 $4")
+          td= entry.when.toISOString().substr(0,10)
+          td= entry.type
+          td= entry.description
+          td £#{(entry.amount/100).toFixed(2)}
+      else
+        tr
+          td(colspan=5) No imported records
+
+block title
+  | Banking
+
+block content
+  h2 Banking
+  mixin showResults(newRecords)
+
+  form(method="post", enctype="multipart/form-data")
+    input(type='hidden', name='form', value='ofx')
+    fieldset
+      legend Upload OFX
+      div
+        input(type="file", name="ofxfile")
+      div
+        button.btn(type="submit", name="dryRun", value="1") Dry-run
+        button.btn(type="submit", name="commit", value="1") COMMIT
+
+  h3 Accounts
+  ul
+    each account in transactionAccounts
+      li
+        a(href="/admin/banking/#{account.id}") #{account.name} (#{account.identifier.replace(/^([0-9]{2})([0-9]{2})([0-9]{2})(.*)$/, "$1-$2-$3 $4")})
+    else
+      li No accounts exist yet - why not import some OFX data above?
+
+  h3 Maintenance
+  form(method="post")
+    button.btn(type="submit", name="reprocess", value="1") Re-process all records

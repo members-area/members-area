@@ -1,0 +1,45 @@
+extends /sidebar
+
+mixin formatInput(name, label, placeholder, type)
+  - type = type || "text"
+  .control-group
+    label.control-label(for=name)= label
+    .controls
+      if type == "checkbox"
+        input(type=type, id=name, name=name, checked=data[name])
+      else
+        input(type=type, id=name, name=name, value=data[name], placeholder=placeholder)
+
+block title
+  | GoCardless
+
+block content
+  h2 GoCardless
+  h3 Settings
+
+  form.form-horizontal(method="POST")
+    if errorMessage
+      p.text-error= errorMessage
+    if successMessage
+      p.text-success= successMessage
+    +formatInput("sandbox", "Sandbox?", "", "checkbox")
+    +formatInput("appId", "App Identifier", "DUMMY_APP")
+    +formatInput("appSecret", "App secret", "INSERT_APP_SECRET_HERE")
+    +formatInput("token", "Merchent access token", "INSERT_MERCHANT_ACCESS_TOKEN")
+    +formatInput("merchantId", "Merchant id", "INSERT_MERCHANT_ID")
+
+    .control-group
+      .controls
+        button.btn-success(type="Submit") Save
+
+  h3 Actions
+  p
+    a(href="/admin/gocardless/bills") View bills
+  p
+    a(href="/admin/gocardless/payouts") View payouts
+  p
+    a(href="/admin/gocardless/subscriptions") View subscriptions
+  p
+    a(href="/admin/gocardless/preauths") View pre-auths
+  p
+    a(href="/admin/gocardless/preauths/dr") Dry-run pre-auth bill creation

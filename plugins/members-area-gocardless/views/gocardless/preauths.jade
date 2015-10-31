@@ -1,0 +1,23 @@
+extends /sidebar
+
+block title
+  | GoCardless Preauths
+
+block content
+  h2 GoCardless Preauths
+  - var fields = ['created_at', 'name', 'max_amount', 'remaining_amount', 'next_interval_start', 'status']
+  table.table
+    tr
+      th Person
+      each field in fields
+        th= field
+      th Actions
+    each preauth in preauthList
+      tr
+        td= preauth.user ? preauth.user.fullname : "Unknown"
+        each field in fields
+          td= preauth[field].toString().replace(/T[0-9:]*Z$/, "")
+        td
+          form(method="POST", action="", style="margin-bottom: 0")
+            if preauth.status == 'active'
+              button.button.btn-small.btn-danger(type='submit', name='cancel', value=preauth.id) Cancel
