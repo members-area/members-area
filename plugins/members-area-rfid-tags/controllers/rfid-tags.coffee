@@ -1,5 +1,6 @@
 Controller = require 'members-area/app/controller'
 _ = require 'underscore'
+async = require 'async'
 
 module.exports = class Rfidtags extends Controller
   @before 'ensureAdmin', only: ['settings']
@@ -17,37 +18,72 @@ module.exports = class Rfidtags extends Controller
 
   receive: (done) ->
     return done() unless @req.method in ['POST', 'PUT']
-    try
-      {tags} = @req.body
-      return done()
-    catch e
+    error = (status, obj) =>
       @rendered = true # We're handling rendering
-      @res.json 400, {errorCode: 400, errorMessage: "Invalid POST data"}
+      @res.json status, obj
       return done()
-      return
 
-    user_id = parseInt(user_id ? 0, 10) if user_id?
-    location = String(location ? "")
-    successful = !!(String(successful ? "1") isnt "0")
-    whenEntered = new Date(parseInt(whenEntered, 10))
+    if !@req.body?.tags
+      return error 400, {errorCode: 400, errorMessage: "Invalid POST data"}
 
-    return error 400, {errorCode: 400, errorMessage: "Invalid user_id"} unless !user_id? or (isFinite(user_id) and user_id > 0)
-    return error 400, {errorCode: 400, errorMessage: "No location specified"} unless location?.length
-    return error 400, {errorCode: 400, errorMessage: "Invalid date"} unless whenEntered.getFullYear() >= 2014
+    {tags} = @req.body
+    tagUids = Object.keys(tags)
 
-    entry =
-      user_id: user_id
-      location: location
-      successful: successful
-      when: whenEntered
+    req = @req
+    receiveTag = (tagUid, done) =>
+      req.models.Rfidtag.find()
+        .where('uid = ?', [tagUid])
+        .first (err, tag) =>
+          error = (status, obj) =>
+            @rendered = true # We're handling rendering
+            @res.json status, obj
+            return done(new Error("Failed on tag '#{tagUid}'"))
+          return done err if err
+          if !tag
+            # Create it
+            remoteTag = tags[tagUid]
+            if remoteTag.assigned_user
+              return error 403, {errorCode: 403, errorMessage: "You can't assign a new token!"}
+            secrets = {}
+            for k, v of remoteTag when k.match /^sector_/
+              secrets[k] = v
+            tag = new req.models.Rfidtag
+              uid: tagUid
+              count: remoteTag.count
+              secrets: secrets
+              meta: {}
+            tag.save (err) ->
+              if err
+                console.dir err
+                return error 400, {errorCode: 400, errorMessage: "Couldn't create tag"}
+              return done()
+          else
+            return done()
+            user_id = parseInt(user_id ? 0, 10) if user_id?
+            location = String(location ? "")
+            successful = !!(String(successful ? "1") isnt "0")
+            whenEntered = new Date(parseInt(whenEntered, 10))
 
-    @req.models.Rfidentry.create [entry], (err) =>
-      if err
-        console.error "ERROR OCCURRED SAVING RFIDENTRY"
-        console.dir err
-        return error 500, "Could not create model"
-      @res.json {success: true}
-      done()
+            return error 400, {errorCode: 400, errorMessage: "Invalid user_id"} unless !user_id? or (isFinite(user_id) and user_id > 0)
+            return error 400, {errorCode: 400, errorMessage: "No location specified"} unless location?.length
+            return error 400, {errorCode: 400, errorMessage: "Invalid date"} unless whenEntered.getFullYear() >= 2014
+
+            entry =
+              user_id: user_id
+              location: location
+              successful: successful
+              when: whenEntered
+
+            @req.models.Rfidentry.create [entry], (err) =>
+              if err
+                console.error "ERROR OCCURRED SAVING RFIDENTRY"
+                console.dir err
+                return error 500, "Could not create model"
+              @res.json {success: true}
+              done()
+
+    async.eachSeries tagUids, receiveTag, done
+
 
   list: (done) ->
     @rendered = true # We're handling rendering
@@ -68,11 +104,11 @@ module.exports = class Rfidtags extends Controller
             tags: {}
             users: {}
 
-          tags = {}
           padUserId = (id) ->
-            targetLenth = 6
+            return null unless id?
+            targetLength = 6
             id = String(id)
-            if id.length < targetLenth
+            if id.length < targetLength
               id = new Array(targetLength - id.length + 1).join("0") + id
             return id
 
