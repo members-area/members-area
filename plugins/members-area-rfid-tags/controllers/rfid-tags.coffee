@@ -80,9 +80,11 @@ module.exports = class Rfidtags extends Controller
                     meta: {}
 
                   @req.models.Rfidentry.create [entry], done
+                return done() unless remoteTag.scans?.length
                 async.eachSeries remoteTag.scans, addScan, done
             , done
 
+    return done() unless tagUids.length
     async.eachSeries tagUids, receiveTag, done
 
 
