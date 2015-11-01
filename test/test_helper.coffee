@@ -59,6 +59,11 @@ before (done) ->
       loadPlugin = (plugin, done) ->
         plugin.load(done)
       async.mapSeries app.plugins, loadPlugin, next
+    getModelsAgainAfterLoadingPlugins: (next) =>
+      getModelsForConnection app, @_db, (err, models) =>
+        @_models = models
+        app.models = models
+        next()
   , done
 
 after ->
