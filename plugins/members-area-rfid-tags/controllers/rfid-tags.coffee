@@ -39,9 +39,9 @@ module.exports = class Rfidtags extends Controller
             @res.json status, obj
             return done(new Error("Failed on tag '#{tagUid}'"))
           return done err if err
+          remoteTag = tags[tagUid]
           if !tag
             # Create it
-            remoteTag = tags[tagUid]
             if remoteTag.assigned_user
               return error 403, {errorCode: 403, errorMessage: "You can't assign a new token!"}
             secrets = {}
@@ -58,29 +58,30 @@ module.exports = class Rfidtags extends Controller
                 return error 400, {errorCode: 400, errorMessage: "Couldn't create tag"}
               return done()
           else
-            return done()
-            user_id = parseInt(user_id ? 0, 10) if user_id?
-            location = String(location ? "")
-            successful = !!(String(successful ? "1") isnt "0")
-            whenEntered = new Date(parseInt(whenEntered, 10))
+            async.series
+              updateCount: (done) ->
+                tag.count = remoteTag.count
+                tag.save done
+              addScans: (done) =>
+                addScan = (scan, done) =>
+                  location = String(scan.location ? "")
+                  successful = (String(result ? "allowed") is "allowed")
+                  whenEntered = new Date(parseInt(scan.date, 10) * 1000)
 
-            return error 400, {errorCode: 400, errorMessage: "Invalid user_id"} unless !user_id? or (isFinite(user_id) and user_id > 0)
-            return error 400, {errorCode: 400, errorMessage: "No location specified"} unless location?.length
-            return error 400, {errorCode: 400, errorMessage: "Invalid date"} unless whenEntered.getFullYear() >= 2014
+                  unless whenEntered.getFullYear() >= 2014
+                    return done(new Error("Invalid date"))
 
-            entry =
-              user_id: user_id
-              location: location
-              successful: successful
-              when: whenEntered
+                  entry =
+                    user_id: tag.user_id
+                    uid: tagUid
+                    location: location
+                    successful: successful
+                    when: whenEntered
+                    meta: {}
 
-            @req.models.Rfidentry.create [entry], (err) =>
-              if err
-                console.error "ERROR OCCURRED SAVING RFIDENTRY"
-                console.dir err
-                return error 500, "Could not create model"
-              @res.json {success: true}
-              done()
+                  @req.models.Rfidentry.create [entry], done
+                async.eachSeries remoteTag.scans, addScan, done
+            , done
 
     async.eachSeries tagUids, receiveTag, done
 
