@@ -16,6 +16,16 @@ block content
       .controls
         button.btn-success(type="Submit") Save
 
+  h3 Tags
+  ul
+    for tag in tags
+      li
+        a(href="/settings/rfid-tags/#{tag.id}")= tag.uid
+        if tag.user
+          br
+          a(href="/users/#{tag.user_id}")= tag.user.fullname
+          |  (#{tag.count} scans)
+
   h3 Recent entries
   table.table
     tr

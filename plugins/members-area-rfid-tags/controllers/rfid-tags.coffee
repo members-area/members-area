@@ -3,9 +3,11 @@ _ = require 'underscore'
 async = require 'async'
 
 module.exports = class Rfidtags extends Controller
-  @before 'ensureAdmin', only: ['settings']
+  @before 'ensureAdmin', only: ['settings', 'editTag']
+  @before 'loadUsers', only: ['editTag']
   @before 'loadRoles', only: ['settings']
-  @before 'loadEntries', only: ['settings']
+  @before 'loadEntries', only: ['settings', 'editTag']
+  @before 'loadTags', only: ['settings']
   @before 'verifySecret', only: ['list']
   @before 'receive', only: ['list']
 
@@ -134,22 +136,66 @@ module.exports = class Rfidtags extends Controller
       @plugin.set {apiSecret: @data.apiSecret}
     done()
 
+  editTag: (done) ->
+    @req.models.Rfidtag.get @req.params.id, (err, @tag) =>
+      return done err if err
+      next = =>
+        @tag.getUser (err, user) =>
+          return done err if err
+          @tag.user = user
+          done()
+      if @req.method is 'POST' and @req.body.user_id
+        @tag.user_id = parseInt(@req.body.user_id, 10)
+        @tag.save (err) ->
+          return done err if err
+          next()
+      else
+        next()
+
   loadRoles: (done) ->
     @req.models.Role.find (err, @roles) =>
       done(err)
 
+  loadUsers: (done) ->
+    @req.models.User.find()
+      .where("verified IS NOT NULL")
+      .run (err, @users) =>
+        done(err)
+
   loadEntries: (done) ->
-    @req.models.Rfidentry.find().order('-id').limit(50).run (err, @entries) =>
+    chain = @req.models.Rfidentry.find()
+    if @req.params.id
+      chain = chain.where("rfidtag_id = ?", [@req.params.id])
+    chain
+      .order('-id')
+      .limit(50)
+      .run (err, @entries) =>
+        return done err if err
+        userIds = []
+        userIds.push entry.user_id for entry in @entries when entry.user_id > 0 and entry.user_id not in userIds
+        if userIds.length
+          @req.models.User.find().where("id in (#{userIds.join(", ")})").run (err, users) =>
+            return done err if err
+            userById = {}
+            userById[user.id] = user for user in users
+            for entry in @entries
+              entry.user = userById[entry.user_id]
+            done()
+        else
+          done()
+
+  loadTags: (done) ->
+    @req.models.Rfidtag.find().order('-id').limit(500).run (err, @tags) =>
       return done err if err
       userIds = []
-      userIds.push entry.user_id for entry in @entries when entry.user_id > 0 and entry.user_id not in userIds
+      userIds.push entry.user_id for entry in @tags when entry.user_id > 0 and entry.user_id not in userIds
       if userIds.length
         @req.models.User.find().where("id in (#{userIds.join(", ")})").run (err, users) =>
           return done err if err
           userById = {}
           userById[user.id] = user for user in users
-          for entry in @entries
-            entry.user = userById[entry.user_id]
+          for tag in @tags
+            tag.user = userById[tag.user_id]
           done()
       else
         done()
