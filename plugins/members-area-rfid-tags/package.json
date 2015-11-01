@@ -1,0 +1,11 @@
+{
+  "name": "members-area-rfid-tags",
+  "version": "0.0.1",
+  "description": "Plugin for members-area for RFID tags (for door entry etc)",
+  "main": "index",
+  "author": {
+    "name": "Benjie Gillam",
+    "email": "benjie@jemjie.com"
+  },
+  "license": "MIT"
+}

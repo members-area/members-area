@@ -1,0 +1,33 @@
+extends /sidebar
+
+block title
+  | RFID Tag Settings
+
+block content
+  h2 RFID Tag Settings
+
+  form.form-horizontal(method="POST")
+    .control-group
+      label.control-label API secret
+      .controls
+        input(type='text', name='apiSecret', value=data.apiSecret)
+
+    .control-group
+      .controls
+        button.btn-success(type="Submit") Save
+
+  h3 Recent entries
+  table.table
+    tr
+      th When
+      th Location
+      th User
+    each entry in entries
+      tr
+        td= entry.when.toISOString()
+        td= entry.location
+        td
+          if entry.user
+            a(href="/people/" + entry.user.id) #{entry.user.fullname} (#{entry.user.username})
+          else
+            | -
