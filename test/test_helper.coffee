@@ -1,3 +1,4 @@
+process.chdir "#{__dirname}/.."
 require '../app/lib/coffee-support'
 process.env.NODE_ENV ?= 'test'
 process.env.SECRET ?= String(Math.random()) + "|" + String(Math.random()) + "|" + String(Math.random())
@@ -18,6 +19,7 @@ getModelsForConnection = require('../app/models')
 roleFixtures = require './fixtures/role'
 
 app = require '../index'
+Plugin = require '../app/plugin'
 db = null
 before (done) ->
   try
@@ -32,6 +34,7 @@ before (done) ->
     setModels: (next) =>
       getModelsForConnection app, @_db, (err, models) =>
         @_models = models
+        app.models = models
         next()
     generateExampleRoles: (next) =>
       Role = @_models.Role
@@ -46,13 +49,23 @@ before (done) ->
           @_db.driver.execSimpleQuery "SELECT setval('role_id_seq', #{roles.length});", next
         else
           next()
+    loadPlugins: (next) =>
+      files = fs.readdirSync("#{__dirname}/../plugins")
+      for moduleName in files when moduleName.match /^members-area-/
+        try
+          app.plugins.push Plugin.load "#{__dirname}/../plugins/#{moduleName}", app
+        catch e
+          console.error "Could not load local '#{moduleName}' plugin: #{e}"
+      loadPlugin = (plugin, done) ->
+        plugin.load(done)
+      async.mapSeries app.plugins, loadPlugin, next
   , done
 
 after ->
   @_db.close()
 
 # Why would you not want this?!
-chai.Assertion.includeStack = true
+chai.config.includeStack = true
 
 class NullTransport
   constructor: (@options) ->
@@ -162,4 +175,4 @@ protect = ->
   global.after = makeSafe global.after
   return global
 
-module.exports = {app, async, catchErrors, chai, expect, getModelsForConnection, reqres, sinon, stub, protect}
+module.exports = {app, async, catchErrors, chai, expect, getModelsForConnection, reqres, sinon, stub, protect, Plugin}
