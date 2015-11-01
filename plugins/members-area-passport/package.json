@@ -2,7 +2,7 @@
   "name": "members-area-passport",
   "version": "0.2.2",
   "description": "Add additional passport authentication methods to members-area.",
-  "main": "index.js",
+  "main": "index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

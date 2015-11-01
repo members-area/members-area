@@ -2,7 +2,7 @@
   "name": "members-area-remote-auth",
   "version": "0.1.0",
   "description": "Remote authentication to the members area, e.g. for Wordpress/MediaWiki.",
-  "main": "index.coffee",
+  "main": "index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

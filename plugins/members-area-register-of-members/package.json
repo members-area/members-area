@@ -2,7 +2,7 @@
   "name": "members-area-register-of-members",
   "version": "0.1.0",
   "description": "Register of Members plugin for members-area",
-  "main": "index.coffee",
+  "main": "index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

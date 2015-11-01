@@ -2,7 +2,7 @@
   "name": "members-area-banking",
   "version": "0.2.2",
   "description": "OFX import/etc for the Members Area",
-  "main": "index.coffee",
+  "main": "index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
