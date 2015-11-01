@@ -11,7 +11,6 @@ module.exports =
   initialize: (done) ->
     @app.addRoute 'all' , '/rfid-tags' , 'members-area-rfid-tags#rfid-tags#list'
     @app.addRoute 'all', '/settings/rfid-tags', 'members-area-rfid-tags#rfid-tags#settings'
-    @app.addRoute 'post' , '/rfid-tags/open' , 'members-area-rfid-tags#rfid-tags#open'
     @hook 'render-person-view' , @modifyUserPage.bind(this)
     @hook 'navigation_items', @modifyNavigationItems.bind(this)
     @hook 'models:initialize', ({models}) =>
