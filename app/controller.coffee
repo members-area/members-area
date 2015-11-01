@@ -76,6 +76,7 @@ class Controller
       catch e
         console.error "ERROR OCCURRED WITH ENTRY:"
         console.dir entry
+        console.error e.stack
         next e
 
     async.eachSeries array, run, (err) =>
