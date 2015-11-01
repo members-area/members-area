@@ -1,0 +1,26 @@
+{
+  "name": "members-area-pin-codes",
+  "version": "0.0.1",
+  "description": "Plugin for members-area for per-user PIN codes (for door entry etc)",
+  "main": "index",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: I need some tests!\" && exit 1"
+  },
+  "author": {
+    "name": "Benjie Gillam",
+    "email": "benjie@jemjie.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/members-area/members-area-pin-codes.git"
+  },
+  "bugs": {
+    "url": "https://github.com/members-area/members-area-pin-codes/issues"
+  },
+  "homepage": "https://github.com/members-area/members-area-pin-codes",
+  "dependencies": {
+    "async": "^0.7.0"
+  }
+}
