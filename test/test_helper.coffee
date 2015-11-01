@@ -145,6 +145,8 @@ safe = (fn) ->
     worker = (args..., cb) ->
       callback = (err, args...) ->
         process.removeListener 'uncaughtException', callback
+        if err
+          console.error err.stack
         cb err, args...
       process.removeAllListeners 'uncaughtException'
       process.on 'uncaughtException', callback
