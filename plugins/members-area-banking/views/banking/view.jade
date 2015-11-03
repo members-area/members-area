@@ -13,6 +13,7 @@ block content
       th Type
       th Description
       th Amount
+      th Payment?
     for entry in transactions
       tr
         td= entry.fitid
@@ -20,3 +21,8 @@ block content
         td= entry.type
         td= entry.description
         td £#{(entry.amount/100).toFixed(2)}
+        td
+          if entry.meta.isPayment
+            | ✔
+          else
+            | ✘
