@@ -8,12 +8,14 @@ block content
   h3 All transactions:
   table.table.table-striped
     tr
+      th Fitid
       th Date
       th Type
       th Description
       th Amount
     for entry in transactions
       tr
+        td= entry.fitid
         td= entry.when.toISOString().substr(0,10)
         td= entry.type
         td= entry.description
