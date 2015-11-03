@@ -23,7 +23,12 @@ class BankingController extends Controller
     @req.models.TransactionAccount.get @req.params.id, (err, @transactionAccount) =>
       return done err if err
       @transactionAccount.getTransactions (err, @transactions) =>
-        @transactions.sort (a, b) -> +b.when - +a.when
+        @transactions.sort (a, b) ->
+          s = +b.when - +a.when
+          return s unless s is 0
+          s = b.description.localeCompare(a.description)
+          return s unless s is 0
+          return +b.amount - a.amount
         done(err)
 
   requireAdmin: (done) ->
