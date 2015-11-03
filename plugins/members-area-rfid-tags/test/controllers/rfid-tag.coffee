@@ -167,6 +167,8 @@ describe 'RfidTagsController', ->
           expect(data.tags[@tag.uid].assigned_user).to.eql paddedUserId
           expect(data.tags[@tag.uid].count).to.eql 7
           expect(data.users).to.be.a 'object'
+          expect(data.users[paddedUserId]).to.be.a 'object'
+          expect(data.users[paddedUserId].name).to.be.a 'string'
           return done()
         RfidTagsController.handle params, req, res, done
 

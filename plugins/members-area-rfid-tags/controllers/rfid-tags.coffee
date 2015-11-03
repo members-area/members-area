@@ -123,7 +123,7 @@ module.exports = class Rfidtags extends Controller
               count: tag.count
 
           for u in users
-            users[padUserId(u.id)] =
+            result.users[padUserId(u.id)] =
               name: u.fullname
               roles: u.activeRoleIds
           @res.json result
