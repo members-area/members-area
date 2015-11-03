@@ -7,6 +7,7 @@ module.exports = ({get, post, all}) ->
   all '/dashboard', 'user#dashboard'
   all '/account', 'user#account'
   all '/people', 'person#index'
+  all '/people/export', 'person#export'
   all '/people/:id', 'person#view'
   all '/roles', 'role#index'
   all '/roles/applications', 'role#applications'

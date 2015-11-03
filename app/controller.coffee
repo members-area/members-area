@@ -177,7 +177,15 @@ class Controller
         title: 'Admin'
         id: 'admin'
         priority: 100
-        items: []
+        items: [
+          {
+            title: 'Export'
+            href: '/people/export'
+            id: 'person-export'
+            priority: 10
+            permissions: ['root']
+          }
+        ]
       }
       {
         title: 'Settings'

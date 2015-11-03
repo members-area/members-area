@@ -1,19 +1,58 @@
 LoggedInController = require './logged-in'
 _ = require 'underscore'
 async = require 'async'
+csv = require 'csv'
 
 module.exports = class PersonController extends LoggedInController
   @before 'setAdmin'
-  @before 'getUsers', only: ['index']
+  @before 'ensureAdmin', only: ['export']
+  @before 'getUsers', only: ['index', 'export']
   @before 'getClassNames', only: ['index']
   @before 'getStats', only: ['index']
   @before 'getUser', only: ['view']
+  @before 'loadRoles', only: ['export']
 
   activeNavigationId: "person-index"
 
   index: ->
 
   view: ->
+
+  export: (done) ->
+    headers = {
+      Email: 'email'
+      Name: 'fullname'
+      Username: 'username'
+      Address: 'address'
+      Verified: (u) -> if u.verified then "Y" else ""
+    }
+    for role in @roles then do (role) ->
+      headers[role.name] = (user) ->
+        if role.id in user.activeRoleIds
+          "Y"
+        else
+          ""
+
+    rows =
+      for user in @users
+        row = {}
+        for header, source of headers
+          row[header] =
+            if typeof source is 'string'
+              user[source]
+            else
+              source(user)
+        row
+
+    csvOptions =
+      header: true
+    csv.stringify rows, csvOptions, (err, res) =>
+      return done(err) if err
+      @res.set 'Content-Type', 'text/csv'
+      @res.send 200, res
+      @rendered = true # We're handling rendering
+      return done()
+    return
 
   getUsers: (done) ->
     @isAdmin = @req.user.can 'admin'
@@ -59,3 +98,7 @@ module.exports = class PersonController extends LoggedInController
 
   setAdmin: ->
     @admin = @loggedInUser.can 'admin'
+
+  loadRoles: (done) ->
+    @req.models.Role.find (err, @roles) =>
+      done(err)

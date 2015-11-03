@@ -37,6 +37,7 @@
     "bcrypt": "^0.8.1",
     "cheerio": "^0.15.0",
     "coffee-script": "^1.9.1",
+    "csv": "^0.4.6",
     "date-utils": "~1.2.15",
     "entities": "^1.1.1",
     "express": "~3.4.8",
