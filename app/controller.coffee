@@ -270,4 +270,16 @@ class Controller
   baseURL: ->
     "#{@req.protocol}://#{@req.header('host')}"
 
+  requireLoggedIn: ->
+    @redirectTo "/login?next=#{encodeURIComponent @req.path}" unless @req.user?
+
+  ensureAdmin: (done) ->
+    if !@req.user?
+      @redirectTo "/login?next=#{encodeURIComponent @req.path}"
+    else if !@req.user.can('admin')
+      done new @req.HTTPError 403, "Permission denied"
+    else
+      done()
+
+
 module.exports = Controller

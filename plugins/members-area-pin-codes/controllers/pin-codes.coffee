@@ -98,8 +98,3 @@ module.exports = class PinCodes extends Controller
           done()
       else
         done()
-
-  ensureAdmin: (done) ->
-    return @redirectTo "/login?next=#{encodeURIComponent @req.path}" unless @req.user?
-    return done new @req.HTTPError 403, "Permission denied" unless @req.user.can('admin')
-    done()
