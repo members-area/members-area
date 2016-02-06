@@ -134,14 +134,15 @@ module.exports =
       rows = []
       if payments?.length
         for payment in payments
+          worked = payment.period_count isnt 0 and payment.include
           rows.push """
-            <tr class="#{if payment.include then "" else "text-error"}">
+            <tr class="#{if worked then "" else "text-error"}">
               <td><a href="/admin/payments/#{payment.id}">#{payment.when.toISOString().substr(0, 10)}</a></td>
               <td>#{payment.type}</td>
               <td>£#{(payment.amount/100).toFixed(2)}</td>
               <td>#{payment.period_from.toISOString().substr(0, 10)}</td>
-              <td>#{payment.period_count}</td>
-              <td>#{if payment.include then "✔" else "✘"}</td>
+              <td>#{if payment.period_count == 0 then "[removed]" else payment.period_count}</td>
+              <td>#{if worked then "✔" else "✘"}</td>
             </tr>
             """
       else
