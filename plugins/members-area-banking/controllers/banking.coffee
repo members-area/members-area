@@ -155,15 +155,33 @@ class BankingController extends Controller
   reconcileTransactions: (account, oldTransactions, newTransactions, done) ->
     newRecords = []
     updatedTransactions = []
-    oldTransactionsByFitid = {}
-    oldTransactionsByFitid[tx.fitid] = tx for tx in oldTransactions
+    getUniqueTransactionId = (tx, fromOFX = false) ->
+      # We can't use this any more because Barclays broke it
+      ## tx.fitid
+      datesafe = (date) ->
+        # All dates fed in represent, roughly, midnight. However their timezones can be weird.
+        # To make this safer, we add 12 hours to everything - midday is safer than midnight.
+        # This works for So Make It's data from Barclays but may have issues elsewhere - beware.
+        twelveHours = 12 * 60 * 60 * 1000
+        d = new Date(+date + twelveHours)
+        return d
+      if fromOFX
+        r = "#{datesafe(tx.date).toISOString().substr(0, 10)}||#{tx.name}||#{tx.amount}"
+      else
+        r = "#{datesafe(tx.when).toISOString().substr(0, 10)}||#{tx.description}||#{tx.amount}"
+      return r
+
+    oldTransactionsByUniqueTransactionId = {}
+    for tx in oldTransactions
+      oldTransactionsByUniqueTransactionId[getUniqueTransactionId(tx, false)] = tx
     for tx in newTransactions
-      oldTransaction = oldTransactionsByFitid[tx.fitid]
+      oldTransaction = oldTransactionsByUniqueTransactionId[getUniqueTransactionId(tx, true)]
       if oldTransaction
-        # Check details
-        if oldTransaction.when.toISOString().substr(0, 10) isnt tx.date.toISOString().substr(0, 10)
-          oldTransaction.when = tx.date
-          updatedTransactions.push oldTransaction
+        # Can't do this any more because Barclays broke FITIDs
+        ## # Check details 
+        ## if oldTransaction.when.toISOString().substr(0, 10) isnt tx.date.toISOString().substr(0, 10)
+        ##   oldTransaction.when = tx.date
+        ##   updatedTransactions.push oldTransaction
         continue
       newRecordData =
         transaction_account_id: account.id
