@@ -35,8 +35,12 @@ block content
         th Count
         td
           select(name='period_count')
-            - for (var i = 1; i <= 12; i++)
-              option(value=i, selected=(i == payment.period_count)) #{i} month#{i > 1 ? "s" : ""}
+            - for (var i = 0; i <= 12; i++)
+              option(value=i, selected=(i == payment.period_count))
+                - if (i == 0)
+                  | IGNORED PAYMENT
+                - else
+                  | #{i} month#{i > 1 ? "s" : ""}
       tr
         th Worked?
         td= (payment.include ? "✔" : "✘")
