@@ -166,9 +166,18 @@ class BankingController extends Controller
         d = new Date(+date + twelveHours)
         return d
       if fromOFX
-        r = "#{datesafe(tx.date).toISOString().substr(0, 10)}||#{tx.name}||#{tx.amount}"
+        txDate = tx.date
+        txDesc = tx.name
       else
-        r = "#{datesafe(tx.when).toISOString().substr(0, 10)}||#{tx.description}||#{tx.amount}"
+        txDate = tx.when
+        txDesc = tx.description
+      if txMatches = txDesc.match(/\b(M0[0-9]+)\b/)
+        # We can't rely on fitid because Barclays broke it; but also we can't
+        # rely on description because that can change from export to export
+        # also. So now we just compare the matching part of the transaction
+        # description in the hopes that that will be sufficient.
+        txDesc = txMatches[1]
+      r = "#{datesafe(txDate).toISOString().substr(0, 10)}||#{txDesc}||#{tx.amount}"
       return r
 
     oldTransactionsByUniqueTransactionId = {}
