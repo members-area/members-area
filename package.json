@@ -13,7 +13,7 @@
     "migrate": "./scripts/db/migrate",
     "seed": "coffee app/seed.coffee",
     "setup": "npm run migrate; npm run seed",
-    "test": "mocha test"
+    "test": "NODE_PATH=.. mocha test"
   },
   "repository": {
     "type": "git",
