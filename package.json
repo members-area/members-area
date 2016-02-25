@@ -34,7 +34,7 @@
   "homepage": "https://github.com/benjie/members-area",
   "dependencies": {
     "async": "~0.7.0",
-    "bcrypt": "^0.8.1",
+    "bcrypt": "0.8.5",
     "cheerio": "^0.15.0",
     "coffee-script": "^1.9.1",
     "csv": "^0.4.6",
@@ -61,7 +61,7 @@
     "passport-twitter": "~1.0.2",
     "resolve": "~0.6.1",
     "source-map-support": "~0.2.5",
-    "sqlite3": "^3.0.5",
+    "sqlite3": "3.1.1",
     "stylus": "~0.42.2",
     "underscore": "~1.5.2",
     "winston": "~0.7.2"
