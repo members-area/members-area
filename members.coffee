@@ -32,7 +32,7 @@ methods = new class
     console.log "Members Area, v#{pkg.version}"
 
   run: =>
-    proc = spawn "node", ["#{cwd}/node_modules/.bin/coffee", "index.coffee"],
+    proc = spawn "npm", ["start"],
       cwd: cwd
       stdio: 'inherit'
     proc.on 'close', process.exit
@@ -88,7 +88,7 @@ methods = new class
       private: true
 
     pkg.scripts ?= {}
-    pkg.scripts.start ?= "./node_modules/.bin/coffee index.coffee"
+    pkg.scripts.start ?= "coffee index.coffee"
     pkg.dependencies ?= {}
     pkg.dependencies["sqlite3"] ?= "3.1.1"
     pkg.dependencies["coffee-script"] ?= ">1.6"
