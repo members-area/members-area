@@ -1,6 +1,6 @@
 {
   "name": "members-area",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "An area for members of a group to manage their subscription, permissions and resources.",
   "main": "index.js",
   "bin": {
@@ -11,9 +11,9 @@
   },
   "scripts": {
     "migrate": "./scripts/db/migrate",
-    "seed": "./node_modules/.bin/coffee app/seed.coffee",
+    "seed": "coffee app/seed.coffee",
     "setup": "npm run migrate; npm run seed",
-    "test": "mocha test"
+    "test": "NODE_PATH=.. mocha test"
   },
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
   "homepage": "https://github.com/benjie/members-area",
   "dependencies": {
     "async": "~0.7.0",
-    "bcrypt": "^0.8.1",
+    "bcrypt": "0.8.5",
     "cheerio": "^0.15.0",
     "coffee-script": "^1.9.1",
     "csv": "^0.4.6",
@@ -61,7 +61,7 @@
     "passport-twitter": "~1.0.2",
     "resolve": "~0.6.1",
     "source-map-support": "~0.2.5",
-    "sqlite3": "^3.0.5",
+    "sqlite3": "3.1.1",
     "stylus": "~0.42.2",
     "underscore": "~1.5.2",
     "winston": "~0.7.2"

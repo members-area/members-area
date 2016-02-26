@@ -1,5 +1,5 @@
 PersonController = require 'members-area/app/controllers/person'
-bcrypt = require 'members-area/node_modules/bcrypt'
+bcrypt = require 'bcrypt'
 
 lpad = (id) ->
   r = String(id)
