@@ -24,12 +24,12 @@ block body
   - var controlGroupClass, value, item, field
   - var tabIndex = 1
   .row
-    .span4.offset1.gumph
+    .col-md-4.col-md-offset-1.gumph
       h2= title || "Registration"
       p.lead= leadText || "Configure this text in Core Settings"
       != registrationText || "The first user is automatically verified and an admin."
 
-    .span4.offset1.register-form
+    .col-md-4.col-md-offset-1.register-form
       h2 Registration form
       form(action='', method='POST')
         fieldset
@@ -54,8 +54,8 @@ block body
             label(class="text-"+controlGroupClass)
               input(type="checkbox", name="terms", tabindex=tabIndex++)
               |  I confirm that the information I have entered above is not
-              |  fraudulent, and that I agree to be bound by the 
+              |  fraudulent, and that I agree to be bound by the
               a(href=registrationRulesUrl)= registrationRulesLabel
-              | . 
+              | .
 
           button.btn.btn-primary.btn-large(type='submit', tabindex=tabIndex++) Sign up
