@@ -7,7 +7,7 @@ html
         = " | " + (siteSettings.name || "Members Area")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     link(rel='stylesheet', href='/css/bootstrap.min.css')
-    link(rel='stylesheet', href='/css/bootstrap-responsive.min.css')
+    link(rel='stylesheet', href='/css/bootstrap-theme.min.css')
     link(rel='stylesheet', href='/css/style.css')
     link(href="/img/favicon.png", rel="shortcut icon")
   body
@@ -24,7 +24,7 @@ html
               span.icon-bar
               span.icon-bar
               span.icon-bar
-            a.brand(href='/') Members Area
+            a.navbar-brand(href='/') Members Area
             //- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse.
             .nav-collapse.collapse
               - var active
@@ -51,17 +51,21 @@ html
       #main.container
         block body
           .row
-            .span12
+            .col-md-12
               block content
 
       .container
         footer
           block footer
-            p.backtotop
-              a(href='#') Back to top
-            p
-              | Powered by <a href="http://github.com/benjie/members-area">Members Area</a>.
-    
+            .row
+              .footer-col
+                .col-md-6
+                  a(href='#') Back to top
+              .footer-col
+                .col-md-6
+                  p
+                    | Powered by <a href="http://github.com/benjie/members-area">Members Area</a>.
+
     script(src='/js/jquery.min.js')
     script(src='/js/jquery-migrate.min.js')
     script(src='/js/bootstrap.min.js')
