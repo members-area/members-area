@@ -18,26 +18,26 @@ block content
     p.text-success Your data has been updated
 
   form.form-horizontal(method="POST")
-    .control-group
+    .form-group
       label.control-label Full Name
       .controls
         input(name='fullname', value=data.fullname)
-    .control-group
+    .form-group
       label.control-label Address
       .controls
         textarea(name='address', rows=5)= data.address
-    .control-group
+    .form-group
       label.control-label Password
       .controls
         input(type='password', name='password')
-    .control-group
+    .form-group
       label.control-label Password (again)
       .controls
         input(type='password', name='password2')
-    .control-group
+    .form-group
       .controls
         button.btn.btn-success(type="submit") Update
-    .control-group
+    .form-group
       label.control-label Picture
       .controls
         img(src=loggedInUser.getGravatar(200),alt="avatar")

@@ -1,7 +1,7 @@
 extends /sidebar
 
 mixin controlGroup(id, label)
-  .control-group
+  .form-group
     label.control-label(for=id)= label
     .controls
       input(name=id, id=id, value=data[id])
@@ -26,6 +26,6 @@ block content
     +controlGroup("GITHUB_APP_ID", "Client ID")
     +controlGroup("GITHUB_SECRET", "Client Secret")
 
-    .control-group
+    .form-group
       .controls
         button.btn.btn-success(type="Submit") Save

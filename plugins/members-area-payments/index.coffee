@@ -45,10 +45,10 @@ module.exports =
 
   renderRoleSubscription: (options) ->
     {controller, $} = options
-    $topNode = $('.main form').first().find('.control-group').last()
+    $topNode = $('.main form').first().find('.form-group').last()
     checked = if !!controller.role.meta.subscriptionRequired then " checked='checked'" else ""
     $newNode = $ """
-      <div class="control-group">
+      <div class="form-group">
         <label for="name" class="control-label">Subscription required</label>
         <div class="controls">
           <input type="checkbox" name="subscriptionRequired"#{checked}> Check this if a subscription is required from people with this role.

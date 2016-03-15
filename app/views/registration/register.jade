@@ -9,9 +9,9 @@ mixin renderErrors(fieldName)
       p.text-error= error
 
 mixin field(fieldName, fieldTitle, required, type)
-  - controlGroupClass = (errors && errors[fieldName] ? "error" : "")
+  - controlGroupClass = (errors && errors[fieldName] ? "has-error" : "")
   - type = type || 'text'
-  .control-group(class=controlGroupClass)
+  .form-group(class=controlGroupClass)
     if fieldTitle
       label(class="text-"+controlGroupClass)= fieldTitle
     if block
@@ -36,7 +36,7 @@ block body
           +renderErrors('base')
 
           //- Antispam
-          .control-group.sdfsdfsdf
+          .form-group.sdfsdfsdf
             label Fill this field in if you're not a human:
             input.text(type='text', name='url', placeholder='Required')
 

@@ -7,26 +7,26 @@ block content
   h2 PIN Code Settings
 
   form.form-horizontal(method="POST")
-    .control-group
+    .form-group
       label.control-label(for="memberRoleId") Member role
       .controls
         select(id="memberRoleId", name="memberRoleId")
           each role in roles
             option(value=role.id, selected=(role.id === data.memberRoleId))= role.name
 
-    .control-group
+    .form-group
       label.control-label(for="keyholderRoleId") Keyholder role
       .controls
         select(id="keyholderRoleId", name="keyholderRoleId")
           each role in roles
             option(value=role.id, selected=(role.id === data.keyholderRoleId))= role.name
 
-    .control-group
+    .form-group
       label.control-label API secret
       .controls
         input(type='text', name='apiSecret', value=data.apiSecret)
 
-    .control-group
+    .form-group
       .controls
         button.btn.btn-success(type="Submit") Save
 

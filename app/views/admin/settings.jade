@@ -1,13 +1,13 @@
 extends /sidebar
 
 mixin controlGroup(name, id, label, defaultValue)
-  .control-group
+  .form-group
     label.control-label(for=name+"-"+id)= label
     .controls
       if block
         block
       else
-        input(id=name+"-"+id, name=name+"["+id+"]", value=data[name][id] || defaultValue)
+        input.form-control(id=name+"-"+id, name=name+"["+id+"]", value=data[name][id] || defaultValue)
         if !data[name][id] && defaultValue
           | &nbsp; &lt; default unsaved value
 
@@ -27,7 +27,7 @@ block content
     +controlGroup("site", "registrationTitle", "Title", "Registration")
     +controlGroup("site", "registrationLead", "Leading text", "Become a Friend of So Make It!")
     +controlGroup("site", "registrationText", "Main text")
-      textarea(name="site[registrationText]", style="width: 300px;height: 12em")= data.site.registrationText || "Many of the services provided by So Make It require a username and password, so please pick a unique username.\n\nPlease enter your real name so people can recognise you. Your name will be visible to all within the members area."
+      textarea.form-control(name="site[registrationText]", style="width: 300px;height: 12em")= data.site.registrationText || "Many of the services provided by So Make It require a username and password, so please pick a unique username.\n\nPlease enter your real name so people can recognise you. Your name will be visible to all within the members area."
       if !data.site.registrationText
         | &nbsp; &lt; default unsaved value
     +controlGroup("site", "registrationRulesUrl", "Rules URL", "https://wiki.somakeit.org.uk/wiki/Rules")
@@ -42,10 +42,10 @@ block content
 
     h4 Theme
     +controlGroup("theme", "identifier", "Theme")
-      select(name="theme[identifier]")
+      select.form-control(name="theme[identifier]")
         each aTheme in themes
           option(value=aTheme.value, selected=(data.theme.identifier == aTheme.value))= aTheme.name
 
-    .control-group
+    .form-group
       .controls
         button.btn.btn-success(type="Submit") Save

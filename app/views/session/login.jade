@@ -12,8 +12,8 @@ block body
         p Usernames and passwords are case sensitive.
       form(action='', method='POST')
         fieldset
-          - var controlGroupClass = (!!err ? "error" : "")
-          .control-group(class=controlGroupClass)
+          - var controlGroupClass = (!!err ? "has-error" : "")
+          .form-group(class=controlGroupClass)
             input(type='hidden', name='form', value=(typeof formName === 'undefined' ? 'login' : formName))
             .clearfix
               - var email = data.email || ""

@@ -1,7 +1,7 @@
 extends /sidebar
 
 mixin formatInput(name, label, placeholder)
-  .control-group
+  .form-group
     label.control-label(for=name)= label
     .controls
       input(id=name, name=name, value=data[name], placeholder=placeholder)

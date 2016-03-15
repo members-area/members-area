@@ -16,7 +16,7 @@ mixin formFor(mode, type, data, index)
       input(type='hidden', name='id', value=data.id)
     input(type='hidden', name='type', value=requirementType.type)
     each input in requirementType.inputs
-      .control-group
+      .form-group
         - var inputId = "add-"+requirementType.type+"-"+input.name
         label.control-label(for=inputId)= input.label
         .controls
@@ -26,7 +26,7 @@ mixin formFor(mode, type, data, index)
                 option(value=option.value, selected=(option.value === data[input.name]))= option.label
           else
             input(id=inputId, type="text", name=input.name, value=data[input.name] || input.value)
-    .control-group
+    .form-group
       .controls
         if mode === 'add'
           button.btn.btn-success(type="submit") Add Requirement
@@ -41,19 +41,19 @@ block content
     p.lead.text-error= error
 
   form.form-horizontal(method="POST")
-    .control-group
+    .form-group
       label.control-label(for="name") Role Name
       .controls
         input(type="text", name="name", value=data.name)
-    .control-group
+    .form-group
       label.control-label(for="description") Description
       .controls
         textarea(name="description", style="width: 100%; height: 5em")= data.meta.description
-    .control-group
+    .form-group
       label.control-label(for="emailText") Email text
       .controls
         textarea(name="emailText", style="width: 100%; height: 5em")= data.meta.emailText
-    .control-group
+    .form-group
       label.control-label(for="color") Colour
       .controls
         div(id="colorPreview", style="float: left; width:1.7em; height:1.7em; border: 1px solid black; background-color: "+data.meta.color)
@@ -61,7 +61,7 @@ block content
         for color in ["#e11d21", "#e05a16", "#fbca04", "#009800", "#006b75", "#207de5", "#0052cc", "#5319e7"]
           div(class="colorPickerOption", style="float: left; width:1.7em; height:1.7em; background-color: "+color, data-color=color)
         div(style="clear:both")
-    .control-group
+    .form-group
       .controls
         button.btn.btn-success(type="submit") Update Role
 

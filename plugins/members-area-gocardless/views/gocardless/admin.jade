@@ -2,7 +2,7 @@ extends /sidebar
 
 mixin formatInput(name, label, placeholder, type)
   - type = type || "text"
-  .control-group
+  .form-group
     label.control-label(for=name)= label
     .controls
       if type == "checkbox"
@@ -28,7 +28,7 @@ block content
     +formatInput("token", "Merchent access token", "INSERT_MERCHANT_ACCESS_TOKEN")
     +formatInput("merchantId", "Merchant id", "INSERT_MERCHANT_ID")
 
-    .control-group
+    .form-group
       .controls
         button.btn.btn-success(type="Submit") Save
 
