@@ -29,10 +29,10 @@ mixin formFor(mode, type, data, index)
     .control-group
       .controls
         if mode === 'add'
-          button.btn-success(type="submit") Add Requirement
+          button.btn.btn-success(type="submit") Add Requirement
         else
-          button.btn-success(type="submit") Edit Requirement
-          button.btn-danger(type="submit",name="delete",value="delete") Delete Requirement
+          button.btn.btn-success(type="submit") Edit Requirement
+          button.btn.btn-danger(type="submit",name="delete",value="delete") Delete Requirement
 
 block content
   h2 Edit Role: #{role.name}
@@ -63,7 +63,7 @@ block content
         div(style="clear:both")
     .control-group
       .controls
-        button.btn-success(type="submit") Update Role
+        button.btn.btn-success(type="submit") Update Role
 
   h3 Edit requirements
   p If you delete a requirement then other changes you make at the same time will be lost.

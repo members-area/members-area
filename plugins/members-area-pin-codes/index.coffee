@@ -79,7 +79,7 @@ module.exports =
           </div>
           <div class="control-group">
             <div class="controls">
-              <button type="Submit" class="btn-success">Update</button>
+              <button type="Submit" class="btn btn-success">Update</button>
             </div>
           </div>
         </form>
