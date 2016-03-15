@@ -11,6 +11,23 @@ before_script:
   - psql -c 'CREATE DATABASE members;' -U postgres
 
 env:
-  - DATABASE_URL=
-  - DATABASE_URL=mysql://travis@localhost/members
-  - DATABASE_URL=postgresql://postgres@localhost/members
+  - CXX=g++-4.8 DATABASE_URL=
+  - CXX=g++-4.8 DATABASE_URL=mysql://travis@localhost/members
+  - CXX=g++-4.8 DATABASE_URL=postgresql://postgres@localhost/members
+
+sudo: false
+
+install:
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+  - npm install
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+
+cache:
+  directories:
+    - node_modules
