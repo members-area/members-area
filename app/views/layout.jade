@@ -17,36 +17,37 @@ html
 
     block everything
       .navbar.navbar-inverse.navbar-static-top
-        .navbar-inner
-          .container
-            //- Responsive Navbar Part 1: Button for triggering responsive navbar (not covered in tutorial). Include responsive CSS to utilize.
-            a.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
+        .container-fluid
+          //- Responsive Navbar Part 1: Button for triggering responsive navbar (not covered in tutorial). Include responsive CSS to utilize.
+          .navbar-header
+            a.btn.btn-navbar(data-toggle='collapse', data-target='.navbar-collapse')
+            a.navbar-toggle.collapsed(data-toggle='collapse', data-target='#main-navbar')
               span.icon-bar
               span.icon-bar
               span.icon-bar
             a.navbar-brand(href='/') Members Area
-            //- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse.
-            .nav-collapse.collapse
-              - var active
-              block headerNavLeft
-              ul.nav.pull-right
-                if loggedInUser
-                  li.active.dropdown
-                    a.dropdown-toggle(data-toggle="dropdown", data-target="#", href="/") #{loggedInUser.safename}
-                      b.caret
-                    ul.dropdown-menu
-                      li
-                        a(href='/') Dashboard
-                      li
-                        a(href='/account') My Account
-                      li.divider
-                      li
-                        form(id="logoutform", action="/logout", method="POST")
-                          input(type="hidden", name="form", value="logout")
-                        a(href='/logout', onclick="document.getElementById('logoutform').submit(); return false") Log out
-                else
-                  li.active
-                    a(href='/') Members area
+          //- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse.
+          .navbar-collapse.collapse#main-navbar
+            - var active
+            block headerNavLeft
+            ul.nav.navbar-nav.pull-right
+              if loggedInUser
+                li.dropdown
+                  a.dropdown-toggle(data-toggle="dropdown", data-target="#", href="/") #{loggedInUser.safename}
+                    b.caret
+                  ul.dropdown-menu
+                    li
+                      a(href='/') Dashboard
+                    li
+                      a(href='/account') My Account
+                    li.divider
+                    li
+                      form(id="logoutform", action="/logout", method="POST")
+                        input(type="hidden", name="form", value="logout")
+                      a(href='/logout', onclick="document.getElementById('logoutform').submit(); return false") Log out
+              else
+                li.active
+                  a(href='/') Members area
 
       #main.container
         block body
