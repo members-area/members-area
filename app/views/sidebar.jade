@@ -12,9 +12,9 @@ mixin navList(navigation)
 
 block body
   .row
-    .span3
-      ul.nav.nav-list
+    .col-md-3
+      ul.nav.nav-stacked
         +navList(navigation)
 
-    .span9.main
+    .col-md-9.main
       block content
