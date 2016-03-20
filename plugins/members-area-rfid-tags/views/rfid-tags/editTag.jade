@@ -10,17 +10,16 @@ block content
     p Assigned to #{tag.user.fullname}
   else
 
-    form.form-horizontal(method="POST")
-      .form-group
-        label.control-label User
-        .controls
-          select(name='user_id')
+    form(method="POST")
+      fieldset
+        .form-group
+          label User
+          select.form-control(name='user_id')
             option Select person
             for user in users
               option(value=user.id) #{user.id} - #{user.fullname}
 
-      .form-group
-        .controls
+        .form-group
           button.btn.btn-success(type="Submit") Save
 
   h3 Recent entries

@@ -14,11 +14,10 @@ block content
         a(href="/settings/roles/" + role.id, class="user-role-tag", style="font-size: 1.1em; background-color: " + role.meta.color + "; color: " + role.meta.textColor)= role.name
 
   h3 Create new role
-  form.form-horizontal(method="POST")
-    .form-group
-      label.control-label(for="name") Role Name
-      .controls
-        input(type="text", name="name", value=data.name)
-    .form-group
-      .controls
+  form(method="POST")
+    fieldset
+      .form-group
+        label(for="name") Role Name
+        input.form-control(type="text", name="name", value=data.name)
+      .form-group
         button.btn.btn-success(type="submit") Create Role

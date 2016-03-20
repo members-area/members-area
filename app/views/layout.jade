@@ -11,61 +11,20 @@ html
     link(rel='stylesheet', href='/css/style.css')
     link(href="/img/favicon.png", rel="shortcut icon")
   body
-    block topmost
-      if restartRequired
-        div(style='background-color:red; text-align: center; font-size:1.3em;padding:6px;font-weight:bold') RESTART REQUIRED
+    #wrapper
+      include ./alert.jade
 
-    block everything
-      .navbar.navbar-inverse.navbar-static-top
-        .container-fluid
-          //- Responsive Navbar Part 1: Button for triggering responsive navbar (not covered in tutorial). Include responsive CSS to utilize.
-          .navbar-header
-            a.btn.navbar-btn(data-toggle='collapse', data-target='.navbar-collapse')
-            a.navbar-toggle.collapsed(data-toggle='collapse', data-target='#main-navbar')
-              span.icon-bar
-              span.icon-bar
-              span.icon-bar
-            a.navbar-brand(href='/') Members Area
-          //- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse.
-          .navbar-collapse.collapse#main-navbar
-            - var active
-            block headerNavLeft
-            ul.nav.navbar-nav.pull-right
-              if loggedInUser
-                li.dropdown
-                  a.dropdown-toggle(data-toggle="dropdown", data-target="#", href="/") #{loggedInUser.safename}
-                    b.caret
-                  ul.dropdown-menu
-                    li
-                      a(href='/') Dashboard
-                    li
-                      a(href='/account') My Account
-                    li.divider
-                    li
-                      form(id="logoutform", action="/logout", method="POST")
-                        input(type="hidden", name="form", value="logout")
-                      a(href='/logout', onclick="document.getElementById('logoutform').submit(); return false") Log out
-              else
-                li.active
-                  a(href='/') Members area
+      include ./navigation.jade
 
-      #main.container
-        block body
-          .row
-            .col-md-12
-              block content
-
-      .container
-        footer
-          block footer
+      block everything
+        block sidebar
+        #main.container
+          block body
             .row
-              .footer-col
-                .col-md-6
-                  a(href='#') Back to top
-              .footer-col
-                .col-md-6
-                  p
-                    | Powered by <a href="http://github.com/members-area/members-area">Members Area</a>.
+              .col-md-12
+                block content
+        
+      include ./footer.jade
 
     script(src='/js/jquery.min.js')
     script(src='/js/jquery-migrate.min.js')

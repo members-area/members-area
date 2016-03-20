@@ -19,5 +19,7 @@ block content
           td= preauth[field].toString().replace(/T[0-9:]*Z$/, "")
         td
           form(method="POST", action="", style="margin-bottom: 0")
-            if preauth.status == 'active'
-              button.btn.btn-sm.btn-danger(type='submit', name='cancel', value=preauth.id) Cancel
+            fieldset
+              if preauth.status == 'active'
+                .form-group
+                  button.btn.btn-sm.btn-danger(type='submit', name='cancel', value=preauth.id) Cancel

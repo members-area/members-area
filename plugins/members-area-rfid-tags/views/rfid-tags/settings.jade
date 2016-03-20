@@ -6,14 +6,12 @@ block title
 block content
   h2 RFID Tag Settings
 
-  form.form-horizontal(method="POST")
-    .form-group
-      label.control-label API secret
-      .controls
-        input(type='text', name='apiSecret', value=data.apiSecret)
-
-    .form-group
-      .controls
+  form(method="POST")
+    fieldset
+      .form-group
+        label API secret
+        input.form-control(type='text', name='apiSecret', value=data.apiSecret)
+      .form-group
         button.btn.btn-success(type="Submit") Save
 
   h3 Tags
