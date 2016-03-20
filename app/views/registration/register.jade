@@ -9,18 +9,18 @@ mixin renderErrors(fieldName)
       p.text-error= error
 
 mixin field(fieldName, fieldTitle, required, type)
-  - controlGroupClass = (errors && errors[fieldName] ? "error" : "")
+  - controlGroupClass = (errors && errors[fieldName] ? "danger" : "")
   - type = type || 'text'
-  .control-group(class=controlGroupClass)
+  .form-group(class=controlGroupClass)
     if fieldTitle
       label(class="text-"+controlGroupClass)= fieldTitle
     if block
       block
     else
-      input.text(type=type, name=fieldName, placeholder=(required ? 'Required' : 'Optional'), tabindex=tabIndex++, value=data[fieldName])
+      input.form-control(type=type, name=fieldName, placeholder=(required ? 'Required' : 'Optional'), tabindex=tabIndex++, value=data[fieldName])
     +renderErrors(fieldName)
 
-block body
+block everything
   - var controlGroupClass, value, item, field
   - var tabIndex = 1
   .row
@@ -30,32 +30,42 @@ block body
       != registrationText || "The first user is automatically verified and an admin."
 
     .col-md-4.col-md-offset-1.register-form
-      h2 Registration form
-      form(action='', method='POST')
-        fieldset
-          +renderErrors('base')
-
-          //- Antispam
-          .control-group.sdfsdfsdf
-            label Fill this field in if you're not a human:
-            input.text(type='text', name='url', placeholder='Required')
-
-          +field('fullname', 'Full Name', true)
-          +field('email', 'Email', true, 'email')
-          +field('username', 'Username', true)
-          +field('address', 'Postal Address', false)
-            textarea.text(name='address', placeholder='Optional', rows=4, tabindex=tabIndex++)= data.address
-
-          +field('password', 'Password', true)
-            input.text(type='password', name='password', placeholder='Password', tabindex=tabIndex++)
-            input.text(type='password', name='password2', placeholder='Again', tabindex=tabIndex++)
-
-          +field('terms', null, true)
-            label(class="text-"+controlGroupClass)
-              input(type="checkbox", name="terms", tabindex=tabIndex++)
-              |  I confirm that the information I have entered above is not
-              |  fraudulent, and that I agree to be bound by the 
-              a(href=registrationRulesUrl)= registrationRulesLabel
-              | .
-
-          button.btn.btn-primary.btn-large(type='submit', tabindex=tabIndex++) Sign up
+      .panel.panel-default
+        .panel-heading
+          h2.panel-title 
+            | Registration form
+          .panel-body
+            form(action='', method='POST', role='form')
+              fieldset
+                +renderErrors('base')
+                //- Antispam
+                .form-group.sdfsdfsdf
+                  label Fill this field in if you're not a human:
+                  input.text(type='text', name='url', placeholder='Required')
+                .form-group
+                  +field('fullname', 'Full Name', true)
+                .form-group
+                  +field('email', 'Email', true, 'email')
+                .form-group  
+                  +field('username', 'Username', true)
+                .form-group
+                  label(class="text-"+controlGroupClass) 
+                    | Address
+                  textarea.form-control(name='address', placeholder='Optional', rows=4, tabindex=tabIndex++)= data.address
+                +field('password', 'Password', true)
+                  .form-group
+                    input.form-control(type='password', name='password', placeholder='Password', tabindex=tabIndex++)
+                  .form-group
+                    input.form-control(type='password', name='password2', placeholder='Again', tabindex=tabIndex++)
+                
+                .form-group
+                  +field('terms', null, true)
+                    label(class="text-"+controlGroupClass)
+                      input(type="checkbox", name="terms", tabindex=tabIndex++)
+                      |  I confirm that the information I have entered above is not
+                      |  fraudulent, and that I agree to be bound by the 
+                      a(href=registrationRulesUrl)= registrationRulesLabel
+                      | .
+                
+                br
+                button.btn.btn-primary.btn-large.btn-block.btn-success(type='submit', tabindex=tabIndex++) Sign up

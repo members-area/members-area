@@ -32,35 +32,39 @@ block content
 
   if !roleUser.approved && !roleUser.rejected
     form(method="POST", action="")
-      h3 Requirements
-      each requirement in requirements || []
-        - var requirementType = requirementTypes[requirement.type]
-        - var passed = requirement.passed
-        if requirementType && requirementType.getSentence
-          if passed
-            p.text-success= requirementType.getSentence(requirement, roleUser)
+      fieldset
+        h3 Requirements
+        each requirement in requirements || []
+          - var requirementType = requirementTypes[requirement.type]
+          - var passed = requirement.passed
+          if requirementType && requirementType.getSentence
+            if passed
+              p.text-success= requirementType.getSentence(requirement, roleUser)
+            else
+              p.text-warning= requirementType.getSentence(requirement, roleUser)
+              if requirement.actionable
+                if requirement.type == 'approval' || requirement.type == 'text'
+                  .form-group
+                    button.btn.btn-success(type='submit', name='approve', value=requirement.id) Approve
+                else
+                  p.text-danger ERROR: actionable but no action?
           else
-            p.text-warning= requirementType.getSentence(requirement, roleUser)
-            if requirement.actionable
-              if requirement.type == 'approval' || requirement.type == 'text'
-                button.btn.btn-success(type='submit', name='approve', value=requirement.id) Approve
-              else
-                p.text-error ERROR: actionable but no action?
-        else
-          p We've not yet coded the description of this requirement.
+            p We've not yet coded the description of this requirement.
 
   if isAdmin
     if !roleUser.rejected
       form(method="POST", action="")
-        h4 Reject
-        p Please be respectful and give a polite reason. This reason may be made public so word it carefully.
-        table.table
-          tr
-            th Rejection date
-            td
-              input(type='date', name='date', value=new Date().toISOString().substring(0,10))
-          tr
-            th Reason
-            td
-              textarea(name='reason')
-        button.btn.btn-danger(type="submit", name='reject', value='1', onclick="return confirm('Are you sure you want to reject this?');") Reject application
+        fieldset
+          h4 Reject
+          p Please be respectful and give a polite reason. This reason may be made public so word it carefully.
+          table.table
+            tr
+              th Rejection date
+              td
+                input(type='date', name='date', value=new Date().toISOString().substring(0,10))
+            tr
+              th Reason
+              td
+                textarea(name='reason')
+          .form-group
+            button.btn.btn-danger(type="submit", name='reject', value='1', onclick="return confirm('Are you sure you want to reject this?');") Reject application

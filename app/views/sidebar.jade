@@ -10,11 +10,11 @@ mixin navList(navigation)
     if item.items
       +navList(item.items)
 
-block body
+block sidebar
   .row
     .col-md-3
-      ul.nav.nav-stacked
-        +navList(navigation)
+      .navbar-default.sidebar(role='navigation')
+        .sidebar-nav.navbar-collapse
+          ul.nav#side-menu
+            +navList(navigation)
 
-    .col-md-9.main
-      block content

@@ -37,4 +37,6 @@ block content
 
   if dryRun
     form(method="POST", action="/admin/gocardless/preauths/do")
-      button.button.btn-success(type="submit", name="confirm", value="confirm") Do it!
+      fieldset
+        .form-group
+          button.btn.btn-success(type="submit", name="confirm", value="confirm") Do it!

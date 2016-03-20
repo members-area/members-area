@@ -6,29 +6,26 @@ block title
 block content
   h2 PIN Code Settings
 
-  form.form-horizontal(method="POST")
-    .control-group
-      label.control-label(for="memberRoleId") Member role
-      .controls
+  form(method="POST")
+    fieldset
+      .form-group
+        label(for="memberRoleId") Member role
         select(id="memberRoleId", name="memberRoleId")
           each role in roles
             option(value=role.id, selected=(role.id === data.memberRoleId))= role.name
 
-    .control-group
-      label.control-label(for="keyholderRoleId") Keyholder role
-      .controls
+      .form-group
+        label(for="keyholderRoleId") Keyholder role
         select(id="keyholderRoleId", name="keyholderRoleId")
           each role in roles
             option(value=role.id, selected=(role.id === data.keyholderRoleId))= role.name
 
-    .control-group
-      label.control-label API secret
-      .controls
-        input(type='text', name='apiSecret', value=data.apiSecret)
+      .form-group
+        label API secret
+        input.form-control(type='text', name='apiSecret', value=data.apiSecret)
 
-    .control-group
-      .controls
-        button.btn-success(type="Submit") Save
+      .form-group
+        button.btn.btn-success(type="Submit") Save
 
   h3 Recent entries
   table.table

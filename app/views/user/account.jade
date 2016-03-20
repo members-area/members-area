@@ -5,41 +5,38 @@ block title
 
 block content
   h2 Account settings
-  p.lead.
-    Hello #{loggedInUser.safename}! Here you can change your personal details.
+  p.lead
+    | Hello #{loggedInUser.safename}! Here you can change your personal details.
 
   if error
-    p.text-error
+    p.text-danger
       if error.property
         | There was an error with '#{error.property}': 
       = error.message
 
   if success
-    p.text-success Your data has been updated
+    p.success Your data has been updated
 
-  form.form-horizontal(method="POST")
-    .control-group
-      label.control-label Full Name
-      .controls
-        input(name='fullname', value=data.fullname)
-    .control-group
-      label.control-label Address
-      .controls
-        textarea(name='address', rows=5)= data.address
-    .control-group
-      label.control-label Password
-      .controls
-        input(type='password', name='password')
-    .control-group
-      label.control-label Password (again)
-      .controls
-        input(type='password', name='password2')
-    .control-group
-      .controls
-        button.btn-success(type="submit") Update
-    .control-group
-      label.control-label Picture
-      .controls
-        img(src=loggedInUser.getGravatar(200),alt="avatar")
-        p You can change your avatar on <a href="http://www.gravatar.com">Gravatar.com</a>. It is based on your email address (#{loggedInUser.email}).
-        p A picture of your face is preferable, so your fellow members can easily recognise you.
+  form(method="POST")
+    fieldset
+      .form-group
+        label Full Name
+        input.form-control(name='fullname', value=data.fullname)
+      .form-group
+        label Address
+        textarea.form-control(name='address', rows=5)= data.address
+      .form-group
+        label Password
+        input.form-control(type='password', name='password')
+      .form-group
+        label Password (again)
+        input.form-control(type='password', name='password2')
+      .form-group
+        button.btn.btn-primary.btn-large.btn-block(.btn-successtype="submit") Update
+
+      .row
+        .col-md-2
+          img(src=loggedInUser.getGravatar(200),alt="avatar")
+        .col-md-6.col-md-offset-1
+          p You can change your avatar on <a href="http://www.gravatar.com">Gravatar.com</a>. It is based on your email address (#{loggedInUser.email}).
+          p A picture of your face is preferable, so your fellow members can easily recognise you.

@@ -28,5 +28,8 @@ block content
       p.text-error You're not eligible for this role
     else
       form(method="POST")
-        input(type="hidden", name="role_id", value=role.id)
-        button.btn.btn-success(type="submit") Apply
+        fieldset
+          .form-group
+            input.form-control(type="hidden", name="role_id", value=role.id)
+          .form-group
+            button.btn.btn-success(type="submit") Apply

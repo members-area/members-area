@@ -1,21 +1,25 @@
 extends /sidebar
 
 mixin formatInput(name, label, placeholder)
-  .control-group
-    label.control-label(for=name)= label
-    .controls
-      input(id=name, name=name, value=data[name], placeholder=placeholder)
+  .form-group
+    label(for=name)= label
+    input.form-control(id=name, name=name, value=data[name], placeholder=placeholder)
 
 mixin nav()
   form(method='GET', action='')
-    if hasPrev
-      button.btn.btn-success(type='submit', name='page', value=(page - 1)) <-- Prev
-    else
-      button.btn.btn-inverse(readonly='readonly', disabled='disabled') <-- Prev
-    if hasNext
-      button.btn.btn-success(type='submit', name='page', value=(page + 1)) Next -->
-    else
-      button.btn.btn-inverse(readonly='readonly', disabled='disabled') Next -->
+    fieldset
+      if hasPrev
+        .form-group
+          button.btn.btn-success(type='submit', name='page', value=(page - 1)) <-- Prev
+      else
+        .form-group
+          button.btn.btn-inverse(readonly='readonly', disabled='disabled') <-- Prev
+      if hasNext
+        .form-group
+          button.btn.btn-success(type='submit', name='page', value=(page + 1)) Next -->
+      else
+        .form-group
+          button.btn.btn-inverse(readonly='readonly', disabled='disabled') Next -->
 
 block title
   | Payments
@@ -53,10 +57,10 @@ block content
 
   h3 Settings
   form.form-horizontal(method="POST")
-    +formatInput("payee", "Payee", "So Make It Ltd.")
-    +formatInput("sortCode", "Sort Code", "00-00-00")
-    +formatInput("accountNumber", "Account Number", "0000 0000")
+    fieldset
+      +formatInput("payee", "Payee", "So Make It Ltd.")
+      +formatInput("sortCode", "Sort Code", "00-00-00")
+      +formatInput("accountNumber", "Account Number", "0000 0000")
 
-    .control-group
-      .controls
-        button.btn-success(type="Submit") Save
+    .form-group
+      button.btn.btn-success(type="Submit") Save
