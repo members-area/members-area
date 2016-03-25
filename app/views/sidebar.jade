@@ -2,7 +2,7 @@ extends /layout
 
 mixin navList(navigation)
   each item in navigation
-    li(class=(item.className + (item.header ? ' nav-header' : '') + (item.active ? ' active' : '')))
+    li(class=(item.className + (item.header ? ' sidebar-header' : '') + (item.active ? ' active' : '')))
       if item.href
         a(href=item.href)= item.title
       else
@@ -14,7 +14,5 @@ block sidebar
   .row
     .col-md-3
       .navbar-default.sidebar(role='navigation')
-        .sidebar-nav.navbar-collapse
-          ul.nav#side-menu
-            +navList(navigation)
-
+        ul.nav.sidebar-nav.navbar-collapse#side-menu
+          +navList(navigation)

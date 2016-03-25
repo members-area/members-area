@@ -104,7 +104,7 @@ module.exports =
     providers.push "<a class='register' href='/auth/twitter'>Twitter</a>" if supportedProviders.twitter
     if providers.length
       htmlToAdd = "<span>With: </span><br />#{providers.join(" | ")}<br /><br />or:<br /><br />"
-      $(".login-form h2").after htmlToAdd
+      $(".panel-body").after htmlToAdd
 
     done()
 
