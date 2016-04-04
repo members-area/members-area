@@ -1,9 +1,16 @@
 @import nib
 
+#wrapper.container
+  width: 100%
+  margin: 0
+  padding: 0
+
 #main.container
-  min-height: 568px
+  min-height: 701px
   padding 0 15px
   background-color: #fff
+  h2
+    font-weight: 900
   @media (min-width: 768px)
     position: inherit
     margin: 0
@@ -58,6 +65,7 @@
   .warning a
     color: red
     font-weight: bold
+
 .navbar
   margin-bottom: 0
 
@@ -87,12 +95,23 @@
   z-index: 1
   position: absolute
   width: 250px
-  padding-top: 11px
-    .sidebar-header
-
-
-#wrapper
-  width: 100%
+  padding-top: 51px
+  margin-bottom: 20px
+  background: none
+  li
+    position: relative
+    a
+      padding: 5px 15px
+    a.active
+      color: white
+      background-color: #337ab7
+  .sidebar-header
+    text-transform: uppercase
+    font-weight: 700
+    padding: 10px 15px
+.navbar-collapse
+  padding-left: 0
+  padding-right: 0
 
 .user-list, .applications
   img
@@ -262,9 +281,12 @@ form .controls img
 
 form.approval .btn
   margin-right: 20px
-
 footer.container
-  width: 100%;
+  z-index: 1
+  width: 100%
+  height: 50px
+  clear: both
+  padding: 15px
 
 footer
   margin-top: 20px

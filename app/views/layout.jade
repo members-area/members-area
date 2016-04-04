@@ -11,19 +11,15 @@ html
     link(rel='stylesheet', href='/css/style.css')
     link(href="/img/favicon.png", rel="shortcut icon")
   body
-    #wrapper
+    #wrapper.container
       include ./alert.jade
-
       include ./navigation.jade
-
       block everything
-        block sidebar
         #main.container
           block body
             .row
               .col-md-12
                 block content
-        
       include ./footer.jade
 
     script(src='/js/jquery.min.js')
