@@ -91,7 +91,7 @@ module.exports =
   renderPersonIndex: (options, done) ->
     {controller, $} = options
     return done() unless controller.loggedInUser.can 'admin'
-    $main = $(".main").eq(0)
+    $main = $("#main.container").eq(0)
 
     map =
       good: "<4 days overdue"
@@ -129,7 +129,7 @@ module.exports =
     .where(user_id: controller.user.id)
     .limit(20)
     .run (err, payments) =>
-      $main = $(".main").eq(0)
+      $main = $("#main.container").eq(0)
 
       rows = []
       if payments?.length
@@ -177,61 +177,71 @@ module.exports =
       $main.append """
         <h3>Add a Payment</h3>
         <form method="POST">
-          <table class="table table-bordered" style="width: auto">
-            <tr>
-              <th>Payment type</th>
-              <td>
-                <select name='type'>
-                  #{
-                    (for k, v of @customPaymentMethods
-                      "<option value='#{k}'>#{v}</option>"
-                    ).join("\n")
-                  }
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <th>
-                Payment date<br>
-                <small>(YYYY-MM-DD)</small>
-              </th>
-              <td>
-                <input name='when' placeholder='YYYY-MM-DD' value='#{new Date().toISOString().substr(0,10)}'>
-              </td>
-            </tr>
-            <tr>
-              <th>
-                Amount<br>
-                <small>£ (GBP)</small>
-              </th>
-              <td>
-                <input name='amount' value='5.00'>
-              </td>
-            </tr>
-            <tr>
-              <th>
-                Duration<br>
-                <small>(months, the period covered by the payment)
-              </th>
-              <td>
-                <select name='period_count'>
-                  <option value='1' selected='selected'>1 month</option>
-                  <option value='2'>2 months</option>
-                  <option value='3'>3 months</option>
-                  <option value='4'>4 months</option>
-                  <option value='5'>5 months</option>
-                  <option value='6'>6 months</option>
-                  <option value='7'>7 months</option>
-                  <option value='8'>8 months</option>
-                  <option value='9'>9 months</option>
-                  <option value='10'>10 months</option>
-                  <option value='11'>11 months</option>
-                  <option value='12'>12 months</option>
-                </select>
-              </td>
-            </tr>
-          </table>
-          <button class='btn btn-warning' type='submit' name='action' value='add-payment'>
+          <fieldset>
+            <table class="table table-bordered" style="width: auto">
+              <tr>
+                <th>Payment type</th>
+                <td>
+                  <div class="form-group">
+                    <select name='type'>
+                      #{
+                        (for k, v of @customPaymentMethods
+                          "<option value='#{k}'>#{v}</option>"
+                        ).join("\n")
+                      }
+                    </select>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  Payment date<br>
+                  <small>(YYYY-MM-DD)</small>
+                </th>
+                <td>
+                  <div class='form-group'>
+                    <input class='form-control' name='when' placeholder='YYYY-MM-DD' value='#{new Date().toISOString().substr(0,10)}'>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  Amount<br>
+                  <small>£ (GBP)</small>
+                </th>
+                <td>
+                  <div class='form-group'>
+                    <input class='form-control' name='amount' value='5.00'>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  Duration<br>
+                  <small>(months, the period covered by the payment)
+                </th>
+                <td>
+                  <div class='form-group'>
+                    <select name='period_count'>
+                      <option value='1' selected='selected'>1 month</option>
+                      <option value='2'>2 months</option>
+                      <option value='3'>3 months</option>
+                      <option value='4'>4 months</option>
+                      <option value='5'>5 months</option>
+                      <option value='6'>6 months</option>
+                      <option value='7'>7 months</option>
+                      <option value='8'>8 months</option>
+                      <option value='9'>9 months</option>
+                      <option value='10'>10 months</option>
+                      <option value='11'>11 months</option>
+                      <option value='12'>12 months</option>
+                    </select>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          <fieldset>
+          <button class='btn btn-primary btn-warning' type='submit' name='action' value='add-payment'>
             Register payment
           </button>
         </form>

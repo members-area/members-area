@@ -419,5 +419,5 @@ module.exports =
       </script>
 
       """
-    $(".main").append($newNode)
+    $("#main.container").append($newNode)
     return
