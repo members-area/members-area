@@ -20,6 +20,8 @@
 #login.container
   @media (min-width: 768px)
     margin-top: 100px
+  @media (min-width: 320px)
+    margin-top: 50px;
 
 .gumph
   font-size: 1.3em
@@ -88,15 +90,20 @@
   .dropdown-menu li a div
       white-space: normal
   .dropdown-user
-    right: 0
-    left: auto
+      right: 0
+      left: auto
+          @media (max-width: 768px)
+              left: 0
+
+.navbar-default
+  @media (max-width: 768px)
+    border-radius: 0
 
 .sidebar
   z-index: 1
   position: absolute
   width: 250px
   padding-top: 51px
-  margin-bottom: 20px
   background: none
   li
     position: relative
@@ -109,9 +116,28 @@
     text-transform: uppercase
     font-weight: 700
     padding: 10px 15px
-.navbar-collapse
+  @media (max-width: 768px)
+    position: relative
+    background-color: white
+    width: 100%
+    padding-top: 0
+
+.sidebar .sidebar-nav.navbar-collapse
   padding-left: 0
   padding-right: 0
+
+.collapse.in
+  display: block
+
+.collapse
+  display: none
+
+.navbar-collapse
+  overflow-x: visible
+  border-top: none
+
+.navbar-collapse.in
+  overflow-y: auto
 
 .user-list, .applications
   img
@@ -289,7 +315,7 @@ footer.container
   padding: 15px
 
 footer
-  margin-top: 20px
+  margin: 30px 0
 
 footer p.backtotop
   text-align: right

@@ -1,10 +1,10 @@
 (function ($, window) {
 
   function loadRetinaImages() {
-    var pixelRatio = (typeof window.devicePixelRatio == 'number') ? 
-      window.devicePixelRatio : 
+    var pixelRatio = (typeof window.devicePixelRatio == 'number') ?
+      window.devicePixelRatio :
       1;
-    
+
     if (pixelRatio > 1) {
       $('img[data-retina-src]').each(function () {
         $(this).attr('src', $(this).data('retina-src'));
@@ -28,5 +28,28 @@
      initPeopleListTypeSelector();
   });
 
-}(this.jQuery, this));
+  $(function() {
 
+    $('ul#side-menu').metisMenu();
+
+  });
+
+  $(function() {
+    $(window).bind("load resize", function() {
+      var width = this.window.width();
+      if (width < 768) {
+        $('ul#side-menu').addClass('collapse');
+      } else {
+        $('ul#side-menu').removeClass('collapse');
+      }
+    });
+    var url = window.location;
+    var element = $('ul.nav a').filter(function() {
+      return this.href == url;
+    }).addClass('active').parent().parent().addClass('in').parent();
+    if (element.is('li')) {
+      element.addClass('active');
+    }
+  });
+
+}(this.jQuery, this));
