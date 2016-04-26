@@ -29,9 +29,9 @@
   "author": "Benjie Gillam <benjie@jemjie.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/benjie/members-area/issues"
+    "url": "https://github.com/members-area/members-area/issues"
   },
-  "homepage": "https://github.com/benjie/members-area",
+  "homepage": "https://github.com/members-area/members-area",
   "dependencies": {
     "async": "~0.7.0",
     "bcrypt": "0.8.5",
@@ -46,7 +46,6 @@
     "html-to-text": "0.0.8",
     "jade": "~1.1.5",
     "juice": "~0.4.0",
-    "metismenu": "^2.5.0",
     "migrate-orm2": "git://github.com/benjie/node-migrate-orm2.git",
     "mysql": "~2.0.1",
     "nib": "~1.0.2",

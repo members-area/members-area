@@ -24,32 +24,39 @@
   }
 
   $(function () {
-     loadRetinaImages();
-     initPeopleListTypeSelector();
-  });
-
-  $(function() {
-
-    $('ul#side-menu').metisMenu();
-
-  });
-
-  $(function() {
-    $(window).bind("load resize", function() {
-      var width = this.window.width();
-      if (width < 768) {
-        $('ul#side-menu').addClass('collapse');
-      } else {
-        $('ul#side-menu').removeClass('collapse');
-      }
-    });
-    var url = window.location;
-    var element = $('ul.nav a').filter(function() {
-      return this.href == url;
-    }).addClass('active').parent().parent().addClass('in').parent();
-    if (element.is('li')) {
-      element.addClass('active');
-    }
+    loadRetinaImages();
+    initPeopleListTypeSelector();
   });
 
 }(this.jQuery, this));
+
+/*$(function() {
+  $('ul#side-menu').metisMenu();
+});
+
+$(function() {
+  $(window).bind("load resize", function() {
+    var topOffset = 50;
+    var width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.window.width;
+    if (width < 768) {
+      $('ul#side-menu').addClass('collapse');
+      topOffset = 100;
+    } else {
+      $('ul#side-menu').removeClass('collapse');
+    }
+
+    var height = ((this.window.innerHeight > 0) ? this.window.innerHeight : this.window.height) - 1;
+    height = height - topOffset;
+    if (height < 1) height = 1;
+    if (height > topOffset) {
+      $('#main.container').css("min-height", (height) + "px");
+    }
+  });
+  var url = window.location;
+  var element = $('ul.nav a').filter(function() {
+    return this.href == url;
+  }).addClass('active').parent().parent().addClass('in').parent();
+  if (element.is('li')) {
+    element.addClass('active');
+  }
+});*/
