@@ -11,6 +11,6 @@ mixin navList(navigation)
       +navList(item.items)
 
 block sidebar
-  .navbar-default.sidebar(role='navigation')
-    ul.nav.sidebar-nav.navbar-collapse#side-menu
+  .navbar-collapse.collapse.navbar-default.sidebar(role='navigation')
+    ul#side-menu.nav.sidebar-nav
       +navList(navigation)

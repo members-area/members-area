@@ -53,11 +53,11 @@ block content
         textarea.form-control(name="emailText", style="width: 100%; height: 5em")= data.meta.emailText
       .form-group
         label(for="color") Colour
-          div(id="colorPreview", style="float: left; width:1.7em; height:1.7em; border: 1px solid black; background-color: "+data.meta.color)
-          input.form-control(id="colorInput", name="color", value=data.meta.color, style="float: left")
-          for color in ["#e11d21", "#e05a16", "#fbca04", "#009800", "#006b75", "#207de5", "#0052cc", "#5319e7"]
-            div(class="colorPickerOption", style="float: left; width:1.7em; height:1.7em; background-color: "+color, data-color=color)
+          div(id="colorPreview", style="margin: 0 10px 10px 0; float: left; width:1.7em; height:1.7em; border: 1px solid black; background-color: "+data.meta.color)
+          input.form-control(id="colorInput", name="color", value=data.meta.color, style="float: left", placeholder="Pick colour from below")
           div(style="clear:both")
+          for color in ["#e11d21", "#e05a16", "#fbca04", "#009800", "#006b75", "#207de5", "#0052cc", "#5319e7"]
+            div(class="colorPickerOption", style="margin-top: 10px; float: left; width:1.7em; height:1.7em; background-color: "+color, data-color=color)
       .form-group
         button.btn.btn-success(type="submit") Update Role
 
