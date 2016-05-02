@@ -36,11 +36,11 @@ block content
     input(type='hidden', name='form', value='ofx')
     fieldset
       legend Upload OFX
-      div
-        input(type="file", name="ofxfile")
-      div
-        button.btn(type="submit", name="dryRun", value="1") Dry-run
-        button.btn(type="submit", name="commit", value="1") COMMIT
+      .form-group
+        input.form-control(type="file", name="ofxfile")
+      .form-group
+        button.btn.btn-block(type="submit", name="dryRun", value="1") Dry-run
+        button.btn.btn-block(type="submit", name="commit", value="1") COMMIT
 
   h3 Accounts
   ul
@@ -52,4 +52,6 @@ block content
 
   h3 Maintenance
   form(method="post")
-    button.btn(type="submit", name="reprocess", value="1") Re-process all records
+    fieldset
+      .form-group
+        button.btn.btn-block(type="submit", name="reprocess", value="1") Re-process all records

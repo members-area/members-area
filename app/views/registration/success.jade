@@ -3,9 +3,9 @@ extends /layout
 block title
   | Application Received
 
-block body
+block everything
   .row
-    .span8.offset2
+    .col-md-8.col-md-offset-2
       if user
         h2 Welcome, user #1!
         p Because you're the first user we've given you admin priviledges and logged you in. Do <a href="/settings">go and configure the site</a> now!

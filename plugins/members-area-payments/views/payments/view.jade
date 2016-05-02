@@ -1,10 +1,9 @@
 extends /sidebar
 
 mixin formatInput(name, label, placeholder)
-  .control-group
-    label.control-label(for=name)= label
-    .controls
-      input(id=name, name=name, value=data[name], placeholder=placeholder)
+  .form-group
+    label(for=name)= label
+    input.form-control(id=name, name=name, value=data[name], placeholder=placeholder)
 
 block title
   | Edit Payment
@@ -13,39 +12,43 @@ block content
   h2 Edit Payment
 
   form.form(method="POST")
-    table.table
-      tr
-        th(width="20%") User
-        td
-          a(href="/people/#{payment.user.id}")= payment.user.username
-      tr
-        th When
-        td
-          a(href="/admin/payments/#{payment.id}")= payment.when.toISOString().substr(0,10)
-      tr
-        th Type
-        td= payment.type
-      tr
-        th Amount
-        td £#{(payment.amount/100).toFixed(2)}
-      tr
-        th From
-        td= payment.period_from.toISOString().substr(0,10)
-      tr
-        th Count
-        td
-          select(name='period_count')
-            - for (var i = 0; i <= 12; i++)
-              option(value=i, selected=(i == payment.period_count))
-                - if (i == 0)
-                  | IGNORED PAYMENT
-                - else
-                  | #{i} month#{i > 1 ? "s" : ""}
-      tr
-        th Worked?
-        td= (payment.include ? "✔" : "✘")
-    button(type="submit") Update
+    fieldset
+      table.table
+        tr
+          th(width="20%") User
+          td
+            a(href="/people/#{payment.user.id}")= payment.user.username
+        tr
+          th When
+          td
+            a(href="/admin/payments/#{payment.id}")= payment.when.toISOString().substr(0,10)
+        tr
+          th Type
+          td= payment.type
+        tr
+          th Amount
+          td £#{(payment.amount/100).toFixed(2)}
+        tr
+          th From
+          td= payment.period_from.toISOString().substr(0,10)
+        tr
+          th Count
+          td
+            select(name='period_count')
+              - for (var i = 0; i <= 12; i++)
+                option(value=i, selected=(i == payment.period_count))
+                  - if (i == 0)
+                    | IGNORED PAYMENT
+                  - else
+                    | #{i} month#{i > 1 ? "s" : ""}
+        tr
+          th Worked?
+          td= (payment.include ? "✔" : "✘")
+      .form-group
+        button.btn(type="submit") Update
 
   if cancelable && payment.include
     form.form(method="POST")
-      button.btn.btn-danger(type="submit", name="cancel", value="cancel", onclick="return confirm('Are you sure you want to cancel this payment?')") Cancel payment
+      fieldset
+        .form-group
+          button.btn.btn-danger(type="submit", name="cancel", value="cancel", onclick="return confirm('Are you sure you want to cancel this payment?')") Cancel payment

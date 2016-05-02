@@ -1,0 +1,35 @@
+nav.navbar.navbar-inverse.navbar-static-top(role='navigation')
+  .navbar-header
+    button.navbar-toggle(data-toggle='collapse', data-target='.navbar-collapse')
+      span.sr-only
+        | Toggle navigation
+      span.icon-bar
+      span.icon-bar
+      span.icon-bar
+    a.navbar-brand(href='/') Members Area
+  ul.nav.navbar-top-links.navbar-right
+    if loggedInUser
+      li.dropdown
+        a.dropdown-toggle(data-toggle='dropdown' role='button')
+          i.glyphicon.glyphicon-user
+          i.glyphicon.glyphicon-triangle-bottom
+        ul.dropdown-menu.dropdown-user
+          li
+            a(href='/')
+              i.glyphicon.glyphicon-scale
+              | &nbsp;Dashboard
+          li
+            a(href='/account')
+              i.glyphicon.glyphicon-user
+              | &nbsp;My Account
+          li.divider
+          li
+            form(id="logoutform", action="/logout", method="POST")
+              input(type="hidden", name="form", value="logout")
+            a(href='/logout', onclick="document.getElementById('logoutform').submit(); return false")
+              i.glyphicon.glyphicon-log-out
+              | &nbsp;Log out
+    else
+      li
+        a(href='/') Please login to the members area
+  block sidebar

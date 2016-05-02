@@ -1,13 +1,37 @@
 @import nib
 
+#wrapper.container
+  width: 100%
+  margin: 0
+  padding: 0
+
 #main.container
-  min-height: 300px
+  min-height: 701px
+  padding 0 15px
+  background-color: #fff
+  h2
+    font-weight: 900
+  @media (min-width: 768px)
+    position: inherit
+    margin: 0
+    padding: 0 30px 0 280px
+    border-left: 1px solid #e7e7e7
+
+#login.container
+  @media (min-width: 768px)
+    margin-top: 100px
+  @media (min-width: 320px)
+    margin-top: 50px;
+
 .gumph
   font-size: 1.3em
   line-height: (1.05 * @font-size)
   margin-top: 50px
   text-align: justify
+
 .register-form
+  margin-top: 30px
+
 .login-form
 .message-container
   padding:20px
@@ -26,6 +50,7 @@
     box-sizing: border-box
     width: 100%
     height: 2.2em
+
 .login-form
   text-align: center
 
@@ -34,14 +59,85 @@
   margin: 30px auto
 
 .nav-list
-  background-color: #f5f5f5;
-  border: 1px solid #e3e3e3;
-  border-radius: 4px;
+  background-color: #f5f5f5
+  border: 1px solid #e3e3e3
+  border-radius: 4px
   margin: 10px
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05)
   .warning a
     color: red
     font-weight: bold
+
+.navbar
+  margin-bottom: 0
+
+.navbar-top-links
+  margin-right: 0
+  li
+    display: inline-block
+  li:last-child
+    margin-right: 15px
+  li a
+    padding: 15px
+    min-height: 50px
+  .dropdown-menu li
+      display:block
+  .dropdown-menu li:last-child
+      margin-right: 0
+  .dropdown-menu li a
+      padding: 3px 20px
+      min-height: 0
+  .dropdown-menu li a div
+      white-space: normal
+  .dropdown-user
+      right: 0
+      left: auto
+          @media (max-width: 768px)
+              left: 0
+
+.navbar-default
+  @media (max-width: 768px)
+    border-radius: 0
+
+.sidebar
+  z-index: 1
+  position: absolute
+  width: 250px
+  padding-top: 51px
+  background: none
+  li
+    position: relative
+    a
+      padding: 5px 15px
+    a.active
+      color: white
+      background-color: #337ab7
+  .sidebar-header
+    text-transform: uppercase
+    font-weight: 700
+    padding: 10px 15px
+  @media (max-width: 768px)
+    position: relative
+    background-color: white
+    width: 100%
+    padding-top: 0
+
+.sidebar .sidebar-nav.navbar-collapse
+  padding-left: 0
+  padding-right: 0
+
+.collapse.in
+  display: block
+
+.collapse
+  display: none
+
+.navbar-collapse
+  overflow-x: visible
+  border-top: none
+
+.navbar-collapse.in
+  overflow-y: auto
 
 .user-list, .applications
   img
@@ -168,7 +264,7 @@ img.gravatar
   display: none
 
 form .controls img
-  margin-bottom: 1em;
+  margin-bottom: 1em
 
 .registerOfMembers
   font-size: 0.85em
@@ -211,18 +307,23 @@ form .controls img
 
 form.approval .btn
   margin-right: 20px
+footer.container
+  z-index: 1
+  width: 100%
+  height: 50px
+  clear: both
+  padding: 15px
 
-footer {
-  margin-top: 20px;
-}
-footer p.backtotop {
-  text-align: right;
-}
-footer p {
-  font-size: 0.9em;
-  margin: 0;
-}
-footer p.legal {
-  font-size: 0.75em;
-  line-spacing: 100%;
-}
+footer
+  margin: 30px 0
+
+footer p.backtotop
+  text-align: right
+
+footer p
+  font-size: 0.9em
+  margin: 0
+
+footer p.legal
+  font-size: 0.75em
+  line-spacing: 100%

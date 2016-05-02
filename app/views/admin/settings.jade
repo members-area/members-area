@@ -1,13 +1,12 @@
 extends /sidebar
 
 mixin controlGroup(name, id, label, defaultValue)
-  .control-group
-    label.control-label(for=name+"-"+id)= label
-    .controls
+  .form-group
+    label(for=name+"-"+id)= label
       if block
         block
       else
-        input(id=name+"-"+id, name=name+"["+id+"]", value=data[name][id] || defaultValue)
+        input.form-control(id=name+"-"+id, name=name+"["+id+"]", value=data[name][id] || defaultValue)
         if !data[name][id] && defaultValue
           | &nbsp; &lt; default unsaved value
 
@@ -18,34 +17,50 @@ block content
   h2 Core Settings
   p Here you can configure the core settings for the Members Area.
 
-  form.form-horizontal(method="POST")
-    h4 Site Settings
-    +controlGroup("site", "name", "Site Name", "Members Area")
-    +controlGroup("site", "baseURL", "Address", _baseURL)
+  form(method="POST")
+    fieldset
+      .panel.panel-default
+        .panel-heading
+          h4.panel-title 
+            | Site Settings
+        .panel-body
+          +controlGroup("site", "name", "Site Name", "Members Area")
+          +controlGroup("site", "baseURL", "Address", _baseURL)
 
-    h4 Registration page
-    +controlGroup("site", "registrationTitle", "Title", "Registration")
-    +controlGroup("site", "registrationLead", "Leading text", "Become a Friend of So Make It!")
-    +controlGroup("site", "registrationText", "Main text")
-      textarea(name="site[registrationText]", style="width: 300px;height: 12em")= data.site.registrationText || "Many of the services provided by So Make It require a username and password, so please pick a unique username.\n\nPlease enter your real name so people can recognise you. Your name will be visible to all within the members area."
-      if !data.site.registrationText
-        | &nbsp; &lt; default unsaved value
-    +controlGroup("site", "registrationRulesUrl", "Rules URL", "https://wiki.somakeit.org.uk/wiki/Rules")
-    +controlGroup("site", "registrationRulesLabel", "Rules Label", "rules")
+      .panel.panel-default
+        .panel-heading
+          h4.panel-title 
+            | Registration page
+        .panel-body
+          +controlGroup("site", "registrationTitle", "Title", "Registration")
+          +controlGroup("site", "registrationLead", "Leading text", "Become a Friend of So Make It!")
+          +controlGroup("site", "registrationText", "Main text")
+            textarea.form-control(name="site[registrationText]", style="width: 300px;height: 12em")= data.site.registrationText || "Many of the services provided by So Make It require a username and password, so please pick a unique username.\n\nPlease enter your real name so people can recognise you. Your name will be visible to all within the members area."
+            if !data.site.registrationText
+              | &nbsp; &lt; default unsaved value
+          +controlGroup("site", "registrationRulesUrl", "Rules URL", "https://wiki.somakeit.org.uk/wiki/Rules")
+          +controlGroup("site", "registrationRulesLabel", "Rules Label", "rules")
+      
+      .panel.panel-default
+        .panel-heading
+          h4.panel-title 
+            | Email
+        .panel-body
+          +controlGroup("email", "from_address", "From Address")
+          +controlGroup("email", "service", "Service", (process.env.MAILGUN_SMTP_LOGIN ? "mailgun" : ""))
+          +controlGroup("email", "host", "Host", "")
+          +controlGroup("email", "username", "Username", process.env.MAILGUN_SMTP_LOGIN)
+          +controlGroup("email", "password", "Password", process.env.MAILGUN_SMTP_PASSWORD)
+      
+      .panel.panel-default
+        .panel-heading
+          h4.panel-title 
+            | Theme
+        .panel-body
+          +controlGroup("theme", "identifier", "Theme")
+            select(name="theme[identifier]")
+              each aTheme in themes
+                option(value=aTheme.value, selected=(data.theme.identifier == aTheme.value))= aTheme.name
 
-    h4 Email
-    +controlGroup("email", "from_address", "From Address")
-    +controlGroup("email", "service", "Service", (process.env.MAILGUN_SMTP_LOGIN ? "mailgun" : ""))
-    +controlGroup("email", "host", "Host", "")
-    +controlGroup("email", "username", "Username", process.env.MAILGUN_SMTP_LOGIN)
-    +controlGroup("email", "password", "Password", process.env.MAILGUN_SMTP_PASSWORD)
-
-    h4 Theme
-    +controlGroup("theme", "identifier", "Theme")
-      select(name="theme[identifier]")
-        each aTheme in themes
-          option(value=aTheme.value, selected=(data.theme.identifier == aTheme.value))= aTheme.name
-
-    .control-group
-      .controls
-        button.btn-success(type="Submit") Save
+      .form-group
+          button.btn.btn-primary.btn-large.btn-block.btn-success(type="Submit") Save

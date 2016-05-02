@@ -1,10 +1,10 @@
 (function ($, window) {
 
   function loadRetinaImages() {
-    var pixelRatio = (typeof window.devicePixelRatio == 'number') ? 
-      window.devicePixelRatio : 
+    var pixelRatio = (typeof window.devicePixelRatio == 'number') ?
+      window.devicePixelRatio :
       1;
-    
+
     if (pixelRatio > 1) {
       $('img[data-retina-src]').each(function () {
         $(this).attr('src', $(this).data('retina-src'));
@@ -24,9 +24,14 @@
   }
 
   $(function () {
-     loadRetinaImages();
-     initPeopleListTypeSelector();
+    loadRetinaImages();
+    initPeopleListTypeSelector();
+  });
+
+  $(function() {
+    $('.navbar-collapse a').click(function() {
+      $('.navbar-collapse').collapse('hide');
+    });
   });
 
 }(this.jQuery, this));
-

@@ -2,19 +2,15 @@ extends /layout
 
 mixin navList(navigation)
   each item in navigation
-    li(class=(item.className + (item.header ? ' nav-header' : '') + (item.active ? ' active' : '')))
+    li(class=(item.className + (item.header ? ' sidebar-header' : '')))
       if item.href
-        a(href=item.href)= item.title
+        a(href=item.href, class=(item.active ? 'active' : ''))= item.title
       else
         = item.title
     if item.items
       +navList(item.items)
 
-block body
-  .row
-    .span3
-      ul.nav.nav-list
-        +navList(navigation)
-
-    .span9.main
-      block content
+block sidebar
+  .navbar-collapse.collapse.navbar-default.sidebar(role='navigation')
+    ul#side-menu.nav.sidebar-nav
+      +navList(navigation)

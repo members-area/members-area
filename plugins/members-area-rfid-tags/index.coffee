@@ -41,7 +41,7 @@ module.exports =
           htmlToAdd += "<li>#{tag.uid}</li>"
         htmlToAdd += "</ul>"
 
-      $(".main").append htmlToAdd
+      $("#main.container").append htmlToAdd
 
       done()
 

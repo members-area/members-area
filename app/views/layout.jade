@@ -7,62 +7,22 @@ html
         = " | " + (siteSettings.name || "Members Area")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     link(rel='stylesheet', href='/css/bootstrap.min.css')
-    link(rel='stylesheet', href='/css/bootstrap-responsive.min.css')
+    link(rel='stylesheet', href='/css/bootstrap-theme.min.css')
     link(rel='stylesheet', href='/css/style.css')
     link(href="/img/favicon.png", rel="shortcut icon")
   body
-    block topmost
-      if restartRequired
-        div(style='background-color:red; text-align: center; font-size:1.3em;padding:6px;font-weight:bold') RESTART REQUIRED
+    #wrapper.container
+      include ./alert.jade
+      include ./navigation.jade
+      block everything
+        #main.container
+          block body
+            .row
+              .col-md-12
+                block content
+      include ./footer.jade
 
-    block everything
-      .navbar.navbar-inverse.navbar-static-top
-        .navbar-inner
-          .container
-            //- Responsive Navbar Part 1: Button for triggering responsive navbar (not covered in tutorial). Include responsive CSS to utilize.
-            a.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
-              span.icon-bar
-              span.icon-bar
-              span.icon-bar
-            a.brand(href='/') Members Area
-            //- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse.
-            .nav-collapse.collapse
-              - var active
-              block headerNavLeft
-              ul.nav.pull-right
-                if loggedInUser
-                  li.active.dropdown
-                    a.dropdown-toggle(data-toggle="dropdown", data-target="#", href="/") #{loggedInUser.safename}
-                      b.caret
-                    ul.dropdown-menu
-                      li
-                        a(href='/') Dashboard
-                      li
-                        a(href='/account') My Account
-                      li.divider
-                      li
-                        form(id="logoutform", action="/logout", method="POST")
-                          input(type="hidden", name="form", value="logout")
-                        a(href='/logout', onclick="document.getElementById('logoutform').submit(); return false") Log out
-                else
-                  li.active
-                    a(href='/') Members area
-
-      #main.container
-        block body
-          .row
-            .span12
-              block content
-
-      .container
-        footer
-          block footer
-            p.backtotop
-              a(href='#') Back to top
-            p
-              | Powered by <a href="http://github.com/benjie/members-area">Members Area</a>.
-    
-    script(src='/js/jquery.min.js')
-    script(src='/js/jquery-migrate.min.js')
+    script(src='/js/jquery-2.2.3.min.js')
+    script(src='/js/jquery-migrate-1.3.0.min.js')
     script(src='/js/bootstrap.min.js')
-    block scripts
+    script(src='/js/members.js')

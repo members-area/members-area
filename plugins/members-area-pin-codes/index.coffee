@@ -49,43 +49,45 @@ module.exports =
             """
         else
           htmlToAdd += """
-            <form method='POST' class='form-horizontal'>
+            <form method='POST'>
               <input type='hidden' name='revealPin' value='pin'>
               <button type="submit" class="btn btn-warning">Click here to reveal your full PIN code</button>
             </form>
             """
       htmlToAdd += """
-        <form method='POST' class='form-horizontal'>
-          <h4>Update PIN code</h4>
-          <input type='hidden' name='replacePin' value='pin'>
-          <div class="control-group">
-            <label class="control-label">4 fixed digits</label>
-            <div class="controls">
-              <input type="text" readonly value="#{lpad(controller.user.id)}">
+        <form method='POST'>
+          <fieldset>
+            <h4>Update PIN code</h4>
+            <div class="form-group">
+              <input class='form-control' type='hidden' name='replacePin' value='pin'>
             </div>
-          </div>
-          <div class="control-group">
-            <label for="pin" class="control-label">8 custom digits</label>
-            <div class="controls">
-              <input id="pin" name="pin" length=8 placeholder="00000000"><br />
+            <div class="form-group">
+              <label class="control-label">4 fixed digits</label>
+              <input class="form-control" type="text" readonly value="#{lpad(controller.user.id)}">
+            </div>
+            <div class="form-group">
+              <label for="pin" class="control-label">8 custom digits</label>
+              <div class="form-group">
+                <input class="form-control" id="pin" name="pin" length=8 placeholder="00000000"><br />
+              </div>
               #{if controller.pinError then "<p class='text-error'>#{controller.pinError}</p>" else ""}
             </div>
-          </div>
-          <div class="control-group">
-            <label for="pin" class="control-label">Show full PIN on save</label>
-            <div class="controls">
-              <input name="revealPin" value="pin" type="checkbox" checked />
+            <div class="form-group">
+              <label for="pin" class="control-label">Show full PIN on save</label>
+              <div class="form-group">
+                <input name="revealPin" value="pin" type="checkbox" checked />
+              </div>
             </div>
-          </div>
-          <div class="control-group">
-            <div class="controls">
-              <button type="Submit" class="btn-success">Update</button>
+            <div class="form-group">
+              <div class="form-group">
+                <button class="form-control" type="Submit" class="btn btn-primary btn-success">Update</button>
+              </div>
             </div>
-          </div>
+          </fieldset>
         </form>
         """
 
-    $(".main").append htmlToAdd
+    $("#main.container").append htmlToAdd
 
     done()
 

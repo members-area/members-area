@@ -6,9 +6,9 @@ mixin provider(name)
       td= name
       td
         if accounts[name.toLowerCase()]
-          a.btn.btn-small.btn-success(href="/auth/#{name.toLowerCase()}") Connected
+          a.btn.btn-sm.btn-success(href="/auth/#{name.toLowerCase()}") Connected
         else
-          a.btn.btn-small.btn-primary(href="/auth/#{name.toLowerCase()}") Connect
+          a.btn.btn-sm.btn-primary(href="/auth/#{name.toLowerCase()}") Connect
 
 block title
   | Social Accounts

@@ -29,9 +29,9 @@
   "author": "Benjie Gillam <benjie@jemjie.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/benjie/members-area/issues"
+    "url": "https://github.com/members-area/members-area/issues"
   },
-  "homepage": "https://github.com/benjie/members-area",
+  "homepage": "https://github.com/members-area/members-area",
   "dependencies": {
     "async": "~0.7.0",
     "bcrypt": "0.8.5",
