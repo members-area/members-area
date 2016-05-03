@@ -12,15 +12,15 @@ html
     link(href="/img/favicon.png", rel="shortcut icon")
   body
     #wrapper.container
-      include ./alert.jade
-      include ./navigation.jade
+      include /alert
+      include /navigation
       block everything
         #main.container
           block body
             .row
               .col-md-12
                 block content
-      include ./footer.jade
+      include /footer
 
     script(src='/js/jquery-2.2.3.min.js')
     script(src='/js/jquery-migrate-1.3.0.min.js')
