@@ -1,0 +1,9 @@
+extends ./base
+
+block content
+  p Hi #{user.safename},
+  p You requested to reset your password. You can do so by clicking the link below:
+  p
+    a(href=resetURL)= resetURL
+  p Thanks,
+  p The #{site.name} team
