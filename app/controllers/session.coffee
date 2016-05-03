@@ -37,6 +37,25 @@ module.exports = class SessionController extends Controller
     @req.logout()
     @redirectTo "/", status: 303
 
+  recover: (done) ->
+    id = parseInt(@req.query.id, 10)
+    code = String(@req.query.code)
+    unless id > 0
+      @error = "Bad Link"
+      return done()
+    @req.models.User.get id, (err, user) =>
+      if !user? or user.meta.resetPasswordCode != code
+        @error = "Bad Reset Code"
+        return done()
+      if user.meta.resetPasswordExpires <= Date.now()
+        @error = "Reset Link Expired"
+        return done()
+      return done() unless @req.method is 'POST' and @req.body.form is 'recover' and @req.body.password?.length > 5
+      user.password = @req.body.password
+      @done = true
+      user.save done
+
+
   forgot: (done) ->
     return done()
     {id, code} = @req.query
