@@ -77,9 +77,9 @@ functionality to core it may be worth having a chat first :)
 Bootstrap
 ---------
 
-I'm no designer, so I use [Bootstrap 2.3.2][], if you wish to
+We use [Bootstrap v3.3.6][], if you wish to
 contribute, the documentation can be found there.
 
-[Bootstrap 2.3.2]: http://getbootstrap.com/2.3.2/
+[Bootstrap v3.3.6]: http://getbootstrap.com/
 [So Make It]: http://www.somakeit.org.uk/
 [mailgun]: https://mailgun.com
