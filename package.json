@@ -1,6 +1,6 @@
 {
   "name": "members-area",
-  "version": "0.5.0",
+  "version": "7.0.0",
   "description": "An area for members of a group to manage their subscription, permissions and resources.",
   "main": "index.js",
   "bin": {
