@@ -90,7 +90,7 @@ methods = new class
     pkg.scripts ?= {}
     pkg.scripts.start ?= "coffee index.coffee"
     pkg.dependencies ?= {}
-    pkg.dependencies["sqlite3"] ?= "3.1.1"
+    pkg.dependencies["sqlite3"] ?= ">=3.1.8 <3.2"
     pkg.dependencies["coffee-script"] ?= ">1.6"
     pkg.dependencies["members-area"] ?= "*"
     fs.writeFileSync "package.json", JSON.stringify pkg, null, 2
