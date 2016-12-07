@@ -47,7 +47,7 @@
     "jade": "~1.1.5",
     "juice": "~0.4.0",
     "migrate-orm2": "git://github.com/benjie/node-migrate-orm2.git",
-    "mysql": "~2.0.1",
+    "mysql": "2.9.0",
     "nib": "~1.0.2",
     "nodemailer": "^0.7.1",
     "ofx": "git://github.com/benjie/node-ofx.git#26d4681ead72dca2b6a72c401ffbb71d46ac1b8b",
