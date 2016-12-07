@@ -34,7 +34,7 @@
   "homepage": "https://github.com/members-area/members-area",
   "dependencies": {
     "async": "~0.7.0",
-    "bcrypt": "0.8.5",
+    "bcrypt": "1.0.0",
     "cheerio": "^0.15.0",
     "coffee-script": "1.10.0",
     "csv": "^0.4.6",
@@ -51,7 +51,7 @@
     "nib": "~1.0.2",
     "nodemailer": "^0.7.1",
     "ofx": "git://github.com/benjie/node-ofx.git#26d4681ead72dca2b6a72c401ffbb71d46ac1b8b",
-    "orm": "git://github.com/dresende/node-orm2.git",
+    "orm": "git://github.com/dresende/node-orm2.git#c91227128accd25e25eb6d42dc787dcd37bd0dfa",
     "orm-timestamps": "~0.2.1",
     "orm-transaction": "0.0.2",
     "passport": "~0.2.0",
