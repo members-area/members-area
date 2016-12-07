@@ -52,11 +52,14 @@ block everything
                   label(class="text-"+controlGroupClass) 
                     | Address
                   textarea.form-control(name='address', placeholder='Optional', rows=4, tabindex=tabIndex++)= data.address
+                  +renderErrors('address')
                 +field('password', 'Password', true)
                   .form-group
                     input.form-control(type='password', name='password', placeholder='Password', tabindex=tabIndex++)
+                    +renderErrors('password')
                   .form-group
                     input.form-control(type='password', name='password2', placeholder='Again', tabindex=tabIndex++)
+                    +renderErrors('password2')
                 
                 .form-group
                   +field('terms', null, true)
