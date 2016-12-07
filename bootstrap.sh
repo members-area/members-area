@@ -33,8 +33,8 @@ set -e
 set -u
 
 # Make sure we're doing this in a blank folder
-mkdir -p MembersArea
-cd MembersArea
+mkdir -p MembersArea/node_modules
+cd MembersArea/node_modules
 
 # Clone members-area into ./members-area/ and then install the dependencies and link it
 git clone git@github.com:members-area/members-area.git
@@ -56,6 +56,8 @@ for PLUGIN in $PLUGINS; do
   ln -s ../../members-area members-area
   cd ../..
 done
+
+cd ..
 
 # Create a new instance for us, bootstrap it
 mkdir -p instance
