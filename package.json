@@ -61,7 +61,7 @@
     "passport-twitter": "~1.0.2",
     "resolve": "~0.6.1",
     "source-map-support": "~0.2.5",
-    "sqlite3": "3.1.1",
+    "sqlite3": "3.1.8",
     "stylus": "~0.42.2",
     "underscore": "~1.5.2",
     "winston": "~0.7.2"
