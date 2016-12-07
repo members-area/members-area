@@ -4,9 +4,9 @@ fs = require 'fs'
 
 viewDir = p.join(__dirname, "..", "views")
 
-rootResolvePath = (path) ->
-  path = p.join viewDir, path.substr(1)
-  if path.indexOf(".") is -1
+rootResolvePath = (templatePath) ->
+  path = p.join viewDir, templatePath.substr(1)
+  if templatePath.indexOf(".") is -1
     path += ".jade"
   return path
 
