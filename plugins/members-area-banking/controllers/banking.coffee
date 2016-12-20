@@ -57,7 +57,7 @@ class BankingController extends Controller
   _reprocess: (done) ->
     @req.models.Transaction.find().run (err, transactions) =>
       return done err if err
-      regex = /^(.*) M(0[0-9]+) ([A-Z]{3})$/
+      regex = /^(.*) M(?:O|0)*(\d*) ([A-Z]{3})$/
       paymentsByUser = {}
       for tx in transactions when !tx.meta.isPayment and (matches = tx.description?.match(regex))
         tx.accountHolder = matches[1]
